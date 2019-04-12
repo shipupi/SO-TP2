@@ -1,0 +1,30 @@
+######################################################################################################################################################################################
+##																																													##
+##																				TPE ARQ																								##
+##																				Group 2																								##
+##																																													##
+######################################################################################################################################################################################
+
+
+Commands:
+
+"help":
+	It will display on screen a simplified version of this manual.
+
+"time":
+	It will display on screen the current time in hh:mm:ss format.
+
+"exceptionDiv":
+	It will launch test program to verify the correct implementation of the handled exception: DivisionByZeroException.
+	Exception occurs when division by 0 is attempted.
+
+"exceptionInvalidOp":
+	It will launch test program to verify the correct implementation of the handled exception: WrongOpcodeException.
+	Exception occurs with the wrong use of operands.
+
+"pong":
+	It will launch the game Pong.
+	Use WS and IK to move up and down the paddles. CTRL + c to exit the game.
+
+"exit":
+	Stops the shell.
