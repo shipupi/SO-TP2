@@ -1,9 +1,9 @@
-#include "modules.h"
-#include "syscalls.h"
-#include "stdio.h"
-#include "vidio.h"
-#include "extra.h"
-
+#include "include/modules.h"
+#include "include/syscalls.h"
+#include "include/stdio.h"
+#include "include/vidio.h"
+#include "include/extra.h"
+#include "include/testInvalidOp.h"
 
 void help() {
 	printf("\nHelp Manual for TPEG2");

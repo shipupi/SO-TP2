@@ -1,14 +1,13 @@
 #include <stdint.h>
 #include <string.h>
-#include "lib.h"
-#include "moduleLoader.h"
-#include "naiveConsole.h"
-#include "naiveClock.h"
-#include "naiveKeyboard.h"
-#include "time.h"
-#include "idtLoader.h"
-#include "vesaDriver.h"
-
+#include "include/lib.h"
+#include "include/moduleLoader.h"
+#include "include/naiveConsole.h"
+#include "include/naiveClock.h"
+#include "include/naiveKeyboard.h"
+#include "include/idtLoader.h"
+#include "include/time.h"
+#include "include/vesaDriver.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -21,6 +20,8 @@ static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
+
+int main();
 
 typedef int (*EntryPoint)();
 
@@ -41,8 +42,6 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	char buffer[10];	
-	
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress

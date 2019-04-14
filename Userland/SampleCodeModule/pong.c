@@ -1,4 +1,8 @@
-#include "pong.h"
+#include "include/stdio.h"
+#include "include/extra.h"
+#include "include/vidio.h"
+#include "include/syscalls.h"
+#include "include/pong.h"
 
 static int ticks = 0;
 
@@ -20,6 +24,9 @@ static int lPosY;
 
 static int ticksTillRefresh;
 static int running;
+
+void addPlayersLabels();
+void addEdges();
 
 
 //draws the limits on-screen
@@ -277,7 +284,7 @@ int pong(){
         addPlayersLabels();
         addSeparatorBar();
       //We empty the buffer that was loaded since last time
-      while (c = getCharWithZero()) {
+      while ((c = getCharWithZero())) {
 
         switch (c) {
           case 'w':

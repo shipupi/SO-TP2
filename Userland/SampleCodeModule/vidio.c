@@ -188,11 +188,10 @@ void drawWhiteRectangleFromCorner(uint64_t x, uint64_t y, uint64_t width, uint64
 
 void drawCharInScreen(int  x, int  y, unsigned char myChar, unsigned char r, unsigned char g, unsigned char b, unsigned char size) {
   int i,j;
-  int counterX, counterY;
-  for (int i = 0; i < 8; i++)
+  for (i = 0; i < 8; i++)
   {
 //  i es la fila
-    for (int j = 0; j < 8; j++)
+    for (j = 0; j < 8; j++)
 // j es la columna
     {
       if (fonts[myChar][i] & (1<<j))

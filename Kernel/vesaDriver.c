@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 
 typedef struct ModeInfoBlock {
   uint16_t attributes;
@@ -25,18 +26,18 @@ typedef struct ModeInfoBlock {
 
 
 
-} ModeInfoBlock __attribute__((packed));
+} ModeInfoBlock;
 
 
 const char fontWidth = 8;
 static ModeInfoBlock *infoBlock = (ModeInfoBlock*)0x0000000000005C00;
 
 int maxLines = 38;
-static cursorXStart = 10;
-static cursorX = 10;
 
-static cursorYStart = 10;
-static cursorY = 10;
+static int cursorXStart = 10;
+static int cursorX = 10;
+static int cursorYStart = 10;
+static int cursorY = 10;
 
 char fonts[130][8] = {
     
@@ -173,8 +174,13 @@ char fonts[130][8] = {
 };
 
 
+// Local functions headers
+void prevLine();
+void shiftUp();
+int strlength(const char * str);
+void printString(char *str, unsigned char r, unsigned char g, unsigned char b);
 
-int strlen(const char * str) {
+int strlength(const char * str) {
     int i = 0;
     while(*(str+i)) {
         i++;
@@ -186,7 +192,7 @@ int strlen(const char * str) {
 
 void putPixel(uint64_t x,uint64_t y, unsigned char r, unsigned char g, unsigned char b) {
 
-  char* screen = infoBlock->physbase + x*infoBlock->bpp / 8 + y*infoBlock->pitch;
+  char* screen = (char *)(uintptr_t) infoBlock->physbase + x*infoBlock->bpp / 8 + y*infoBlock->pitch;
   screen[0] = b;              // BLUE
   screen[1] = g;              // GREEN
   screen[2] = r;              // RED
@@ -198,7 +204,7 @@ void putPixel(uint64_t x,uint64_t y, unsigned char r, unsigned char g, unsigned 
 void fillRect(unsigned char x, unsigned char y, uint16_t width, uint16_t height, unsigned char r, unsigned char g, unsigned char b) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
 
-  char* pos = infoBlock->physbase + x*pixelWidth + y*infoBlock->pitch;
+  char* pos = (char *)(uintptr_t) infoBlock->physbase + x*pixelWidth + y*infoBlock->pitch;
   int i, j;
 
   for (i = 0; i < height; i++) {
@@ -216,15 +222,15 @@ void fillRect(unsigned char x, unsigned char y, uint16_t width, uint16_t height,
 
 
 // Esta funcion difiere de drawchar en tanto a que no hace el calculo de pos*, el drawstring lo calcula y ya cambia automaticamente la posicion
-// y se la pasa a esta funcion con la posicion ya calculaa
-void drawCharForString(char* pos, char myChar, unsigned char pixelWidth, int pitch, unsigned char r, unsigned char g, unsigned char b) {
+// y se la pasa a esta funcion con la posicion ya calculada
+void drawCharForString(char* pos, unsigned char myChar, unsigned char pixelWidth, int pitch, unsigned char r, unsigned char g, unsigned char b) {
 
 
   int i,j;
-  for (int i = 0; i < 8; i++)
+  for (i = 0; i < 8; i++)
   {
 //  i es la fila
-    for (int j = 0; j < 8; j++)
+    for (j = 0; j < 8; j++)
 // j es la columna
     {
       if (fonts[myChar][i] & (1 << j))
@@ -241,7 +247,7 @@ void drawCharForString(char* pos, char myChar, unsigned char pixelWidth, int pit
 void drawChar(int  x, int  y, unsigned char myChar, unsigned char r, unsigned char g, unsigned char b) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
   int pitch = infoBlock->pitch;
-  char* pos = infoBlock->physbase + x*pixelWidth + y*pitch;
+  char* pos = (char *)(uintptr_t) infoBlock->physbase + x*pixelWidth + y*pitch;
   // char a[8] = { 0x1E, 0x33, 0x33, 0x3E, 0x30, 0x18, 0x0E, 0x00};
 //  Las fonts son arrays de 8 bytes, si cada bit es una posicion que vale 0 o 1, son 64 pixels descriptos
 // Vamos a pintar los pixels que tienen un 1 con el color que viene por parametro, y de negro los que no vienen por parametro
@@ -249,10 +255,10 @@ void drawChar(int  x, int  y, unsigned char myChar, unsigned char r, unsigned ch
 // El problema con esto es que si habia otra letra escrita en el mismo lugar, se van a overlapear y na va a pisar bien
 // Mas adelante veo si surjen problemas con esto y veo como resolverlos
   int i,j;
-  for (int i = 0; i < 8; i++)
+  for (i = 0; i < 8; i++)
   {
 //  i es la fila
-    for (int j = 0; j < 8; j++)
+    for (j = 0; j < 8; j++)
 // j es la columna
     {
       if (fonts[myChar][i] & (1<<j))
@@ -270,8 +276,8 @@ void drawChar(int  x, int  y, unsigned char myChar, unsigned char r, unsigned ch
 void drawString(unsigned char  x, unsigned char  y, char* string, unsigned char r, unsigned char g, unsigned char b) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
   int pitch = infoBlock->pitch;
-  char* pos = infoBlock->physbase + x*pixelWidth + y*pitch;
-  int len = strlen(string);
+  char* pos = (char *)(uintptr_t)  infoBlock->physbase + x*pixelWidth + y*pitch;
+  int len = strlength(string);
   for (int i = 0; i < len; i++)
   {
     drawCharForString(pos, string[i],pixelWidth,pitch,r,g,b);
@@ -328,8 +334,8 @@ void printWhiteString(char * str){
 void printString(char *str, unsigned char r, unsigned char g, unsigned char b) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
   int pitch = infoBlock->pitch;
-  char* pos = infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
-  int len = strlen(str);
+  char* pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+  int len = strlength(str);
   for (int i = 0; i < len; i++)
   {
     drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
@@ -337,7 +343,7 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b) {
     if (cursorX >= (infoBlock->Xres - 5 - cursorXStart))
     {
       nextLine();
-      pos = infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+      pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
     } else {
       pos += fontWidth * pixelWidth;
     }
@@ -350,9 +356,9 @@ void shiftUp() {
     
    int pitch = infoBlock->pitch;
    int destY = cursorYStart;
-   char* dest = infoBlock->physbase + destY*pitch;
+   char* dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
    int srcY = cursorYStart + 20;
-   char* src = infoBlock->physbase + srcY*pitch;
+   char* src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
    int size = infoBlock->Xres * pitch;
    memcpy(dest, src, size);
    cursorY -= 20;
@@ -362,9 +368,9 @@ void shiftUp() {
 void copyLine() {
    int pitch = infoBlock->pitch;
    int destY = cursorYStart;
-   char* dest = infoBlock->physbase + destY*pitch;
+   char* dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
    int srcY = cursorYStart + 20;
-   char* src = infoBlock->physbase + srcY*pitch;
+   char* src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
    int size = infoBlock->Xres * pitch * 20;
    memcpy(src,dest, size);
 }
