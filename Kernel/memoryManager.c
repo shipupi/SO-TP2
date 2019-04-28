@@ -3,100 +3,67 @@
 #include "include/kernel.h"
 #include "include/vesaDriver.h"
 
-void *getMemorySpace( int32_t pid, uint64_t requestedSpace);
+void * getMemorySpace( int32_t pid, uint64_t requestedSpace);
 void initializeMemoryManager();
 void freeMemorySpace (int32_t pid, void * freeBaseAddress);
 
-extern uint8_t endOfKernel;
-#define MAXBLOCKS 50
-static uint64_t blocksSize[MAXBLOCKS];
-static void * blocksAddress[MAXBLOCKS];
-static int32_t blocksPid[MAXBLOCKS];
-static uint64_t activeBlocks;
+#define MAXBLOCKS 32768
+#define BLOCKSIZE 4096
+static byte blockStatus[MAXBLOCKS];
+static void * baseAddress = 0x900000;
+static uint64_t size = 0x8000000;//128Mb = 2ˆ7*2ˆ10 = 131072
 
-void numberToString(uint64_t number, char * string) {
-	int i = 0;
-	while(number > 10) {
-		string[i] = (number % 10) + '0';
-		number = number / 10;
-		i++;
+void * getBlockById(int32_t N){
+	return baseAddress + N * blocksSize ;
+}
+
+int32_t getIdByAdress(void * address){
+	return (address - baseAddress) / blocksSize ;
+}
+
+int32_t getBlocksForSize(uint64_t requestedSize){
+	return (requestedSize / blocksSize)+1;
+}
+
+void initializeMemoryManager(){
+	for(int i = 0 ; i < MAXBLOCKS ; i++){
+		blockStatus[i] = 0;
 	}
 }
 
+void * requestMemorySpace(uint64_t requestedSpace){
+	int32_t n = getBlocksForSize(requestedSpace); //me must find n contiguous 0's in an array
+	void * ret = -1;
+	int32_t base = 0;
 
-void initializeMemoryManager() {
-	void * baseAddress = getStackBase();
-	uint64_t size = (uint64_t) &endOfKernel - (uint64_t) baseAddress;
-
-	// Initialize first block
-	// Size = total size
-	// Address = BaseAddress
-	// Process = -1 (unassigned)
-	activeBlocks = 1;
-	blocksSize[0] = size;
-	blocksAddress[0] = baseAddress;
-	blocksPid[0] = -1;
-}
-
-void * requestMemorySpace ( int32_t pid, uint64_t requestedSpace) {
-
-	// First fit algorithm
-	int i;
-	int assignedBlock = -1;
-	for (i = 0; i < activeBlocks; ++i)
-	{
-		// If block is unassigned, and block has available space. assign
-		if (blocksPid[i] == -1 && blocksSize[i] >= requestedSpace) {
-			assignedBlock = i;
-			break;
+	int acum = 0;
+	for(int i=0;i<MAXBLOCKS;i++){
+		if(blockStatus[i]==0){
+			if(acum==0){
+				base = i;
+			}
+			acum++;
 		}
-	}
-	// End of algorithm
-
-	if (assignedBlock == -1)
-	{
-		// No found blocks, throw error?
-	} else {
-		// Assign the block
-		blocksPid[assignedBlock] = pid;
-		if (requestedSpace > blocksSize[assignedBlock])
-		{
-			// We have leftover space. Lets assign it to a new block
-			// Active blocks is the index of the new created block
-			blocksPid[activeBlocks] = -1;
-			blocksAddress[activeBlocks] = blocksAddress[assignedBlock] + requestedSpace + 1;
-			blocksSize[activeBlocks] = blocksSize[assignedBlock] - requestedSpace;
-			activeBlocks++; 
+		else if(blockStatus[i]==1){
+			acum = 0;
 		}
-	}
 
-	return blocksAddress[assignedBlock];
-}
-
-void freeMemorySpace (int32_t pid, void * freeBaseAddress) {
-	int i = 0;
-	int block = -1;
-	for (i = 0; i < activeBlocks; ++i)
-	{
-		if (blocksAddress[i] == freeBaseAddress)
-		{
-			block = i;
+		if(acum==n){
+			ret = getBlockById(base) ;
 			break;
 		}
 	}
 
-	if (block == -1) {
-		// Requested to release unassigned block, throw error?
-	} else {
-		// Check if block is assigned to requested pid
-		if (blocksPid[block] == pid) {
-			// Free the block
-			// Merge with adjacent free blocks? how do we do that?
-			// Next one should be easy, previous one is harder, maybe keep a pointer to the previous block?
-			blocksPid[block] = -1;
-		} else {
-			// Free request not made by block owner, throw error?
-		}
+	return ret;
+	}
+
+
+void freeMemorySpace (void * freeBaseAddress,int32_t size){
+	int32_t sz = getBlocksForSize(size);
+	int32_t id = getIdByAdress(freeBaseAddress); 
+
+	for(int i = id ; i < sz + id  ; i++){
+		blockStatus[i] = 0;
 	}
 
 }
