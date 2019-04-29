@@ -2,6 +2,7 @@
 #include <string.h>
 #include "include/lib.h"
 #include "include/moduleLoader.h"
+#include "include/memoryManager.h"
 #include "include/naiveConsole.h"
 #include "include/naiveClock.h"
 #include "include/naiveKeyboard.h"
