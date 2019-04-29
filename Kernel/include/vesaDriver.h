@@ -12,5 +12,5 @@ void printChar(unsigned char myChar, unsigned char r, unsigned char g, unsigned 
 void printWhiteString(char *str);
 void printString(char *str, unsigned char r, unsigned char g, unsigned char b);
 void deleteChar();
-
+void printInt(int num);
 #endif

@@ -385,3 +385,28 @@ void clearAll() {
   cursorX = cursorXStart;
   cursorY = cursorYStart;
 }
+
+void printInt(int num) {
+  char string[10];
+  int remainder;
+  int index = 0;
+  int reverseIndex = 0;
+  char aux;
+  if (num == 0){
+    string[0] = '0';
+  }
+  else {
+    while (num > 0){
+      remainder = num % 10;
+      string[index++] = remainder + '0';
+      num /= 10;
+    }
+  }
+  string[index] = 0;
+  while (reverseIndex < index/2){
+    aux = string[--index];
+    string[reverseIndex] = aux;
+    string[index] = string[reverseIndex++];
+  }
+  printWhiteString(string);
+}
