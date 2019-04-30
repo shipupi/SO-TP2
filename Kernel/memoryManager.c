@@ -3,10 +3,6 @@
 #include "include/kernel.h"
 #include "include/vesaDriver.h"
 
-void * getMemorySpace( int32_t pid, uint64_t requestedSpace);
-void initializeMemoryManager();
-void freeMemorySpace (void * freeBaseAddress,int32_t size);
-
 #define MAXBLOCKS 32768
 #define BLOCKSIZE 4096
 static char blockStatus[MAXBLOCKS];
@@ -32,6 +28,7 @@ void initializeMemoryManager(){
 
 void * requestMemorySpace(uint64_t requestedSpace){
 	int32_t n = getBlocksForSize(requestedSpace); //me must find n contiguous 0's in an array
+
 	void * ret = (void *)(uintptr_t) -1;
 	int32_t base = 0;
 
@@ -48,11 +45,14 @@ void * requestMemorySpace(uint64_t requestedSpace){
 		}
 
 		if(acum==n){
-			ret = getBlockById(base) ;
+			ret = getBlockById(base);
+			for (int i =  0; i < n; ++i)
+			{
+				blockStatus[base + i] = 1;
+			}
 			break;
 		}
 	}
-
 	return ret;
 	}
 

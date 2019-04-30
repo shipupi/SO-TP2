@@ -1,4 +1,8 @@
+#ifndef MEMORYMANAGER_H
+#define MEMORYMANAGER_H
+
 #include <stdint.h>
 
 void initializeMemoryManager();
-void * getMemorySpace ( uint32_t requestedSpace);
+void * requestMemorySpace(uint64_t requestedSpace);
+#endif

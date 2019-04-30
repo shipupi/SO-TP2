@@ -386,12 +386,14 @@ void clearAll() {
   cursorY = cursorYStart;
 }
 
-void printInt(int num) {
+
+void printUint(uint64_t num) {
   char string[10];
   int remainder;
   int index = 0;
   int reverseIndex = 0;
   char aux;
+  int length;
   if (num == 0){
     string[0] = '0';
   }
@@ -403,10 +405,53 @@ void printInt(int num) {
     }
   }
   string[index] = 0;
-  while (reverseIndex < index/2){
+  length = index;
+  while (reverseIndex < length / 2){
     aux = string[--index];
-    string[reverseIndex] = aux;
-    string[index] = string[reverseIndex++];
+    string[index] = string[reverseIndex];
+    string[reverseIndex++] = aux;
+  }
+
+  printWhiteString(string);
+}
+
+void printInt(int num) {
+  char string[10];
+  int remainder;
+  int index = 0;
+  int reverseIndex = 0;
+  int i;
+  char aux;
+  int length;
+  int negative = 0;
+
+  if (num < 0) {
+    negative = 1;
+    num = num * -1;
+  }
+  if (num == 0){
+    string[0] = '0';
+  }
+  else {
+    while (num > 0){
+      remainder = num % 10;
+      string[index++] = remainder + '0';
+      num /= 10;
+    }
+  }
+  string[index] = 0;
+  length = index;
+  while (reverseIndex < length / 2){
+    aux = string[--index];
+    string[index] = string[reverseIndex];
+    string[reverseIndex++] = aux;
+  }
+
+  if(negative) {
+    for (i = length; i> 0; i--) {
+      string[i] = string[i-1];
+    }
+    string[0] = '-';
   }
   printWhiteString(string);
 }
