@@ -1,7 +1,7 @@
-#include "naiveKeyboard.h"
-#include "naiveConsole.h"
-#include "getKey.h"
-#include "keyMap.h"
+#include "drivers/naiveKeyboard.h"
+#include "naiveLegacy/naiveConsole.h"
+#include "pure/getKey.h"
+#include "drivers/keyMap.h"
 
 //150 was chosen at random
 #define BUFFER_SIZE 200

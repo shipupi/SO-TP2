@@ -396,6 +396,8 @@ void printUint(uint64_t num) {
   int length;
   if (num == 0){
     string[0] = '0';
+    printWhiteString(string);
+    return;
   }
   else {
     while (num > 0){

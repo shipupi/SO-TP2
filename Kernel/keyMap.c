@@ -1,4 +1,4 @@
-#include "keyMap.h"
+#include "drivers/keyMap.h"
 
 //Based on osdev Scan Code set 1 and Ascii Table
 const unsigned char asciiMap[128] = { 0, //Filler

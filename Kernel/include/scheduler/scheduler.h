@@ -4,6 +4,6 @@
 
 void schedule();
 uint8_t addProcess(void * entryPoint);
-void endProcess(void * stackAddress);
+void endProcess(int pid);
 void listProcesses();
 #endif

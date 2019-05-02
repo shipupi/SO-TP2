@@ -1,5 +1,5 @@
-#include <naiveClock.h>
-#include <naiveConsole.h>
+#include <naiveLegacy/naiveClock.h>
+#include <naiveLegacy/naiveConsole.h>
 
 
 #define SECONDS 00

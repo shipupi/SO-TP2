@@ -1,6 +1,6 @@
-#include <time.h>
-#include <scheduler.h>
-#include "include/vesaDriver.h"
+#include <drivers/time.h>
+#include "include/scheduler/scheduler.h"
+#include "include/drivers/vesaDriver.h"
 
 static unsigned long ticks = 0;
 

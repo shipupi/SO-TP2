@@ -1,12 +1,12 @@
 #include <stdint.h>
 #include <systemCalls.h>
-#include "naiveKeyboard.h"
-#include "naiveClock.h"
-#include "vesaDriver.h"
-#include "soundDriver.h"
-#include "time.h"
-#include "memoryManager.h"
-#include "scheduler.h"
+#include "drivers/naiveKeyboard.h"
+#include "naiveLegacy/naiveClock.h"
+#include "drivers/vesaDriver.h"
+#include "drivers/soundDriver.h"
+#include "drivers/time.h"
+#include "memoryManager/memoryManager.h"
+#include "scheduler/scheduler.h"
 
 
 #define SYSCALLNUMBER 11
@@ -134,8 +134,8 @@ void sys_schedule() {
 uint8_t sys_addProcess(void * entryPoint) {
 	return addProcess(entryPoint);
 }
-void sys_endProcess(void * stackAddress) {
-	endProcess(stackAddress);
+void sys_endProcess(int pid) {
+	endProcess(pid);
 }
 void sys_listProcesses() {
 	listProcesses();

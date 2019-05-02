@@ -21,6 +21,6 @@ void * sys_requestMemorySpace(uint64_t requestedSpace);
 void sys_freeMemorySpace (void * freeBaseAddress,int32_t size);
 void sys_schedule();
 uint8_t sys_addProcess(void * entryPoint);
-void sys_endProcess(void * stackAddress);
+void sys_endProcess(int pid);
 void sys_listProcesses();
 #endif /* SYSTEMCALLS_H */

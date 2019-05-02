@@ -9,6 +9,12 @@ int main() {
 	//We call the init of Shell
 	// printUint(&shell_init);
 	os_addProcess(&shell_init);
-	// os_listProcesses();
+	os_addProcess(&shell_init);
+	os_addProcess(&shell_init);
+	os_endProcess(1);
+	os_endProcess(2);
+	os_addProcess(&shell_init);
+	os_listProcesses();
 	// shell_init();
+	return 1;
 }

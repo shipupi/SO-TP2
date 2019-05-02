@@ -2,14 +2,14 @@
 #include <string.h>
 #include "include/lib.h"
 #include "include/moduleLoader.h"
-#include "include/memoryManager.h"
-#include "include/naiveConsole.h"
-#include "include/naiveClock.h"
-#include "include/naiveKeyboard.h"
+#include "include/memoryManager/memoryManager.h"
+#include "include/naiveLegacy/naiveConsole.h"
+#include "include/naiveLegacy/naiveClock.h"
+#include "include/drivers/naiveKeyboard.h"
 #include "include/idtLoader.h"
-#include "include/time.h"
-#include "include/vesaDriver.h"
-#include "include/scheduler.h"
+#include "include/drivers/time.h"
+#include "include/drivers/vesaDriver.h"
+#include "include/scheduler/scheduler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;

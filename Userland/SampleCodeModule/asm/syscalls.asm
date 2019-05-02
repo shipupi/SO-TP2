@@ -185,7 +185,7 @@ os_addProcess:
 	int 80h
 	finish
 
-os_sys_endProcess:
+os_endProcess:
 	start
 	mov rsi, rdi
 	mov rdi, 0x0E
