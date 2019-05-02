@@ -9,6 +9,10 @@ GLOBAL os_beep
 GLOBAL os_unbeep
 GLOBAL os_requestMemorySpace
 GLOBAL os_freeMemorySpace
+GLOBAL os_schedule
+GLOBAL os_addProcess
+GLOBAL os_endProcess
+GLOBAL os_listProcesses	
 
 section .text
 
@@ -166,7 +170,32 @@ os_freeMemorySpace:
 	mov rsi,rdi
 	mov rdi, 0x0B
 	int 80h
+	finish
 
+os_schedule:
+	start
+	mov rdi, 0x0C
+	int 80h
+	finish
+
+os_addProcess:
+	start
+	mov rsi, rdi
+	mov rdi, 0x0D
+	int 80h
+	finish
+
+os_sys_endProcess:
+	start
+	mov rsi, rdi
+	mov rdi, 0x0E
+	int 80h
+	finish
+
+os_listProcesses:
+	start
+	mov rdi, 0x0F
+	int 80h
 	finish
 
 

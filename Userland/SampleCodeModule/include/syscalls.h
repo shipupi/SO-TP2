@@ -13,5 +13,8 @@ void os_beep();
 void os_unbeep();
 void * os_requestMemorySpace(uint64_t requestedSpace);
 void os_freeMemorySpace (void * freeBaseAddress,int32_t size);
-
+void os_schedule();
+uint8_t os_addProcess(void * entryPoint);
+void os_endProcess(void * stackAddress);
+void os_listProcesses();
 #endif

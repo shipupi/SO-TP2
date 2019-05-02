@@ -1,4 +1,4 @@
-
+  
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -30,6 +30,10 @@ EXTERN sys_ticks
 EXTERN sys_sec
 EXTERN sys_requestMemorySpace
 EXTERN sys_freeMemorySpace
+EXTERN sys_schedule
+EXTERN sys_addProcess
+EXTERN sys_endProcess
+EXTERN sys_listProcesses
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN nextLine
@@ -175,11 +179,23 @@ _syscall:
 	cmp rdi, 0x09		; syscall de unbeep
 	je .syscall09
 
-  cmp rdi, 0x0A   ; syscall de unbeep
+  cmp rdi, 0x0A   ; syscall de requestmemoryspace
   je .syscall0A
 
-  cmp rdi, 0x0B   ; syscall de unbeep
+  cmp rdi, 0x0B   ; syscall de freeMemorySpace
   je .syscall0B
+
+  cmp rdi, 0x0C   ; syscall de schedule
+  je .syscall0C
+
+  cmp rdi, 0x0D   ; syscall de addProcess
+  je .syscall0D
+
+  cmp rdi, 0x0E   ; syscall de endProcess
+  je .syscall0E
+
+  cmp rdi, 0x0F   ; syscall de listProcesses
+  je .syscall0F
 
 .continue:
 	mov rsp, rbp
@@ -246,11 +262,27 @@ _syscall:
 .syscall0B:
 
   mov rdi, rsi
-  mov rsi, rdx
-   
+  mov rsi, rdx 
   call sys_freeMemorySpace
   jmp .continue
 
+.syscall0C:
+  call sys_schedule
+  jmp .continue
+
+.syscall0D:
+  mov rdi, rsi
+  call sys_addProcess
+  jmp .continue
+
+.syscall0E:
+  mov rdi, rsi
+  call sys_endProcess
+  jmp .continue
+
+.syscall0F:
+  call sys_listProcesses
+  jmp .continue
 
 ; EXCEPTIONS 
 

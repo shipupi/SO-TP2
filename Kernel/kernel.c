@@ -9,6 +9,7 @@
 #include "include/idtLoader.h"
 #include "include/time.h"
 #include "include/vesaDriver.h"
+#include "include/scheduler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;

@@ -6,6 +6,28 @@
 #include "soundDriver.h"
 #include "time.h"
 #include "memoryManager.h"
+#include "scheduler.h"
+
+
+#define SYSCALLNUMBER 11
+
+static void * systemCallsArray[] = {
+		&sys_ticks,
+		&sys_sec,
+		&sys_read,
+		&sys_write,
+		&sys_time,
+		&sys_pixel,
+		&sys_clear,
+		&sys_beep,
+		&sys_unbeep,
+		&sys_requestMemorySpace,
+		&sys_freeMemorySpace
+};
+
+void * getSyscallFunction(int number) {
+	return systemCallsArray[number];	
+}
 
 int sys_ticks(int * result) {
 	*result = ticks_elapsed();
@@ -103,4 +125,18 @@ void * sys_requestMemorySpace(uint64_t requestedSpace) {
 
 void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
 	freeMemorySpace(freeBaseAddress,size);
+}
+
+// Processes
+void sys_schedule() {
+	schedule();
+}
+uint8_t sys_addProcess(void * entryPoint) {
+	return addProcess(entryPoint);
+}
+void sys_endProcess(void * stackAddress) {
+	endProcess(stackAddress);
+}
+void sys_listProcesses() {
+	listProcesses();
 }
