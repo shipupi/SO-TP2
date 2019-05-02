@@ -5,6 +5,7 @@
 #include "vesaDriver.h"
 #include "soundDriver.h"
 #include "time.h"
+#include "memoryManager.h"
 
 int sys_ticks(int * result) {
 	*result = ticks_elapsed();
@@ -93,4 +94,13 @@ void sys_beep() {
 //Stop sound
 void sys_unbeep() {
 	stopSound();
+}
+
+// MEMORY SYSCALLS
+void * sys_requestMemorySpace(uint64_t requestedSpace) {
+	return requestMemorySpace(requestedSpace);
+}
+
+void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
+	freeMemorySpace(freeBaseAddress,size);
 }

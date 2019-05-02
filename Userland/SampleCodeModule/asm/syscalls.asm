@@ -7,6 +7,8 @@ GLOBAL os_ticks
 GLOBAL os_sec
 GLOBAL os_beep
 GLOBAL os_unbeep
+GLOBAL os_requestMemorySpace
+GLOBAL os_freeMemorySpace
 
 section .text
 
@@ -150,6 +152,22 @@ os_unbeep:
 
 	finish
 
+os_requestMemorySpace:
+	start
+	mov rsi, rdi
+	mov rdi, 0x0A
+	int 80h
+	finish
+
+
+os_freeMemorySpace:
+	start
+	mov rdx, rsi
+	mov rsi,rdi
+	mov rdi, 0x0B
+	int 80h
+
+	finish
 
 
 section .data

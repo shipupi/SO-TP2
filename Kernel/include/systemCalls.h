@@ -16,5 +16,6 @@ void sys_pixel(uint64_t x, uint64_t y, unsigned char r, unsigned char g, unsigne
 void sys_clear();
 void sys_beep();
 void sys_unbeep();
-
+void * sys_requestMemorySpace(uint64_t requestedSpace);
+void sys_freeMemorySpace (void * freeBaseAddress,int32_t size);
 #endif /* SYSTEMCALLS_H */

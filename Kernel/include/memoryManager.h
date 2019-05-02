@@ -5,4 +5,5 @@
 
 void initializeMemoryManager();
 void * requestMemorySpace(uint64_t requestedSpace);
+void freeMemorySpace (void * freeBaseAddress,int32_t size);
 #endif

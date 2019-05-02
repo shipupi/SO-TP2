@@ -28,6 +28,8 @@ EXTERN sys_beep
 EXTERN sys_unbeep
 EXTERN sys_ticks
 EXTERN sys_sec
+EXTERN sys_requestMemorySpace
+EXTERN sys_freeMemorySpace
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN nextLine
@@ -173,6 +175,11 @@ _syscall:
 	cmp rdi, 0x09		; syscall de unbeep
 	je .syscall09
 
+  cmp rdi, 0x0A   ; syscall de unbeep
+  je .syscall0A
+
+  cmp rdi, 0x0B   ; syscall de unbeep
+  je .syscall0B
 
 .continue:
 	mov rsp, rbp
@@ -229,6 +236,21 @@ _syscall:
 .syscall09:
 	call sys_unbeep
 	jmp .continue
+
+
+.syscall0A:
+  mov rdi, rsi
+  call sys_requestMemorySpace
+  jmp .continue
+
+.syscall0B:
+
+  mov rdi, rsi
+  mov rsi, rdx
+   
+  call sys_freeMemorySpace
+  jmp .continue
+
 
 ; EXCEPTIONS 
 

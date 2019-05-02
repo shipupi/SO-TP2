@@ -11,5 +11,7 @@ uint64_t os_draw(uint64_t x, uint64_t y, uint64_t red,uint64_t green,uint64_t bl
 void os_clear(void);
 void os_beep();
 void os_unbeep();
+void * os_requestMemorySpace(uint64_t requestedSpace);
+void os_freeMemorySpace (void * freeBaseAddress,int32_t size);
 
 #endif

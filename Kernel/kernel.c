@@ -62,7 +62,22 @@ int main()
 {	
 	initializeMemoryManager();
 	load_idt();
-    ((EntryPoint)sampleCodeModuleAddress)();
+	
+	
+	// TEST DE MEMORY MANAGER
+	// void * addr1 = requestMemorySpace(5000); // Request de 2 bloques (Deberia dar base Address = 0x900000
+ //    printUint((uint64_t)(uintptr_t) addr1); // print addr 1
+ //    nextLine();
+ //    printUint((uint64_t)(uintptr_t) requestMemorySpace(50)); // request de 1 bloque (Deberia imprimir 0x900000 + 4096 * 2)
+ //    nextLine();
+    // freeMemorySpace (addr1,5000); // Libero los primeros 2 bloques
+    // printUint((uint64_t)(uintptr_t) requestMemorySpace(10000)); // request de 3 bloque (Deberia imprimir 0x900000 + 4096 * 3)
+    // nextLine();
+    // printUint((uint64_t)(uintptr_t) requestMemorySpace(6000)); // request de 2 bloque (Deberia imprimir 0x900000)
 
+	
+
+
+    ((EntryPoint)sampleCodeModuleAddress)();
 	return 0;
 }
