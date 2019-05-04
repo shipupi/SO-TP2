@@ -17,6 +17,8 @@
 static int currentPID = 0;
 
 
+int rand(){return getSeconds();}
+
 static PCB processes[MAXPROCESSES]; 
 
 void * schedule(void * oldStack) {
@@ -77,6 +79,8 @@ void * schedule(void * oldStack) {
 	
 	int winner = (rand()%m_ticket-1)+ 1;
 
+
+	// return processes[0].stackAddress;
 	return  processes[winner].stackAddress;
 }
 

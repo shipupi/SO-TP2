@@ -62,6 +62,8 @@ void reboot()
 int main()
 {	
 	initializeMemoryManager();
+	// os_addProcess(&shell_init,1,name,1,50);
+	addProcess(sampleCodeModuleAddress, 1, 'a', 1, 50);
 	load_idt();
 	
 	
@@ -79,6 +81,6 @@ int main()
 	
 
 
-    ((EntryPoint)sampleCodeModuleAddress)();
+    // ((EntryPoint)sampleCodeModuleAddress)();
 	return 0;
 }
