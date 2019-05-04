@@ -293,6 +293,10 @@ _syscall:
 
 .syscall0D:
   mov rdi, rsi
+  mov rsi, rdx
+  mov rdx, rcx
+  mov rcx, r8
+  mov r8 , r9
   call sys_addProcess
   jmp .continue
 

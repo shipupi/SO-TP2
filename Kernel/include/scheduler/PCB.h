@@ -12,6 +12,10 @@ typedef struct PCB {
 	uint64_t pid;
 	void * stackAddress;
 	uint64_t status;
+	uint64_t priority;
+	char name;
+	uint8_t foreground;
+	uint64_t size;
 } PCB;
 
 #endif
