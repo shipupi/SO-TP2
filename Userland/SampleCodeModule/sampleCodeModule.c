@@ -18,7 +18,16 @@ int main() {
 	//os_addProcess(&shell_init,4,name,1,50);
 	os_listProcesses();
 	// shell_init();
-	while(1);
+	int a = 0;
+	int b= 0;
+	while(b < 1000) {
+		a++;
+		if (a%250000 == 0)
+		{
+			b++;
+			printUint(b);
+		}
+	}
 	return 1;
 }
 

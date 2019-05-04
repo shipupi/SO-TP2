@@ -35,7 +35,7 @@ int sys_ticks(int * result) {
 }
 
 int sys_sec (int * result) {
-	*result = seconds_elapsed();
+	*result = getSeconds();
 	return *result;
 }
 

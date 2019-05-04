@@ -7,6 +7,7 @@
 #include "include/naiveLegacy/naiveClock.h"
 #include "include/drivers/naiveKeyboard.h"
 #include "include/idtLoader.h"
+#include "interrupts.h"
 #include "include/drivers/time.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/scheduler/scheduler.h"
@@ -65,7 +66,10 @@ int main()
 	// os_addProcess(&shell_init,1,name,1,50);
 	addProcess(sampleCodeModuleAddress, 1, 'a', 1, 50);
 	load_idt();
-	
+	// Si llegue aca es xq volvio aca despues del primer schedule
+	while(1) {
+		_hlt();
+	}
 	
 	// TEST DE MEMORY MANAGER
 	// void * addr1 = requestMemorySpace(5000); // Request de 2 bloques (Deberia dar base Address = 0x900000
@@ -77,9 +81,6 @@ int main()
     // printUint((uint64_t)(uintptr_t) requestMemorySpace(10000)); // request de 3 bloque (Deberia imprimir 0x900000 + 4096 * 3)
     // nextLine();
     // printUint((uint64_t)(uintptr_t) requestMemorySpace(6000)); // request de 2 bloque (Deberia imprimir 0x900000)
-
-	
-
 
     // ((EntryPoint)sampleCodeModuleAddress)();
 	return 0;

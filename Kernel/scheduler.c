@@ -3,6 +3,7 @@
 #include "scheduler/PCB.h"
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
+#include "interrupts.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -14,14 +15,53 @@
 #define MAXPROCESSES 256
 #define PROCESSSTACKSIZE 4096
 
-static int currentPID = 0;
+static int PIDCounter = 0;
+static int activeProcess = -1;
 
 
 int rand(){return getSeconds;}
 
 static PCB processes[MAXPROCESSES]; 
+static int currentProcess = 0;
 
 void * schedule(void * oldStack) {
+	nextLine();
+	printWhiteString("Schedule!");
+	nextLine();
+	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
+	if (PIDCounter  == 0)
+	{
+		return oldStack;
+	}
+
+	int i;
+	int n = 0;
+	int ap[MAXPROCESSES];
+	for (i = 0; i < MAXPROCESSES; ++i)
+	{
+		if (processes[i].status == PCB_READY)
+		{
+			ap[n] = i;
+			n++;
+		}
+		
+
+	}
+
+	// Tengo la cantidad de procesos activos y los tengo metidos en un array
+	if (activeProcess != -1) {
+		// Piso el stack del proceso anterior
+		processes[activeProcess].stackAddress = oldStack;
+	}
+	// Setteo el nuevo activeprocess con el que me toco
+	activeProcess = ap[0];
+	return processes[activeProcess].stackAddress;
+}
+
+
+void * schedulet(void * oldStack) {
+
+
 	int n,i,j,k,temp=65,flag=0;
 	char process[20];
 	int brust[20],priority[20],pos;
@@ -97,14 +137,14 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
 	newPCB.stackAddress = newStack;
 	fillStackFrame (newPCB,entryPoint);
-	newPCB.pid = currentPID;
+	newPCB.pid = PIDCounter;
 	newPCB.status = PCB_READY;
 	newPCB.priority = priority;
 	newPCB.name = name;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
-	processes[currentPID] = newPCB;
-	currentPID++;
+	processes[PIDCounter] = newPCB;
+	PIDCounter++;
 	return 1;
 }
 
@@ -120,7 +160,7 @@ void listProcesses() {
 	nextLine();
 	printWhiteString("PID | Stack Addresss | Status | Priority | Nombre | Foreground | Reserved Memory ");
 	nextLine();
-	for (i = 0; i < currentPID; ++i)
+	for (i = 0; i < PIDCounter; ++i)
 	{
 		printUint(processes[i].pid);
 		printWhiteString("   | 	   ");
