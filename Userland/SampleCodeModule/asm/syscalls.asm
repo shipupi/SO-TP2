@@ -180,7 +180,11 @@ os_schedule:
 
 os_addProcess:
 	start
-	mov rsi, rdi
+	mov r9, r8
+	mov r8, rcx
+	mov rcx,rdx
+	mov rdx,rsi
+	mov rsi,rdi
 	mov rdi, 0x0D
 	int 80h
 	finish

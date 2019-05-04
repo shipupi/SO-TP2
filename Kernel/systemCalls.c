@@ -131,8 +131,8 @@ void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
 void sys_schedule() {
 	schedule();
 }
-uint8_t sys_addProcess(void * entryPoint) {
-	return addProcess(entryPoint);
+uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size) {
+	return addProcess(entryPoint,priority,name,foreground,size);
 }
 void sys_endProcess(int pid) {
 	endProcess(pid);
