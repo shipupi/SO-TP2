@@ -17,7 +17,7 @@
 static int currentPID = 0;
 
 
-int rand(){return getSeconds();}
+int rand(){return getSeconds;}
 
 static PCB processes[MAXPROCESSES]; 
 
@@ -28,7 +28,7 @@ void * schedule(void * oldStack) {
 	int time=0,quantom=1,tbt=0;
 	int z=0,lottery[20],ticket[20][20],q=0;
 	//number of processes
-	n=3;
+	n=1;
 
 	for(i=0;i<n;i++)
 	{
@@ -37,7 +37,7 @@ void * schedule(void * oldStack) {
 	}
 	for(i=0;i<n;i++)
 	{
-		brust[i] = 2;
+		brust[i] = rand();
 		priority[i] = processes[i].priority;
 	}
 	
@@ -69,18 +69,25 @@ void * schedule(void * oldStack) {
 	int p=1,m_ticket=0;
 	for(i=0;i<n;i++)
 	{
-		lottery[i] = (brust[i]/quantom) + (n-priority[i]);
+		lottery[i]=(n-priority[i])+1;
+		printWhiteString("el lottery[i]");
+		printUint(lottery[i]);
+		nextLine();
 		for (z=0;z<lottery[i];z++) 
 		{
+
             ticket[i][z] = p++;
             m_ticket = p;
         }
 	}
 	
 	int winner = (rand()%m_ticket-1)+ 1;
+	nextLine();
+	printUint(winner);
+	nextLine();
+	
 
-
-	// return processes[0].stackAddress;
+	//return processes[0].stackAddress;
 	return  processes[winner].stackAddress;
 }
 
