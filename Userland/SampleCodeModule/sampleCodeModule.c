@@ -10,7 +10,7 @@ int main() {
 	//We call the init of Shell
 	// printUint(&shell_init);
 	// char name = 'A';
-	// os_addProcess(&shell_init,1,name,1,50);
+	os_addProcess(&shell_init,1,'c',1,50);
 	// os_addProcess(&shell_init,2,name,1,50);
 	// os_addProcess(&shell_init,3,name,1,50);
 	// os_endProcess(1);
