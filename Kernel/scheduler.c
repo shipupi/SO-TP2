@@ -19,7 +19,7 @@ static int PIDCounter = 0;
 static int activeProcess = -1;
 
 
-int rand(){return getSeconds;}
+int rand(){return getSeconds();}
 
 static PCB processes[MAXPROCESSES]; 
 static int currentProcess = 0;
@@ -68,7 +68,7 @@ void * schedulet(void * oldStack) {
 	int time=0,quantom=1,tbt=0;
 	int z=0,lottery[20],ticket[20][20],q=0;
 	//number of processes
-	n=1;
+	n=2;
 
 	for(i=0;i<n;i++)
 	{
