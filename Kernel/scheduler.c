@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "memoryManager/memoryManager.h"
 #include "scheduler/PCB.h"
+#include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 
 
@@ -15,16 +16,17 @@ static int currentPID = 0;
 
 static PCB processes[MAXPROCESSES]; 
 
-void * schedule(void * oldStack) {
-	return  processes[0].stackAddress;
+void * schedule(void * currentStack) {
+	return processes[0].stackAddress;
 }
 
 // Returns pid?
 uint8_t addProcess(void * entryPoint) {
 	struct PCB newPCB;
 	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
-	newPCB.pid = currentPID;
 	newPCB.stackAddress = newStack;
+	fillStackFrame (newPCB,entryPoint);
+	newPCB.pid = currentPID;
 	newPCB.status = PCB_READY;
 	processes[currentPID] = newPCB;
 	currentPID++;
