@@ -2,6 +2,9 @@
 #include "memoryManager/memoryManager.h"
 #include "scheduler/PCB.h"
 #include "drivers/vesaDriver.h"
+#include <naiveLegacy/naiveClock.h>
+#include <naiveLegacy/naiveConsole.h>
+
 
 
 // Process Control Block
@@ -15,8 +18,70 @@ static int currentPID = 0;
 
 static PCB processes[MAXPROCESSES]; 
 
+int rand(){
+	return getSeconds();
+}
+
 void * schedule(void * oldStack) {
-	return  processes[0].stackAddress;
+	int n,i,j,k,temp=65,flag=0;
+	char process[20];
+	int brust[20],priority[20],pos;
+	int time=0,quantom=1,tbt=0;
+	int z=0,lottery[20],ticket[20][20],q=0;
+	//number of processes
+	n=3;
+
+	for(i=0;i<n;i++)
+	{
+		process[i] = temp;
+		temp+=1;
+	}
+	for(i=0;i<n;i++)
+	{
+		brust[i] = 2;
+		priority[i] = processes[i].priority;
+	}
+	
+	//sorting burst time, priority and process number in ascending order using selection sort
+    for(i=0;i<n;i++)
+    {
+        pos=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(priority[j]<priority[pos])
+                pos=j;
+        }
+ 
+        temp=process[i];
+        process[i]=process[pos];
+        process[pos]=temp;
+ 
+        temp=brust[i];
+        brust[i]=brust[pos];
+        brust[pos]=temp;
+ 
+        temp=priority[i];
+        priority[i]=priority[pos];
+        priority[pos]=temp;
+        
+    }
+    
+	//assign one or more lottery numbers to each process
+	int p=1,m_ticket=0;
+	for(i=0;i<n;i++)
+	{
+		lottery[i] = (brust[i]/quantom) + (n-priority[i]);
+		for (z=0;z<lottery[i];z++) 
+		{
+            ticket[i][z] = p++;
+            m_ticket = p;
+        }
+	}
+	
+	int winner = (rand()%m_ticket-1)+ 1;
+
+	return  processes[winner].stackAddress;
+
 }
 
 // Returns pid?
