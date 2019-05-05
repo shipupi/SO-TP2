@@ -25,12 +25,12 @@ int main() {
 	// 	// o a sleep
 	// }
 	while(1) {
-		a++;
-		if (a%25000000 == 0)
-		{
-			b++;
-			puint(b);
-		}
+		// a++;
+		// if (a%25000000 == 0)
+		// {
+		// 	b++;
+		// 	puint(b);
+		// }
 	}
 	return 1;
 }

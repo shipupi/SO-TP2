@@ -24,6 +24,19 @@ int rand(){return getSeconds();}
 static PCB processes[MAXPROCESSES]; 
 
 
+int chooseNextProcess2(int ap[], int n) {
+	int chosen = ap[0];
+	for (int i = 0; i < n; ++i)
+	{
+		if (ap[i] == activeProcess && i != n-1) {
+			// Si no estoy en el ultimo, devuelvo el siguiente al q estoy
+			return ap[i+1];
+		}
+	}
+	// Si estoy en el ultimo (o en uno q ya no esta activo) devuelvo el primero
+	return chosen;
+}
+
 int chooseNextProcess(int ap[], int n) {
 	
 	int ticket[n][MAXPROCESSES]; // maximum required
@@ -106,7 +119,7 @@ void * schedule(void * oldStack) {
 		processes[activeProcess].stackAddress = oldStack;
 	} 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess(ap, n);;
+	activeProcess = chooseNextProcess2(ap, n);;
 	return processes[activeProcess].stackAddress;
 }
 
@@ -239,6 +252,10 @@ void listProcesses() {
 
 		nextLine();
 	}
+}
+
+void sleep() {
+
 } 
 
 
