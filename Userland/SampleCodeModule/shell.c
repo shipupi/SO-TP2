@@ -22,7 +22,7 @@ int to_num(char * s , int dim){
 	}
 	return n;
 }
-
+/*
 int strlen(char * str){ //todo: agregar a string.h
 	int n = 0;
 	for(int i = 0 ; str[i]!='\0';i++){
@@ -30,7 +30,7 @@ int strlen(char * str){ //todo: agregar a string.h
 	}
 	return n;
 }
-
+*/
 void shell_init() {
 	//Start Shell
 	static char buffer[MAX_COMMAND_LENGTH];
@@ -73,7 +73,7 @@ void shell_init() {
 			printf("background\n");
 		}
 		int arglen = strlen(arguments);
-		exit = shell_execute(command,background, arguments,int arglen);
+		exit = shell_execute(command,background, arguments,arglen);
 	}
 	printf("\nGoodbye.");
 	return;
@@ -130,7 +130,7 @@ int shell_execute(char *command,char background, char *arguments,int arglen) {
 		printf(arguments);
 		printf("\n");
 	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
-		if(strcmp(arguments,'')!=0){
+		if(strcmp(arguments,"")!=0){
 			int n = to_num(arguments,arglen);
 			sleepPID(n);
 		}else{
@@ -138,7 +138,7 @@ int shell_execute(char *command,char background, char *arguments,int arglen) {
 		}
 	}
 	else if (strcmp(command, "wake") == 0 || strcmp(command, "&wake") == 0){
-		if(strcmp(arguments,'')!=0){
+		if(strcmp(arguments,"")!=0){
 			int n = to_num(arguments,arglen);
 			wakePID(n);
 		}else{
