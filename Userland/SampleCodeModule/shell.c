@@ -1,4 +1,3 @@
-#include "std.h"
 #include "shell.h"
 #include "modules.h"
 #include "string.h"
@@ -6,24 +5,6 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
-
-int pow(int base,int n){
-	int i , p;
-	p=1;
-	for(i=1;i<=n;++i){
-		p = p*base;
-	}
-	return p;
-}
-
-
-int strlen(char * str){ //todo: agregar a string.h
-	int n = 0;
-	for(int i = 0 ; str[i]!='\0';i++){
-		n+=1;
-	}
-	return n;
-}
 
 void shell_init() {
 	//Start Shell
@@ -74,6 +55,7 @@ void shell_init() {
 
 int shell_execute(char *command,int background, char *arguments) {
 	int exit = 0;
+	int l = strlen(arguments);
 	printf("\n");
 	//Now we need to compare the command to all the possible options
 	if (strcmp(command, "help") == 0 || strcmp(command, "&help") == 0 ){
@@ -129,20 +111,22 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "test2") == 0 || strcmp(command, "&test2") == 0) {
 		os_wakePID(2);
 	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
-		int l = strlen(arguments);
-		if(l == 0){
+		if(l !=0){
 			int n = to_num(arguments,strlen(arguments));
+			printf("Sleep: ");
+			puint(n);
+			printf("\n");
 			sleepPID(n);
 		}else{
 			sleep();
 		}
 	}
 	else if (strcmp(command, "wake") == 0 || strcmp(command, "&wake") == 0){
-		if(strcmp(arguments,'')!=0){
-			int n = to_num(arguments,arglen);
+		if(l !=0){
+			int n = to_num(arguments,l);
 			wakePID(n);
 		}else{
-			wake();
+			printf("Error, argument needed");
 		}
 	}
 	else {
