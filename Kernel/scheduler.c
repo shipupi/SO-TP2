@@ -25,28 +25,22 @@ static PCB processes[MAXPROCESSES];
 
 
 int chooseNextProcess(int ap[], int n) {
-	int chosen = ap[0];
-	for (int i = 0; i < n; ++i)
-	{
-		if (ap[i] == activeProcess && i != n-1) {
-			// Si no estoy en el ultimo, devuelvo el siguiente al q estoy
-			return ap[i+1];
-		}
-	}
-	int ticket[n][20]; //20 because of other codes
-	int lottery[20];
+	
+	int ticket[n][MAXPROCESSES]; // maximum required
+	int lottery[MAXPROCESSES];
 	int p=1,m_ticket=0;
 	int priority[n];
 	int i,z;
+	int winner = 0;
 
-	//initialize priority
+	//initialize prioritys
 	int t = 0;
 	int index[n];
 	for (i = 0; i < MAXPROCESSES && t<n; ++i)
 	{
 		if (processes[i].status == PCB_READY)
 		{
-			 // aca buscar el id del proceso para despues retornar
+	
 			priority[t] = processes[i].priority;
 			index[t] = i;
 			t++;
@@ -68,7 +62,7 @@ int chooseNextProcess(int ap[], int n) {
 	}
 
 	int winner_ticket = (rand()%m_ticket-1)+ 1;
-	int winner = 0;
+	
 	for(i =0;i<n;i++){
 
         for(z=0;z<lottery[i];z++){
@@ -77,15 +71,7 @@ int chooseNextProcess(int ap[], int n) {
             }
         }
     }
-    /*printWhiteString("------------------------");
-    nextLine();
-    printUint(index[winner]);
-    nextLine();
-    printUint(chosen);
-    nextLine();*/
     return index[winner];
-	// Si estoy en el ultimo (o en uno q ya no esta activo) devuelvo el primero
-	return chosen;
 }
 
 void * schedule(void * oldStack) {
