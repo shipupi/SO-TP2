@@ -145,6 +145,25 @@ void sys_sleep(){
 	printWhiteString("SLEEP");
 }
 
+void sys_ipc_create(char * id,uint64_t size){
+	printWhiteString("IPC_CREATE");
+}
+
+void sys_ipc_write(char * id,char * string,uint64_t messageSize){
+	printWhiteString("IPC_WRITE");
+}
+
+void sys_ipc_read(char * id,char * string,uint64_t messageSize){
+	printWhiteString("IPC_READ");
+}
+
+void sys_sleepPID(int pid){
+	printWhiteString("SLEEP_PID");
+}
+
+void sys_wakePID(int pid){
+	printWhiteString("WAKE_PID");
+}
 
 
 

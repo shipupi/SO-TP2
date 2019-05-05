@@ -35,6 +35,11 @@ EXTERN sys_addProcess
 EXTERN sys_endProcess
 EXTERN sys_listProcesses
 EXTERN sys_sleep
+EXTERN sys_ipc_create
+EXTERN sys_ipc_write
+EXTERN sys_ipc_read
+EXTERN sys_sleepPID
+EXTERN sys_wakePID
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN printUint
@@ -223,6 +228,19 @@ _syscall:
   je .syscall0F
 
   cmp rdi, 0x10   ; syscall del sleep
+  je .syscall10
+
+  cmp rdi, 0x11   ; syscall de create
+  je .syscall11
+
+  cmp rdi, 0x12   ; syscall de write
+  je .syscall12
+
+  cmp rdi, 0x13   ; syscall de read
+  je .syscall13
+
+  cmp rdi, 0x14   ; syscall de sleepPID
+  je .syscall14
 
 .continue:
 	mov rsp, rbp
@@ -317,6 +335,36 @@ _syscall:
 
 .syscall10:
   call sys_sleep
+  jmp .continue
+
+.syscall11:
+  mov rdi, rsi
+  mov rsi, rdx
+  call sys_ipc_create
+  jmp .continue
+
+.syscall12:
+  mov rdi, rsi
+  mov rsi, rdx
+  mov rdx, rcx
+  call sys_ipc_write
+  jmp .continue
+
+.syscall13:
+  mov rdi, rsi
+  mov rsi, rdx
+  mov rdx, rcx
+  call sys_ipc_read
+  jmp .continue
+
+.syscall14:
+  mov rdi, rsi
+  call sys_sleepPID
+  jmp .continue
+
+.syscall15:
+  mov rdi, rsi
+  call sys_wakePID
   jmp .continue
 
 ; EXCEPTIONS 
@@ -472,3 +520,5 @@ section .data
   regR13 db "R13: ", 0
   regR14 db "R14: ", 0
   regR15 db "R15: ", 0
+
+

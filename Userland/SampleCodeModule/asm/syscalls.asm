@@ -14,6 +14,11 @@ GLOBAL os_addProcess
 GLOBAL os_endProcess
 GLOBAL os_listProcesses
 GLOBAL os_sleep
+GLOBAL os_ipc_create
+GLOBAL os_ipc_write
+GLOBAL os_ipc_read
+GLOBAL os_sleepPID
+GLOBAL os_wakePID
 
 section .text
 
@@ -209,11 +214,53 @@ os_sleep:
 	int 80h
 	finish
 
+os_ipc_create:
+	start
+	mov rdx, rsi
+	mov rsi,rdi
+	mov rdi, 0x11
+	int 80h
+	finish
+
+os_ipc_read:
+	start
+	mov rcx,rdx
+	mov rdx,rsi
+	mov rsi,rdi
+	mov rdi, 0x12
+	int 80h
+	finish
+
+os_ipc_write:
+	start
+	mov rcx,rdx
+	mov rdx,rsi
+	mov rsi,rdi
+	mov rdi, 0x13
+	int 80h
+	finish
+
+os_sleepPID:
+	start
+	mov rsi,rdi
+	mov rdi, 0x14
+	int 80h
+	finish
+
+os_wakePID:
+	start
+	mov rsi,rdi
+	mov rdi, 0x15
+	int 80h
+	finish
+
 section .data
 	timeArray times 6 DW 0
 
 section .bb
 	aux resb 4	; para enteros
+
+
 
 
 

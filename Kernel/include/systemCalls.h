@@ -24,6 +24,12 @@ uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t for
 void sys_endProcess(int pid);
 void sys_listProcesses();
 void sys_sleep();
+void sys_ipc_create(char * id,uint64_t size);
+void sys_ipc_write(char * id,char * string,uint64_t messageSize);
+void sys_ipc_read(char * id,char * string,uint64_t messageSize);
+void sys_sleepPID(int pid);
+void sys_wakePID(int pid);
 #endif /* SYSTEMCALLS_H */
+
 
 
