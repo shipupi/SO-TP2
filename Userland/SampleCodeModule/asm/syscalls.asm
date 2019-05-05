@@ -19,6 +19,8 @@ GLOBAL os_ipc_write
 GLOBAL os_ipc_read
 GLOBAL os_sleepPID
 GLOBAL os_wakePID
+GLOBAL os_ipc_list
+GLOBAL os_ipc_close
 
 section .text
 
@@ -254,14 +256,24 @@ os_wakePID:
 	int 80h
 	finish
 
+os_ipc_list:
+	start
+	mov rdi, 0x16
+	int 80h
+	finish
+
+os_ipc_close:
+	start
+	mov rsi,rdi
+	mov rdi,0x17
+	int 80h
+	finish
+
 section .data
 	timeArray times 6 DW 0
 
 section .bb
 	aux resb 4	; para enteros
-
-
-
 
 
 

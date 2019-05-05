@@ -169,6 +169,11 @@ void sys_wakePID(int pid){
 	wakePID(pid);
 }
 
+void sys_ipc_list(){
 
+}
 
+void sys_ipc_close(char * id){
+
+}
 

@@ -40,6 +40,8 @@ EXTERN sys_ipc_write
 EXTERN sys_ipc_read
 EXTERN sys_sleepPID
 EXTERN sys_wakePID
+EXTERN sys_ipc_list;
+EXTERN sys_ipc_close;
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN printUint
@@ -244,6 +246,12 @@ _syscall:
   cmp rdi, 0x15   ; syscall de sleepPID
   je .syscall15
 
+  cmp rdi, 0x16   ; syscall de ipc_list
+  je .syscall16
+
+  cmp rdi, 0x17   ; syscall de ipc_close
+  je .syscall17
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -371,6 +379,14 @@ _syscall:
   call sys_wakePID
   jmp .continue
 
+.syscall16:
+  call sys_ipc_list
+  jmp .continue
+
+.syscall17
+  call sys_ipc_close
+  mov rdi, rsi
+  jmp .continue
 
 
 ; EXCEPTIONS 

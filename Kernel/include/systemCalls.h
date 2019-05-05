@@ -29,6 +29,8 @@ void sys_ipc_write(char * id,char * string,uint64_t messageSize);
 void sys_ipc_read(char * id,char * string,uint64_t messageSize);
 void sys_sleepPID(int pid);
 void sys_wakePID(int pid);
+void sys_ipc_list();
+void sys_ipc_close(char *);
 #endif /* SYSTEMCALLS_H */
 
 

@@ -23,7 +23,7 @@ void os_ipc_write(char * id,char * string,uint64_t messageSize);
 void os_ipc_read(char * id,char * string,uint64_t messageSize);
 void os_sleepPID(int pid);
 void os_wakePID(int pid);
+void os_ipc_list();
+void os_ipc_close(char *);
 #endif
-
-
 
