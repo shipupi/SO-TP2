@@ -1,8 +1,8 @@
 #ifndef STDIO_H
 #define STDIO_H
 
-void printInt(int num);
-void printUnt(int num);
+void pint(int num);
+void puint(int num);
 char getChar();
 void putChar(char c);
 void printf(char * str);

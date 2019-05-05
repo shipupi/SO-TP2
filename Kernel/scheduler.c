@@ -38,9 +38,6 @@ int chooseNextProcess(int ap[], int n) {
 }
 
 void * schedule(void * oldStack) {
-	// nextLine();
-	// printWhiteString("Schedule!");
-	// nextLine();
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
@@ -50,7 +47,6 @@ void * schedule(void * oldStack) {
 	int i;
 	int n = 0;
 	int ap[MAXPROCESSES];
-	int chosen;
 	for (i = 0; i < MAXPROCESSES; ++i)
 	{
 		if (processes[i].status == PCB_READY)
@@ -62,15 +58,10 @@ void * schedule(void * oldStack) {
 
 	// Si no hay processescesos activos, hago un halt
 	// Pero hay q ver como arreglo el stack?
-	// if (n == 0)
-	// {
-		
-	// }
-
-
-	// Si hay procesos activos, me fijo a cual le toca
-	// POr ahora programo un round robin comun, hay q cambiarlo al lottery schedule
-	
+	if (n == 0)
+	{
+		// sleep?
+	}
 
 	// Tengo la cantidad de procesos activos y los tengo metidos en un array
 	if (activeProcess != -1) {

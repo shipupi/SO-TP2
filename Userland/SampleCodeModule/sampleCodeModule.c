@@ -29,7 +29,7 @@ int main() {
 		if (a%25000000 == 0)
 		{
 			b++;
-			printUint(b);
+			puint(b);
 		}
 	}
 	return 1;

@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include "syscalls.h"
 
 char getChar() {
@@ -34,7 +33,7 @@ void printf(char * str) {
 }
 
 
-void printInt(int num) {
+void pint(int num) {
   char string[10];
   int remainder;
   int index = 0;
@@ -75,7 +74,7 @@ void printInt(int num) {
   printf(string);
 }
 
-void printUint(uint64_t num) {
+void puint(uint64_t num) {
   char string[10];
   int remainder;
   int index = 0;

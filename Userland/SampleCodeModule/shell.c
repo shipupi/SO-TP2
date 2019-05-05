@@ -3,7 +3,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "syscalls.h"
-
+#include "applications.h"
 
 void shell_init() {
 	//Start Shell
@@ -16,7 +16,7 @@ void shell_init() {
 	while (!exit) {
 		printf("\n$>");
 		scanf(command, MAX_COMMAND_LENGTH);
-		if(command[0]=="&"){
+		if(command[0] == '&'){
 			background = 1;
 			printf("background\n");
 		}
