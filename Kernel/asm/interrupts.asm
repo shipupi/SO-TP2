@@ -36,8 +36,10 @@ EXTERN sys_endProcess
 EXTERN sys_listProcesses
 EXTERN printWhiteString
 EXTERN registerValueToString
+EXTERN printUint
 EXTERN nextLine
 EXTERN reboot
+EXTERN schedule
 
 SECTION .text
 
@@ -57,9 +59,13 @@ SECTION .text
 	push r13
 	push r14
 	push r15
+  push fs
+  push gs
 %endmacro
 
 %macro popState 0
+  pop gs
+  pop fs
 	pop r15
 	pop r14
 	pop r13
@@ -126,7 +132,25 @@ picSlaveMask:
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
-	irqHandlerMaster 0
+  ; Partes sacadas de rowdaboat
+  ; Context Switch
+  pushState
+
+  mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
+  call schedule  
+  ; push rax
+  ; mov rdi, rax
+  ; call printUint
+  ; pop rax
+  mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
+  mov al, 20h ; Send end of interrupt
+  out 20h, al
+  popState
+  iretq
+  ; End of context switch
+
+
+
 
 ;Keyboard
 _irq01Handler:
