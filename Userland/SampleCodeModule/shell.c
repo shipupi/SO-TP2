@@ -1,3 +1,4 @@
+#include "std.h"
 #include "shell.h"
 #include "modules.h"
 #include "string.h"
@@ -5,6 +6,24 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
+
+int pow(int base,int n){
+	int i , p;
+	p=1;
+	for(i=1;i<=n;++i){
+		p = p*base;
+	}
+	return p;
+}
+
+
+int strlen(char * str){ //todo: agregar a string.h
+	int n = 0;
+	for(int i = 0 ; str[i]!='\0';i++){
+		n+=1;
+	}
+	return n;
+}
 
 void shell_init() {
 	//Start Shell
@@ -110,11 +129,22 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "test2") == 0 || strcmp(command, "&test2") == 0) {
 		os_wakePID(2);
 	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
-		sleep();
+		int l = strlen(arguments);
+		if(l == 0){
+			int n = to_num(arguments,strlen(arguments));
+			sleepPID(n);
+		}else{
+			sleep();
+		}
 	}
-	else if (strcmp(command, "exit") == 0 || strcmp(command, "&exit") == 0) {
-		exit = 1;
-	} 
+	else if (strcmp(command, "wake") == 0 || strcmp(command, "&wake") == 0){
+		if(strcmp(arguments,'')!=0){
+			int n = to_num(arguments,arglen);
+			wakePID(n);
+		}else{
+			wake();
+		}
+	}
 	else {
 		printf("\nshell: ");
 		printf(command);
@@ -123,5 +153,7 @@ int shell_execute(char *command,int background, char *arguments) {
 
 	return exit;
 }
+
+
 
 
