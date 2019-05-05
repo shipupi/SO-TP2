@@ -4,7 +4,15 @@
 
 ###  Sleep()
 
-Pone un proceso a dormir
+Pone al proceso actual a dormir
+
+### sleepPID(int pid)
+
+Pone a un proceso a dormir
+
+### wakePID(int pid)
+
+Despierta un proceso
 
 ## IPCs
 

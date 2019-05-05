@@ -254,10 +254,20 @@ void listProcesses() {
 	}
 }
 
+
+// Sends active process to sleep
 void sleep() {
+	processes[activeProcess].status = PCB_LOCK;
+}
 
-} 
 
+void sleepPID(int pid) {
+	processes[pid].status = PCB_LOCK;
+}
+
+void wakePID(int pid) {
+	processes[pid].status = PCB_READY;
+}
 
 
 

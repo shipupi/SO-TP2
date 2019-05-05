@@ -11,3 +11,12 @@ int strcmp(char * str1, char * str2) {
 		str2++;
 	}
 }
+
+
+int strlen(char * string) {
+	int i = 0;
+	while(*(string + i)) {
+		i++;
+	} 
+	return i;
+} 
