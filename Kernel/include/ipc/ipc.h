@@ -3,4 +3,12 @@
 
 #include <stdint.h>
 
+typedef struct IPC{
+    char * id;
+    void * address;
+    int i;
+} IPC;
+
 #endif
+
+
