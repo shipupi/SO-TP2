@@ -26,7 +26,9 @@ void shell_init() {
 		{
 			if (buffer[i] == ' ' && i != length-1) {
 				memcopy((void *) (uintptr_t) command, buffer, i);
+				command[i+1] = 0;
 				memcopy((void *) (uintptr_t) arguments, buffer + i + 1, length - i - 1);
+				arguments[length -i] = 0;
 				found = 1;
 				break;
 			}
@@ -92,7 +94,7 @@ int shell_execute(char *command,char background, char *arguments) {
 		//testScheduler();
 	}
 	else if (strcmp(command, "test") == 0 || strcmp(command, "&test") == 0) {
-		printf("Command: \n");
+		printf("\nCommand:");
 		printf(command);
 		printf("\n");
 		printf("arguments: ");
