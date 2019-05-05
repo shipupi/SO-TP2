@@ -5,4 +5,7 @@
 int testMemoryManager();
 int ps();
 void sleep();
+void wake();
+void sleepPID(int pid);
+void wakePID(int pid);
 #endif

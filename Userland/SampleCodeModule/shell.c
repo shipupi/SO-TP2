@@ -6,6 +6,31 @@
 #include "applications.h"
 #include "memory.h"
 
+int pow(int base,int n){
+	int i , p;
+	p=1;
+	for(i=1;i<=n;++i){
+		p = p*base;
+	}
+	return p;
+}
+
+int to_num(char * s , int dim){
+	int n;
+	for(int i = 0 ; s[i]!='\0';i++){
+		n += pow(10,dim - i - 1)*(s[i]-'0');
+	}
+	return n;
+}
+
+int strlen(char * str){ //todo: agregar a string.h
+	int n = 0;
+	for(int i = 0 ; str[i]!='\0';i++){
+		n+=1;
+	}
+	return n;
+}
+
 void shell_init() {
 	//Start Shell
 	static char buffer[MAX_COMMAND_LENGTH];
@@ -47,13 +72,14 @@ void shell_init() {
 			background = 1;
 			printf("background\n");
 		}
-		exit = shell_execute(command,background, arguments);
+		int arglen = strlen(arguments);
+		exit = shell_execute(command,background, arguments,int arglen);
 	}
 	printf("\nGoodbye.");
 	return;
 }
 
-int shell_execute(char *command,char background, char *arguments) {
+int shell_execute(char *command,char background, char *arguments,int arglen) {
 	int exit = 0;
 
 	//Now we need to compare the command to all the possible options
@@ -104,11 +130,21 @@ int shell_execute(char *command,char background, char *arguments) {
 		printf(arguments);
 		printf("\n");
 	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
-		sleep();
+		if(strcmp(arguments,'')!=0){
+			int n = to_num(arguments,arglen);
+			sleepPID(n);
+		}else{
+			sleep();
+		}
 	}
-	else if (strcmp(command, "exit") == 0 || strcmp(command, "&exit") == 0) {
-		exit = 1;
-	} 
+	else if (strcmp(command, "wake") == 0 || strcmp(command, "&wake") == 0){
+		if(strcmp(arguments,'')!=0){
+			int n = to_num(arguments,arglen);
+			wakePID(n);
+		}else{
+			wake();
+		}
+	}
 	else {
 		printf("\nshell: ");
 		printf(command);
@@ -117,5 +153,7 @@ int shell_execute(char *command,char background, char *arguments) {
 
 	return exit;
 }
+
+
 
 
