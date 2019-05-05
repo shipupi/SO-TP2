@@ -20,3 +20,4 @@ int strlen(char * string) {
 	} 
 	return i;
 } 
+

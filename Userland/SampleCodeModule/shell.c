@@ -11,12 +11,15 @@ void shell_init() {
 	static char buffer[MAX_COMMAND_LENGTH];
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
+	
 	char background = 0;
 	int exit = 0;
 	printf("\nARQ TPE Group 2");
 	printf("\nWhat module would you like to execute? (try 'help')");
 
 	while (!exit) {
+		memclear(command, MAX_COMMAND_LENGTH);
+		memclear(arguments, MAX_COMMAND_LENGTH);
 		printf("\n$>");
 		scanf(buffer, MAX_COMMAND_LENGTH);
 		int length = strlen(buffer);

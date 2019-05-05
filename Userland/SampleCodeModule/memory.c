@@ -38,3 +38,24 @@ void * memcopy(void * destination, const void * source, uint64_t length)
 
 	return destination;
 }
+
+
+void * memclear(void * buffer, uint64_t length) {
+	uint64_t i;
+	if ((uint64_t)buffer % sizeof(uint32_t) == 0 &&
+		length % sizeof(uint32_t) == 0)
+	{
+		uint32_t *b = (uint32_t *) buffer;
+		for (i = 0; i < length / sizeof(uint32_t); i++)
+			b[i] = 0;
+	}
+	else
+	{
+		uint8_t * b = (uint8_t*)buffer;
+
+		for (i = 0; i < length; i++)
+			b[i] = 0;
+	}
+
+	return buffer;
+}

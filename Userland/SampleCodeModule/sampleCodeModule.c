@@ -18,19 +18,8 @@ int main() {
 	//os_addProcess(&shell_init,4,name,1,50);
 	os_listProcesses();
 	// shell_init();
-	int a = 0;
-	int b= 0;
-	// while(1) {
-	// 	// Llamar a halt?
-	// 	// o a sleep
-	// }
 	while(1) {
-		// a++;
-		// if (a%25000000 == 0)
-		// {
-		// 	b++;
-		// 	puint(b);
-		// }
+		
 	}
 	return 1;
 }
