@@ -146,7 +146,7 @@ void sys_sleep(){
 }
 
 void sys_ipc_create(char * id,uint64_t size){
-	printWhiteString("IPC_CREATE");
+	ipc_create(id,size);
 }
 
 void sys_ipc_write(char * id,char * string,uint64_t messageSize){
@@ -170,7 +170,7 @@ void sys_wakePID(int pid){
 }
 
 void sys_ipc_list(){
-
+	ipc_list();
 }
 
 void sys_ipc_close(char * id){

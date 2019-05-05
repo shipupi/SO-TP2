@@ -92,7 +92,7 @@ int shell_execute(char *command,int background, char *arguments) {
 	} 
 	else if (strcmp(command, "prodCons") == 0 || strcmp(command, "&prodCons") == 0) {
 		//background == 0 ? exit() : /*?*/ ;
-		//exit();
+		//prodcons();
 	} 
 	else if (strcmp(command, "ps") == 0 || strcmp(command, "&ps") == 0) {
 		//background == 0 ? ps() : /*?*/ ;
@@ -134,6 +134,12 @@ int shell_execute(char *command,int background, char *arguments) {
 		}else{
 			printf("Error, argument needed");
 		}
+	}
+	else if (strcmp(command, "createIPC") == 0 || strcmp(command, "&createIPC") == 0){
+		//os_ipc_create();
+	}
+	else if (strcmp(command, "testIPC") == 0 || strcmp(command, "&testIPC") == 0){
+		testIPC();
 	}
 	else {
 		printf("\nshell: ");
