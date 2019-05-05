@@ -33,6 +33,57 @@ int chooseNextProcess(int ap[], int n) {
 			return ap[i+1];
 		}
 	}
+	int ticket[n][20]; //20 because of other codes
+	int lottery[20];
+	int p=1,m_ticket=0;
+	int priority[n];
+	int i,z;
+
+	//initialize priority
+	int t = 0;
+	int index[n];
+	for (i = 0; i < MAXPROCESSES && t<n; ++i)
+	{
+		if (processes[i].status == PCB_READY)
+		{
+			 // aca buscar el id del proceso para despues retornar
+			priority[t] = processes[i].priority;
+			index[t] = i;
+			t++;
+		}
+		
+
+	}
+
+	for(i=0;i<n;i++)
+	{
+		lottery[i]=(priority[i])+1;
+
+		for (z=0;z<lottery[i];z++) 
+		{
+
+            ticket[i][z] = p++;
+            m_ticket = p;
+        }
+	}
+
+	int winner_ticket = (rand()%m_ticket-1)+ 1;
+	int winner = 0;
+	for(i =0;i<n;i++){
+
+        for(z=0;z<lottery[i];z++){
+            if(ticket[i][z]==winner_ticket){
+                winner=i;
+            }
+        }
+    }
+    /*printWhiteString("------------------------");
+    nextLine();
+    printUint(index[winner]);
+    nextLine();
+    printUint(chosen);
+    nextLine();*/
+    return index[winner];
 	// Si estoy en el ultimo (o en uno q ya no esta activo) devuelvo el primero
 	return chosen;
 }
