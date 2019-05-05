@@ -17,8 +17,8 @@ void os_schedule();
 uint8_t os_addProcess(void * entryPoint , uint64_t priority , char name,uint8_t foreground,uint64_t size);
 void os_endProcess(int pid);
 void os_listProcesses();
+void os_sleep();
 #endif
-
 
 
 

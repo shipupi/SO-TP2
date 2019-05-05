@@ -23,7 +23,7 @@ void sys_schedule();
 uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size);
 void sys_endProcess(int pid);
 void sys_listProcesses();
+void sys_sleep();
 #endif /* SYSTEMCALLS_H */
-
 
 

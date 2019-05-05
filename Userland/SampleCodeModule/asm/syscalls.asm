@@ -202,9 +202,18 @@ os_listProcesses:
 	int 80h
 	finish
 
+os_sleep:
+	start
+	mov rdi, 0x10
+	int 80h
+	finish
 
 section .data
 	timeArray times 6 DW 0
 
 section .bb
 	aux resb 4	; para enteros
+
+
+
+

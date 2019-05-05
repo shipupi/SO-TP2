@@ -79,6 +79,10 @@ int shell_execute(char *command,char background) {
 		//testScheduler();
 		return exit;
 	}
+	else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
+		sleep();
+		return exit;
+	}
 	else if (strcmp(command, "exit") == 0 || strcmp(command, "&exit") == 0) {
 		exit = 1;
 		return exit;

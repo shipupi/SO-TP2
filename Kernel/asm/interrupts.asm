@@ -34,6 +34,7 @@ EXTERN sys_schedule
 EXTERN sys_addProcess
 EXTERN sys_endProcess
 EXTERN sys_listProcesses
+EXTERN sys_sleep
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN printUint
@@ -221,6 +222,8 @@ _syscall:
   cmp rdi, 0x0F   ; syscall de listProcesses
   je .syscall0F
 
+  cmp rdi, 0x10   ; syscall del sleep
+
 .continue:
 	mov rsp, rbp
 	pop rbp
@@ -310,6 +313,10 @@ _syscall:
 
 .syscall0F:
   call sys_listProcesses
+  jmp .continue
+
+.syscall10:
+  call sys_sleep
   jmp .continue
 
 ; EXCEPTIONS 

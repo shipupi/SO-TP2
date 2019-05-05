@@ -4,5 +4,5 @@
 
 int testMemoryManager();
 int ps();
-
+void sleep();
 #endif

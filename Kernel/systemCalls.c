@@ -140,3 +140,11 @@ void sys_endProcess(int pid) {
 void sys_listProcesses() {
 	listProcesses();
 }
+
+void sys_sleep(){
+	printWhiteString("SLEEP");
+}
+
+
+
+
