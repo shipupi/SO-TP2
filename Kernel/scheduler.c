@@ -22,7 +22,7 @@ void * schedule(void * oldStack) {
 // Returns pid?
 uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t foreground , uint64_t size){
 	struct PCB newPCB;
-	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
+	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);//size?
 	newPCB.pid = currentPID;
 	newPCB.stackAddress = newStack;
 	newPCB.status = PCB_READY;
@@ -72,6 +72,7 @@ void listProcesses() {
 		nextLine();
 	}
 } 
+
 
 
 
