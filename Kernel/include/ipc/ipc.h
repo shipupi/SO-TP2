@@ -3,12 +3,17 @@
 
 #include <stdint.h>
 
+#define ID_SIZE 40
+
 typedef struct IPC{
-    char * id;
+    char id[ID_SIZE];
     void * address;
     int i;
 } IPC;
 
 #endif
+
+
+
 
 
