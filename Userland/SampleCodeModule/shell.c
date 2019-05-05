@@ -12,7 +12,7 @@ void shell_init() {
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
 	
-	char background = 0;
+	int background = 0;
 	int exit = 0;
 	printf("\nARQ TPE Group 2");
 	printf("\nWhat module would you like to execute? (try 'help')");
@@ -53,9 +53,9 @@ void shell_init() {
 	return;
 }
 
-int shell_execute(char *command,char background, char *arguments) {
+int shell_execute(char *command,int background, char *arguments) {
 	int exit = 0;
-
+	printf("\n");
 	//Now we need to compare the command to all the possible options
 	if (strcmp(command, "help") == 0 || strcmp(command, "&help") == 0 ){
 		//background == 0 ? help() : /*?*/ ;
@@ -68,6 +68,14 @@ int shell_execute(char *command,char background, char *arguments) {
 	else if (strcmp(command, "pong") == 0 || strcmp(command, "&pong") == 0) {
 		//background == 0 ? pong() : /*?*/ ;
 		pong();
+	} 
+	else if (strcmp(command, "numbers") == 0 || strcmp(command, "&numbers") == 0) {
+		if (background)
+		{
+			os_addProcess(&printNumbers,1,'c',1,4000);
+		} else {
+			printNumbers();
+		}
 	} 
 	else if (strcmp(command, "exceptionDiv") == 0 || strcmp(command, "&exceptionDiv") == 0) {
 		//background == 0 ? exceptioDiv0 : /*?*/ ;
@@ -97,12 +105,10 @@ int shell_execute(char *command,char background, char *arguments) {
 		//testScheduler();
 	}
 	else if (strcmp(command, "test") == 0 || strcmp(command, "&test") == 0) {
-		printf("\nCommand:");
-		printf(command);
-		printf("\n");
-		printf("arguments: ");
-		printf(arguments);
-		printf("\n");
+		os_sleepPID(2);
+	}
+	else if (strcmp(command, "test2") == 0 || strcmp(command, "&test2") == 0) {
+		os_wakePID(2);
 	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
 		sleep();
 	}

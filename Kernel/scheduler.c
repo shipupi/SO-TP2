@@ -266,7 +266,10 @@ void sleepPID(int pid) {
 }
 
 void wakePID(int pid) {
-	processes[pid].status = PCB_READY;
+	if (PIDCounter >= pid + 1 && processes[pid].status == PCB_LOCK)
+	{
+		processes[pid].status = PCB_READY;
+	}
 }
 
 

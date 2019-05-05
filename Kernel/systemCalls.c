@@ -158,11 +158,15 @@ void sys_ipc_read(char * id,char * string,uint64_t messageSize){
 }
 
 void sys_sleepPID(int pid){
-	printWhiteString("SLEEP_PID");
+	printWhiteString("SLEEP_PID ");
+	printInt(pid);
+	sleepPID(pid);
 }
 
 void sys_wakePID(int pid){
 	printWhiteString("WAKE_PID");
+	printInt(pid);
+	wakePID(pid);
 }
 
 

@@ -18,6 +18,8 @@ uint8_t os_addProcess(void * entryPoint , uint64_t priority , char name,uint8_t 
 void os_endProcess(int pid);
 void os_listProcesses();
 void os_sleep();
+void os_sleepPID(int pid);
+void os_wakePID(int pid);
 #endif
 
 

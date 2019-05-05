@@ -46,6 +46,7 @@ EXTERN printUint
 EXTERN nextLine
 EXTERN reboot
 EXTERN schedule
+EXTERN sleep
 
 SECTION .text
 
@@ -179,11 +180,9 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 _syscall:
-	push rbp
-	mov rbp, rsp
 
-  	cmp rdi, 0x01     ; syscall de total ticks
-  	je .syscall01
+	cmp rdi, 0x01     ; syscall de total ticks
+	je .syscall01
 
  	cmp rdi, 0x02     ; syscall de ticks per sec
   	je .syscall02
@@ -242,9 +241,10 @@ _syscall:
   cmp rdi, 0x14   ; syscall de sleepPID
   je .syscall14
 
+  cmp rdi, 0x15   ; syscall de sleepPID
+  je .syscall15
+
 .continue:
-	mov rsp, rbp
-	pop rbp
 	iretq	;Dont use ret when returning from int call
 
 
@@ -333,10 +333,14 @@ _syscall:
   call sys_listProcesses
   jmp .continue
 
-.syscall10:
-  call sys_sleep
-  jmp .continue
-
+.syscall10:  
+  pushState
+  call sleep
+  mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
+  call schedule  
+  mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
+  popState
+  iretq
 .syscall11:
   mov rdi, rsi
   mov rsi, rdx
@@ -366,6 +370,8 @@ _syscall:
   mov rdi, rsi
   call sys_wakePID
   jmp .continue
+
+
 
 ; EXCEPTIONS 
 
