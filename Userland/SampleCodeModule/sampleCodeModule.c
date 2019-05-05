@@ -17,11 +17,13 @@ int main() {
 	// os_endProcess(2);
 	//os_addProcess(&shell_init,4,name,1,50);
 	os_listProcesses();
-	// shell_init();
+	//shell_init();
 	while(1) {
 		
 	}
 	return 1;
 }
+
+
 
 

@@ -110,11 +110,13 @@ int shell_execute(char *command,int background, char *arguments) {
 	}
 	else if (strcmp(command, "test2") == 0 || strcmp(command, "&test2") == 0) {
 		os_wakePID(2);
-	}else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
+	}
+	else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
+		printf(command);
+		printf("\n");
 		if(l !=0){
-			int n = to_num(arguments,strlen(arguments));
-			printf("Sleep: ");
-			puint(n);
+			int n = to_num(arguments,l);
+			pint(n);
 			printf("\n");
 			sleepPID(n);
 		}else{
@@ -122,8 +124,12 @@ int shell_execute(char *command,int background, char *arguments) {
 		}
 	}
 	else if (strcmp(command, "wake") == 0 || strcmp(command, "&wake") == 0){
+		printf(command);
+		printf("\n");
 		if(l !=0){
 			int n = to_num(arguments,l);
+			pint(n);
+			printf("\n");
 			wakePID(n);
 		}else{
 			printf("Error, argument needed");
