@@ -6,31 +6,6 @@
 #include "applications.h"
 #include "memory.h"
 
-int pow(int base,int n){
-	int i , p;
-	p=1;
-	for(i=1;i<=n;++i){
-		p = p*base;
-	}
-	return p;
-}
-
-int to_num(char * s , int dim){
-	int n;
-	for(int i = 0 ; s[i]!='\0';i++){
-		n += pow(10,dim - i - 1)*(s[i]-'0');
-	}
-	return n;
-}
-/*
-int strlen(char * str){ //todo: agregar a string.h
-	int n = 0;
-	for(int i = 0 ; str[i]!='\0';i++){
-		n+=1;
-	}
-	return n;
-}
-*/
 void shell_init() {
 	//Start Shell
 	static char buffer[MAX_COMMAND_LENGTH];
