@@ -7,7 +7,8 @@ int ps();
 void sleep();
 void sleepPID(int pid);
 void wakePID(int pid);
+void prodcons();
+void testIPC();
 #endif
-
 
 

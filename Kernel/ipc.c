@@ -8,16 +8,16 @@
 
 IPC arrIPC[N];
 
-int i = 0;
+int IPCcounter = 0;
 
 int ipc_create (char * id, uint64_t size){
     struct IPC newIPC;
     void * address = requestMemorySpace(size);
     memcpy(newIPC.id,id,ID_SIZE);
     newIPC.address = address;
-    newIPC.i = i;
-    arrIPC[i] = newIPC;
-    i++;
+    newIPC.IPCcounter = IPCcounter;
+    arrIPC[IPCcounter] = newIPC;
+    IPCcounter++;
 	return 1;
 }
 
@@ -26,6 +26,25 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
 }
 void ipc_read(char * id,char * string,uint64_t messageSize){
 
+}
+
+void ipc_list(){
+    int i;
+    nextLine();
+    printWhiteString("id | addresss | IPCcounter");
+    nextLine();
+    for (i = 0; i < IPCcounter ; ++i)
+    {
+        printWhiteString(arrIPC[i].id);
+        printWhiteString("   |     ");
+
+        printUint((uint64_t) (uintptr_t) arrIPC[i].address);
+        printWhiteString("    |    ");
+
+        printInt(arrIPC[i].IPCcounter);
+
+        nextLine();
+    }
 }
 
 uint32_t jenkins_one_at_a_time_hash(char *key, int len)

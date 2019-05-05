@@ -8,7 +8,7 @@
 typedef struct IPC{
     char id[ID_SIZE];
     void * address;
-    int i;
+    int IPCcounter;
 } IPC;
 
 #endif
