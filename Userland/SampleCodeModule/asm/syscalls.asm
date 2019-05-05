@@ -12,7 +12,8 @@ GLOBAL os_freeMemorySpace
 GLOBAL os_schedule
 GLOBAL os_addProcess
 GLOBAL os_endProcess
-GLOBAL os_listProcesses	
+GLOBAL os_listProcesses
+GLOBAL os_sleep
 
 section .text
 
