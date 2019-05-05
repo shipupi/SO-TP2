@@ -8,7 +8,7 @@ Pone un proceso a dormir
 
 ## IPCs
 
-### create_ipc(char * id, uint64_t size)
+### ipc_create(char * id, uint64_t size)
 
 Crea un IPC Con ID id y direccion de tamanio de memoria size
 
