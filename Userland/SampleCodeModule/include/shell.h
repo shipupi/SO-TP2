@@ -5,6 +5,6 @@
 #define MAX_COMMAND_LENGTH 1024
 
 void shell_init();
-int shell_execute(char *command);
+int shell_execute(char *command,char background);
 
 #endif

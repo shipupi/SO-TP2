@@ -172,6 +172,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
 	return 1;
+
 }
 
 // Ends the process
@@ -211,6 +212,7 @@ void listProcesses() {
 		nextLine();
 	}
 } 
+
 
 
 
