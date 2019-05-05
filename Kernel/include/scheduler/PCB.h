@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 
-#define PCB_READY 0
+#define PCB_READY 3
 #define PCB_LOCK 1
 #define PCB_ENDED 2
 

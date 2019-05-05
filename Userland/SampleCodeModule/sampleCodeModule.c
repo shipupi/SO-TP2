@@ -20,9 +20,13 @@ int main() {
 	// shell_init();
 	int a = 0;
 	int b= 0;
-	while(b < 1000) {
+	// while(1) {
+	// 	// Llamar a halt?
+	// 	// o a sleep
+	// }
+	while(1) {
 		a++;
-		if (a%250000 == 0)
+		if (a%25000000 == 0)
 		{
 			b++;
 			printUint(b);

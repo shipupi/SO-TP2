@@ -22,12 +22,25 @@ static int activeProcess = -1;
 int rand(){return getSeconds();}
 
 static PCB processes[MAXPROCESSES]; 
-static int currentProcess = 0;
+
+
+int chooseNextProcess(int ap[], int n) {
+	int chosen = ap[0];
+	for (int i = 0; i < n; ++i)
+	{
+		if (ap[i] == activeProcess && i != n-1) {
+			// Si no estoy en el ultimo, devuelvo el siguiente al q estoy
+			return ap[i+1];
+		}
+	}
+	// Si estoy en el ultimo (o en uno q ya no esta activo) devuelvo el primero
+	return chosen;
+}
 
 void * schedule(void * oldStack) {
-	nextLine();
-	printWhiteString("Schedule!");
-	nextLine();
+	// nextLine();
+	// printWhiteString("Schedule!");
+	// nextLine();
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
@@ -37,6 +50,7 @@ void * schedule(void * oldStack) {
 	int i;
 	int n = 0;
 	int ap[MAXPROCESSES];
+	int chosen;
 	for (i = 0; i < MAXPROCESSES; ++i)
 	{
 		if (processes[i].status == PCB_READY)
@@ -44,19 +58,31 @@ void * schedule(void * oldStack) {
 			ap[n] = i;
 			n++;
 		}
-		
-
 	}
+
+	// Si no hay processescesos activos, hago un halt
+	// Pero hay q ver como arreglo el stack?
+	// if (n == 0)
+	// {
+		
+	// }
+
+
+	// Si hay procesos activos, me fijo a cual le toca
+	// POr ahora programo un round robin comun, hay q cambiarlo al lottery schedule
+	
 
 	// Tengo la cantidad de procesos activos y los tengo metidos en un array
 	if (activeProcess != -1) {
 		// Piso el stack del proceso anterior
 		processes[activeProcess].stackAddress = oldStack;
-	}
+	} 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = ap[0];
+	activeProcess = chooseNextProcess(ap, n);;
 	return processes[activeProcess].stackAddress;
 }
+
+
 
 
 void * schedulet(void * oldStack) {

@@ -7,7 +7,7 @@
 #include "include/naiveLegacy/naiveClock.h"
 #include "include/drivers/naiveKeyboard.h"
 #include "include/idtLoader.h"
-#include "interrupts.h"
+#include "include/interrupts.h"
 #include "include/drivers/time.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/scheduler/scheduler.h"
@@ -67,6 +67,7 @@ int main()
 	addProcess(sampleCodeModuleAddress, 1, 'a', 1, 50);
 	load_idt();
 	// Si llegue aca es xq volvio aca despues del primer schedule
+	// Que hacer?
 	while(1) {
 		_hlt();
 	}
