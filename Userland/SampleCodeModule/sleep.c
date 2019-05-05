@@ -9,7 +9,7 @@ void sleep(){
 	os_sleep();
 }
 
-void sleepPID(){
+void sleepPID(int pid){
 	printf("\nSLEEPPID");
 	os_sleep();
 }

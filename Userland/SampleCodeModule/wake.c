@@ -9,7 +9,7 @@ void wake(){
 	os_sleep();
 }
 
-void wakePID(){
+void wakePID(int pid){
 	printf("\nWAKEPID");
-	os_wake();
+	os_sleep();
 }
