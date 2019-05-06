@@ -13,20 +13,7 @@ IPC arrIPC[N];
 int ipcIndex = 0;
 int IPCcounter = 0;
 
-int ipc_create (char * id, uint64_t size){
-    struct IPC newIPC;
-    void * address = requestMemorySpace(size);
-    memcpy(newIPC.id,id,ID_SIZE);
-    newIPC.address = address;
-    newIPC.IPCcounter = IPCcounter;
-    newIPC.read = 0;
-    newIPC.unread = 0;
-    arrIPC[IPCcounter] = newIPC;
-    IPCcounter++;
-	return 1;
-}
-
-int findId( char * id) {
+int findId(char * id) {
     int foundId = -1;
     for (int i = 0; i < IPCcounter; ++i)
     {
@@ -37,6 +24,23 @@ int findId( char * id) {
     }
     return foundId;
 }
+
+int ipc_create (char * id, uint64_t size){
+    if(findId(id)==-1){
+        struct IPC newIPC;
+        void * address = requestMemorySpace(size);
+        memcpy(newIPC.id,id,ID_SIZE);
+        newIPC.address = address;
+        newIPC.IPCcounter = IPCcounter;
+        newIPC.read = 0;
+        newIPC.unread = 0;
+        arrIPC[IPCcounter] = newIPC;
+        IPCcounter++;
+        return 1;
+    }
+	return -1;
+}
+
 
 void ipc_write(char * id,char * string,uint64_t messageSize){
     int ipcId = findId(id);
@@ -80,7 +84,5 @@ void ipc_list(){
         nextLine();
     }
 }
-
-
 
 
