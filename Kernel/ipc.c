@@ -78,7 +78,7 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
 void ipc_list(){
     int i;
     nextLine();
-    printWhiteString("id | addresss | IPCCounter");
+    printWhiteString("id | addresss | IPCcounter | Read/Unread");
     nextLine();
     for (i = 0; i < IPCCounter ; ++i)
     {
@@ -88,7 +88,13 @@ void ipc_list(){
         printUint((uint64_t) (uintptr_t) arrIPC[i].address);
         printWhiteString("    |    ");
 
-        // printInt(arrIPC[i].IPCCounter);
+        printInt(arrIPC[i].IPCcounter);
+        printWhiteString("    |    ");
+
+        printUint((uint64_t) (uintptr_t)arrIPC[i].read);
+        printWhiteString("    |    ");
+
+        printUint((uint64_t) (uintptr_t)arrIPC[i].unread);
 
         nextLine();
     }
