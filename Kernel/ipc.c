@@ -11,32 +11,16 @@
 IPC arrIPC[N];
 
 int ipcIndex = 0;
-int IPCCounter = 0;
+int IPCcounter = 0;
 
-<<<<<<< HEAD
-int findId(char * id) {
-=======
-int ipc_create (char * id, uint64_t size){
-    struct IPC newIPC;
-    void * address = requestMemorySpace(size);
-    memcpy(newIPC.id,id,ID_SIZE);
-    newIPC.address = address;
-    newIPC.write = 0;
-    newIPC.read = 0;
-    newIPC.unread = 0;
-    newIPC.free = size;
-    arrIPC[IPCCounter] = newIPC;
-    IPCCounter++;
-	return 1;
-}
 
 int findId( char * id) {
->>>>>>> c2653375df640149c1e645d44428c9a4c71dc22b
     int foundId = -1;
-    for (int i = 0; i < IPCCounter; ++i)
+    for (int i = 0; i < IPCcounter; ++i)
     {
         if (strcmp(arrIPC[i].id, id) == 0) {
             foundId = i;
+            return i;
             break;
         }
     }
@@ -101,7 +85,7 @@ void ipc_list(){
     nextLine();
     printWhiteString("id | addresss | IPCcounter | Read/Unread");
     nextLine();
-    for (i = 0; i < IPCCounter ; ++i)
+    for (i = 0; i < IPCcounter ; ++i)
     {
         printWhiteString(arrIPC[i].id);
         printWhiteString("   |     ");
@@ -122,7 +106,4 @@ void ipc_list(){
 }
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> c2653375df640149c1e645d44428c9a4c71dc22b
