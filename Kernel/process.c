@@ -3,6 +3,7 @@
 #include "scheduler/process.h"
 #include "scheduler/PCB.h"
 #include "drivers/vesaDriver.h"
+#include "scheduler/scheduler.h"
 
 
 
@@ -21,13 +22,13 @@ StackFrame * fillStackFrame (PCB pcb, void * entryPoint ) {
 	frame->r9 =		0x009;
 	frame->r8 =		0x00A;
 	frame->rsi =	0x00B;
-	frame->rdi =	0x00C;
+	frame->rdi =	(uintptr_t)entryPoint;
 	frame->rbp =	0x00D;
 	frame->rdx =	0x00E;
 	frame->rcx =	0x00F;
 	frame->rbx =	0x010;
 	frame->rax =	0x011;
-	frame->rip =	(uint64_t)entryPoint;
+	frame->rip =	(uintptr_t) &runProcess;
 	frame->cs =		0x008;
 	frame->eflags = 0x202;
 	frame->rsp =	(uint64_t)&(frame->base);

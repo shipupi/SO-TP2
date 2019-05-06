@@ -6,6 +6,7 @@ GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
 
+GLOBAL timer_tick
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
 GLOBAL _irq02Handler
@@ -42,6 +43,7 @@ EXTERN sys_sleepPID
 EXTERN sys_wakePID
 EXTERN sys_ipc_list
 EXTERN sys_ipc_close
+EXTERN sys_halt
 
 EXTERN sys_mut_create
 EXTERN sys_mut_request
@@ -279,6 +281,9 @@ _syscall:
   cmp rdi, 0x1D   ; pid
   je .syscall1D
 
+  cmp rdi, 0x1E   ; halt
+  je .syscall1D
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -443,6 +448,10 @@ _syscall:
   call sys_pid
   jmp .continue
 
+
+.syscall1E:
+  hlt
+
 ; EXCEPTIONS 
 
 %macro pushAllRegisters 0
@@ -559,6 +568,11 @@ _exception0Handler:
 _exception6Handler:
 	exception invalidOp
 	
+
+timer_tick:
+  start
+  int 20h
+  finish
 
 haltcpu:
 	cli

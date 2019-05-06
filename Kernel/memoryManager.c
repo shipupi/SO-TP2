@@ -30,7 +30,6 @@ void initializeMemoryManager(){
 }
 
 void * requestMemorySpace(uint64_t requestedSpace){
-	
 
 	int32_t n = getBlocksForSize(requestedSpace); //me must find n contiguous 0's in an array
 	void * ret = (void *)(uintptr_t) -1;
@@ -61,6 +60,7 @@ void * requestMemorySpace(uint64_t requestedSpace){
 			break;
 		}
 	}
+
 	return ret;
 	}
 

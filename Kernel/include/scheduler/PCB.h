@@ -11,6 +11,7 @@
 typedef struct PCB {
 	uint64_t pid;
 	void * stackAddress;
+	void * baseAddress;
 	uint64_t status;
 	uint64_t priority;
 	char name;

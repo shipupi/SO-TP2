@@ -37,6 +37,8 @@ int sys_mut_request(char * id);
 int sys_mut_release(char * id);
 int sys_mut_delete(char * id);
 void sys_mut_list();
+void sys_halt();
+void timer_tick();
 #endif /* SYSTEMCALLS_H */
 
 

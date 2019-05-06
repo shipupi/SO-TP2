@@ -76,8 +76,10 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "numbers") == 0 || strcmp(command, "&numbers") == 0) {
 		if (background)
 		{
+			printf("Llamando a numbers\n");
 			os_addProcess(&printNumbers,1,'c',1,4000);
 		} else {
+			printf("Llamando a numbers 2\n");
 			printNumbers();
 		}
 	} 

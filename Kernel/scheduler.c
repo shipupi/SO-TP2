@@ -20,6 +20,7 @@ static int PIDCounter = 0;
 static int activeProcess = -1;
 static int m_ticket = 0;
 
+typedef int (*EntryPoint)();
 
 int rand(int n){
 	printUint(seconds_elapsed());
@@ -149,83 +150,6 @@ void * schedule(void * oldStack) {
 	return processes[activeProcess].stackAddress;
 }
 
-
-
-
-void * schedulet(void * oldStack) {
-
-
-	int n,i,j,k,temp=65,flag=0;
-	char process[20];
-	int brust[20],priority[20],pos;
-	int time=0,quantom=1,tbt=0;
-	int z=0,lottery[20],ticket[20][20],q=0;
-	//number of processes
-	n=2;
-
-	for(i=0;i<n;i++)
-	{
-		process[i] = temp;
-		temp+=1;
-	}
-	for(i=0;i<n;i++)
-	{
-		//brust[i] = rand();
-		priority[i] = processes[i].priority;
-	}
-	
-	//sorting burst time, priority and process number in ascending order using selection sort
-    for(i=0;i<n;i++)
-    {
-        pos=i;
-        for(j=i+1;j<n;j++)
-        {
-            if(priority[j]<priority[pos])
-                pos=j;
-        }
- 
-        temp=process[i];
-        process[i]=process[pos];
-        process[pos]=temp;
- 
-        temp=brust[i];
-        brust[i]=brust[pos];
-        brust[pos]=temp;
- 
-        temp=priority[i];
-        priority[i]=priority[pos];
-        priority[pos]=temp;
-        
-    }
-    
-	//assign one or more lottery numbers to each process
-	int p=1,m_ticket=0;
-	for(i=0;i<n;i++)
-	{
-		lottery[i]=(n-priority[i])+1;
-		printWhiteString("el lottery[i]");
-		printUint(lottery[i]);
-		nextLine();
-		for (z=0;z<lottery[i];z++) 
-		{
-
-            ticket[i][z] = p++;
-            printWhiteString("-------------");
-            printUint(m_ticket);
-            m_ticket = p;
-        }
-	}
-	
-	int winner = (rand(n)%m_ticket-1)+ 1;
-	nextLine();
-	printUint(winner);
-	nextLine();
-	
-
-	//return processes[0].stackAddress;
-	return  processes[winner].stackAddress;
-}
-
 void lottery(){
 	int i,z;
 	int n = 0;
@@ -282,6 +206,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	struct PCB newPCB;
 	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
 	newPCB.stackAddress = newStack;
+	newPCB.baseAddress = newStack;
 	fillStackFrame (newPCB,entryPoint);
 	newPCB.pid = PIDCounter;
 	newPCB.status = PCB_READY;
@@ -291,7 +216,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.size = size;
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
-	lottery();
+	// lottery();
 	return 1;
 
 }
@@ -299,9 +224,16 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 // Ends the process
 void endProcess(int pid) {
 	processes[pid].status = PCB_ENDED;
-	freeMemorySpace(processes[pid].stackAddress, PROCESSSTACKSIZE);
+	freeMemorySpace(processes[pid].baseAddress, PROCESSSTACKSIZE);
 	return;
 }
+
+void runProcess(uintptr_t entryPoint) {
+	((EntryPoint)entryPoint)();
+	endProcess(activeProcess);
+	timer_tick();
+}
+
 
 void listProcesses() {
 	int i;
@@ -310,13 +242,24 @@ void listProcesses() {
 	nextLine();
 	for (i = 0; i < PIDCounter; ++i)
 	{
+		if (processes[i].status == PCB_ENDED)
+		{
+			continue;
+		}
 		printUint(processes[i].pid);
 		printWhiteString("   | 	   ");
 
 		printUint((uint64_t) (uintptr_t) processes[i].stackAddress);
 		printWhiteString("    |    ");
 
-		printInt(processes[i].status);
+		switch(processes[i].status) {
+			case PCB_READY:
+				printWhiteString("rdy");
+				break;
+			case PCB_LOCK:
+				printWhiteString("lck");
+				break;
+		}
 		printWhiteString("    |    ");
 
 		printInt(processes[i].priority);
