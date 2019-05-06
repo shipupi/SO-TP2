@@ -23,7 +23,7 @@ static int m_ticket = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
-	return ticks_elapsed();
+	return ticks_elapsed()*31*17*11;
 }
 
 
@@ -54,19 +54,8 @@ int chooseNextProcess(int ap[], int n) {
 	int i,z;
 	int winner = 0;
 	int winner_ticket = (rand(n)%m_ticket)+1;
-	//printUint(winner_ticket);
-	//int index[n];
-	/*pl("el m_tickets de choose ");
-	printUint(m_ticket);
-	pl(" ");
-	int winner_ticket = (rand(n)%m_ticket)+1;
-	pl(" el gandor es ");
-	printUint(winner_ticket);
-	pl(" ");*/
-	//printUint(winner_ticket);
-	//printUint(m_ticket);
-
-	    //initialize prioritys
+	
+	//initialize prioritys
 	int t = 0;
 	int index[n];
 	for (i = 0; i < MAXPROCESSES; ++i)
@@ -94,9 +83,6 @@ int chooseNextProcess(int ap[], int n) {
         }
     }
 
-    //initialize prioritys
-	//int t = 0;
-	//int index[n];
 	for (i = 0; i < MAXPROCESSES; ++i)
 	{
 		if (processes[i].status == PCB_READY)
@@ -146,7 +132,7 @@ void * schedule(void * oldStack) {
 	} 
 	// Setteo el nuevo activeprocess con el que me toco
 	activeProcess = chooseNextProcess(ap, n);
-
+	//printUint(activeProcess);
 	return processes[activeProcess].stackAddress;
 }
 
