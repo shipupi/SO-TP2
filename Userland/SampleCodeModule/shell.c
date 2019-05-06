@@ -15,8 +15,6 @@ void shell_init() {
 	static char buffer[MAX_COMMAND_LENGTH];
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
-	printf("test\n");
-	printf(shortcuts[0].id);
 	os_ipc_create("exec",10);
 	int background = 0;
 	int exit = 0;
