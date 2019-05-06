@@ -11,11 +11,29 @@
 IPC arrIPC[N];
 
 int ipcIndex = 0;
-int IPCcounter = 0;
+int IPCCounter = 0;
 
+<<<<<<< HEAD
 int findId(char * id) {
+=======
+int ipc_create (char * id, uint64_t size){
+    struct IPC newIPC;
+    void * address = requestMemorySpace(size);
+    memcpy(newIPC.id,id,ID_SIZE);
+    newIPC.address = address;
+    newIPC.write = 0;
+    newIPC.read = 0;
+    newIPC.unread = 0;
+    newIPC.free = size;
+    arrIPC[IPCCounter] = newIPC;
+    IPCCounter++;
+	return 1;
+}
+
+int findId( char * id) {
+>>>>>>> c2653375df640149c1e645d44428c9a4c71dc22b
     int foundId = -1;
-    for (int i = 0; i < IPCcounter; ++i)
+    for (int i = 0; i < IPCCounter; ++i)
     {
         if (strcmp(arrIPC[i].id, id) == 0) {
             foundId = i;
@@ -47,13 +65,31 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     IPC ipc = arrIPC[ipcId];
 
     if (messageSize > ipc.size) {
-        // No entra, retorneamos
+        // No entra, retornamos
         return;
     }
 
-    if (ipc.write + messageSize > ipc.size) {
-
+    if (messageSize > ipc.free) {
+        // No entra, retornamos
+        return;
     }
+
+    if (ipc.write + messageSize > ipc.size)
+    {
+        // Hay q copiar la mitad y la otra mitad al principio
+        uint64_t endSize = ipc.size - ipc.write;
+        uint64_t startSize = messageSize - endSize;
+        memcpy(ipc.address + ipc.write, string, endSize);
+        memcpy(ipc.address, string + endSize, startSize);
+        ipc.write = startSize;
+    } else {
+        // hay lugar para todo, vamos a copiar el string al buffer
+        memcpy(ipc.address + ipc.write, string, messageSize);
+        ipc.write += messageSize;
+    }
+
+    ipc.free -= messageSize;
+    ipc.unread += messageSize;
 }
 
 void ipc_read(char * id,char * string,uint64_t messageSize){
@@ -65,7 +101,7 @@ void ipc_list(){
     nextLine();
     printWhiteString("id | addresss | IPCcounter | Read/Unread");
     nextLine();
-    for (i = 0; i < IPCcounter ; ++i)
+    for (i = 0; i < IPCCounter ; ++i)
     {
         printWhiteString(arrIPC[i].id);
         printWhiteString("   |     ");
@@ -86,3 +122,7 @@ void ipc_list(){
 }
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c2653375df640149c1e645d44428c9a4c71dc22b
