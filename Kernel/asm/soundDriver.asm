@@ -7,7 +7,7 @@ GLOBAL stopSound
 ; I made this with info from https://wiki.osdev.org/PIT
 
 section .data
-FREQ db 9000				; the frequency of the sound
+FREQ dd 9000				; the frequency of the sound
 
 section .text
 
