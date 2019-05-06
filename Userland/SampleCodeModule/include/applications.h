@@ -3,6 +3,8 @@
 
 int testMemoryManager();
 int printNumbers();
+int printNumbers1();
+int printNumbers2();
 int ps();
 void sleep();
 void sleepPID(int pid);

@@ -156,6 +156,10 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "trw") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
 		testReadWriteIPC();
 	}
+	else if (strcmp(command, "testLottery") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
+		os_addProcess(&printNumbers1, 1, 's', 1, 4000);
+		os_addProcess(&printNumbers2, 5, 's', 1, 4000);
+	}
 	else if (strcmp(command, "ticks") == 0 || strcmp(command, "&ticks") == 0){
 		int n = 0;
 		n = ticks();

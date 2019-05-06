@@ -4,7 +4,7 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
-#include "time.h"
+#include "include/drivers/time.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -23,8 +23,8 @@ static int m_ticket = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
-	printUint(seconds_elapsed());
-	return getSeconds();}
+	return ticks_elapsed();
+}
 
 
 static PCB processes[MAXPROCESSES];
@@ -145,7 +145,7 @@ void * schedule(void * oldStack) {
 		processes[activeProcess].stackAddress = oldStack;
 	} 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess2(ap, n);
+	activeProcess = chooseNextProcess(ap, n);
 
 	return processes[activeProcess].stackAddress;
 }
@@ -216,7 +216,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.size = size;
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
-	// lottery();
+	lottery();
 	return 1;
 
 }
