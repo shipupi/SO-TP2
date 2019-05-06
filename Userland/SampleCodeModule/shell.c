@@ -7,13 +7,16 @@
 #include "memory.h"
 #include "exec.h"
 
-static char path[sizeof(void *)];
+static SHORTCUT shortcuts[MAX_SHORTCUTS];
+static int programs;
 void shell_init() {
 	//Start Shell
+	programs = initializeShortcutsArray(shortcuts);
 	static char buffer[MAX_COMMAND_LENGTH];
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
-	
+	printf("test\n");
+	printf(shortcuts[0].id);
 	os_ipc_create("exec",10);
 	int background = 0;
 	int exit = 0;
@@ -60,6 +63,35 @@ int shell_execute(char *command,int background, char *arguments) {
 	int exit = 0;
 	int l = strlen(arguments);
 	printf("\n");
+	int found = -1;
+	int bg = command[0] == '&'? 1: 0;
+	for (int i = 0; i < programs; ++i)
+	{
+		
+		if (strcmp(bg?command+1: command, shortcuts[i].id) == 0)
+		{
+			found = i;
+			break;
+		} 
+	}
+	if (found != -1) {
+		char * ptr = shortcuts[found].pointer;
+		if (bg) {
+			os_addProcess(ptr,1,'c',1,4000);
+		} else {
+			((EntryPoint)(ptr))();
+		}
+	} else {
+		printf("\nshell: ");
+		printf(command);
+		printf(": command not found (try help)");
+	}
+
+	return exit;
+
+
+
+
 	//Now we need to compare the command to all the possible options
 	if (strcmp(command, "help") == 0 || strcmp(command, "&help") == 0 ){
 		//background == 0 ? help() : /*?*/ ;

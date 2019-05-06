@@ -1,6 +1,10 @@
 #ifndef EXTRA_H
 #define EXTRA_H
 
+#include "shell.h"
+
+int initializeShortcutsArray(SHORTCUT scArr[]);
+void loadShortcut(SHORTCUT scArr[], char * id, uintptr_t ptr);
 int testMemoryManager();
 int printNumbers();
 int printNumbers1();
