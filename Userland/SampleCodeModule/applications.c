@@ -21,6 +21,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "clear", (uintptr_t)&clear);
 	// loadShortcut(scArr, "prodCons", (uintptr_t)&prodCons);
 	loadShortcut(scArr, "testMemoryManager", (uintptr_t)&testMemoryManager);
+	loadShortcut(scArr, "lot", (uintptr_t)&testLottery);
 	loadShortcut(scArr, "mut", (uintptr_t)&list_mutex);
 	loadShortcut(scArr, "mut2", (uintptr_t)&mut2);
 	loadShortcut(scArr, "mut1", (uintptr_t)&mut1);

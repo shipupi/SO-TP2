@@ -23,7 +23,7 @@ int printNumbers2() {
 		if (a%250000 == 0)
 		{
 			b++;
-			puint(2);
+			// puint(2);
 		}
 	}
 	return 1;
@@ -36,7 +36,7 @@ int printNumbers1() {
 		if (a%250000 == 0)
 		{
 			b++;
-			puint(1);
+			// puint(1);
 		}
 	}
 	return 1;
