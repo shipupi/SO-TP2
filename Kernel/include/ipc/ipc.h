@@ -12,6 +12,7 @@ typedef struct IPC{
     uint64_t read;
     uint64_t size;
     uint64_t unread;
+    uint64_t free;
 } IPC;
 
 #endif
