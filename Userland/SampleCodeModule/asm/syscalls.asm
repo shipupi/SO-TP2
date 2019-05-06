@@ -26,6 +26,7 @@ GLOBAL os_mut_request
 GLOBAL os_mut_release
 GLOBAL os_mut_delete
 GLOBAL os_mut_list
+GLOBAL os_pid
 
 section .text
 
@@ -305,6 +306,12 @@ os_mut_delete:
 os_mut_list:
 	start
 	mov rdi, 0x1C
+	int 80h
+	finish
+
+os_pid:
+	start
+	mov rdi, 0x1D
 	int 80h
 	finish
 

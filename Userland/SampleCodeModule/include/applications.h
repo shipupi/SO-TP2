@@ -14,5 +14,8 @@ void testReadWriteIPC2();
 void testReadWriteIPC3();
 int ticks();
 void test_mutex();
+void list_mutex();
+void mut1();
+void mut2();
 #endif
 

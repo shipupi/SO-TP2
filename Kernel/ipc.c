@@ -4,7 +4,6 @@
 #include "ipc/ipc.h"
 #include "include/string.h"
 #include "include/drivers/vesaDriver.h"
-#include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
 #include "include/scheduler/scheduler.h"
 

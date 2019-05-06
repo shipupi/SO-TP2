@@ -48,6 +48,7 @@ EXTERN sys_mut_request
 EXTERN sys_mut_release
 EXTERN sys_mut_delete
 EXTERN sys_mut_list
+EXTERN sys_pid
 
 EXTERN printWhiteString
 EXTERN registerValueToString
@@ -275,6 +276,9 @@ _syscall:
   cmp rdi, 0x1C   ; mut_list
   je .syscall1C
 
+  cmp rdi, 0x1D   ; pid
+  je .syscall1D
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -435,6 +439,9 @@ _syscall:
   call sys_mut_list
   jmp .continue
 
+.syscall1D:
+  call sys_pid
+  jmp .continue
 
 ; EXCEPTIONS 
 

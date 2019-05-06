@@ -16,11 +16,10 @@ int main() {
 	// os_endProcess(1);
 	// os_endProcess(2);
 	//os_addProcess(&shell_init,4,name,1,50);
-	os_listProcesses();
 	//shell_init();
-	while(1) {
-		
-	}
+	// os_sleep();
+	os_endProcess(os_pid());
+	while(1) {} // while 1 hasta q Programa finalizado
 	return 1;
 }
 

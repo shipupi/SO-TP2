@@ -8,6 +8,9 @@
 #include <naiveLegacy/naiveConsole.h>
 #include "ipc/mutex.h"
 #include "include/lib.h"
+#include "include/interrupts.h"
+#include "include/scheduler/scheduler.h"
+
 
 MUT arrMUT[MAX_MUTS];
 
@@ -28,8 +31,6 @@ int findIdMUT( char * id) {
 }
 
 int mut_create(char * id){
-	printWhiteString("mut_create");
-	nextLine();
 	if(findIdMUT(id)==-1){
         //pl("entre al if");
         int i;
@@ -55,27 +56,56 @@ int mut_create(char * id){
 
 }
 
-int mut_request(char * id){
-	printWhiteString("mut_request");
-	nextLine();
+int mut_release(char * id){
+
+    int mId = findIdMUT(id);
+    if (mId == -1){
+        return -1;
+    }
+
+    MUT m = arrMUT[mId];
+    int nextPid = -1;
+	if (m.waiting > 0) {
+        nextPid = m.waitPids[0];
+        m.waitPids[0] = -1;
+        for (int i = 1; i < m.waiting - 1; ++i)
+        {
+            m.waitPids[i -1 ] = m.waitPids[i];
+        }
+        m.waiting -= 1;
+        wakePID(nextPid);
+        m.value = MUT_LOCKED;
+    }
+    arrMUT[mId] = m;
+
 	return 0;
 }
 
-int mut_release(char * id){
-	printWhiteString("mut_release");
-	nextLine();
-	return 0;
+int mut_request(char * id){
+	int mId = findIdMUT(id);
+    if (mId == -1){
+        return -1;
+    }
+    MUT m = arrMUT[mId];
+    if (m.value == MUT_LOCKED)
+    {
+        m.waitPids[m.waiting] = pid();
+        m.waiting += 1;
+        arrMUT[mId] = m;
+        printInt(pid());
+        ipc_sleep();
+    }
+    m.value = MUT_LOCKED;
+    arrMUT[mId] = m;
+    return 1;
 }
 
 int mut_delete(char * id){
-	printWhiteString("mut_delete");
 	nextLine();
 	return 0;
 }
 
 void mut_list(){
-	printWhiteString("mut_list");
-	nextLine();
 	int i, j;
     nextLine();
     printWhiteString("id | value | waiting");

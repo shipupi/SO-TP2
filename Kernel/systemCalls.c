@@ -199,6 +199,8 @@ void sys_mut_list(){
 	mut_list();
 }
 
-
+int  sys_pid() {
+	return pid();
+}
 
 

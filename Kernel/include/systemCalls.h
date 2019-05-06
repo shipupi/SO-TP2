@@ -23,6 +23,7 @@ void sys_schedule();
 uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size);
 void sys_endProcess(int pid);
 void sys_listProcesses();
+int sys_pid();
 void sys_sleep();
 void sys_ipc_create(char * id,uint64_t size);
 void sys_ipc_write(char * id,char * string,uint64_t messageSize);

@@ -5,13 +5,16 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
+#include "exec.h"
 
+static char path[sizeof(void *)];
 void shell_init() {
 	//Start Shell
 	static char buffer[MAX_COMMAND_LENGTH];
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
 	
+	os_ipc_create("exec",10);
 	int background = 0;
 	int exit = 0;
 	printf("\nARQ TPE Group 2");
@@ -97,6 +100,7 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "ps") == 0 || strcmp(command, "&ps") == 0) {
 		//background == 0 ? ps() : /*?*/ ;
 		ps();
+		
 	}
 	else if (strcmp(command, "testMemoryManager") == 0 || strcmp(command, "&testMemoryManager") == 0) {
 		//background == 0 ? testMemoryManager() : /*?*/ ;
@@ -110,6 +114,12 @@ int shell_execute(char *command,int background, char *arguments) {
 	}
 	else if (strcmp(command, "test2") == 0 || strcmp(command, "&test2") == 0) {
 		os_wakePID(2);
+	}
+	else if (strcmp(command, "mut1") == 0 || strcmp(command, "&mut1") == 0) {
+		os_addProcess(&mut1 ,1,'m', 1, 256);
+	}
+	else if (strcmp(command, "mut2") == 0 || strcmp(command, "&mut2") == 0) {
+		mut2();
 	}
 	else if (strcmp(command, "sleep") == 0 || strcmp(command, "&sleep") == 0) {
 		printf(command);
@@ -136,7 +146,7 @@ int shell_execute(char *command,int background, char *arguments) {
 		}
 	}
 	else if (strcmp(command, "mut") == 0 || strcmp(command, "&mut") == 0){
-		test_mutex();
+		list_mutex();
 	}
 	else if (strcmp(command, "ipcs") == 0 || strcmp(command, "&testIPC") == 0){
 		testIPC();
@@ -166,6 +176,16 @@ int shell_execute(char *command,int background, char *arguments) {
 	return exit;
 }
 
+// int shell_bgexec(uintptr_t program) {
+// 	int size = sizeof(void *);;
+// 	memcopy(path, &program, size);
+// 	pint(program);
+// 	printf("\n");
+// 	pint((uintptr_t) (*(path)));
+// 	os_ipc_write("exec", path, size);
+// 	// execv();
+// 	return 1;
+// }
 
 
 

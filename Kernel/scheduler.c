@@ -238,9 +238,6 @@ void lottery(){
 			n++;
 		}
 	}
-	pl("la cant");
-	printUint(n);
-	pl("hola");
 	int lottery[MAXPROCESSES];
 	int p=1;
 	m_ticket=0;
@@ -277,9 +274,6 @@ void lottery(){
             
         }
 	}
-	pl("can tickets ");
-	printUint(m_ticket);
-
 	
 }
 
@@ -297,8 +291,6 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.size = size;
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
-	pl("pid.priority");
-	printUint(priority);
 	lottery();
 	return 1;
 
