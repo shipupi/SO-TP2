@@ -4,6 +4,7 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
+#include "ipc/ipc.h"
 #include "include/drivers/time.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>

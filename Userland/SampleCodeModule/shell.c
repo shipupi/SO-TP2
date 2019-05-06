@@ -5,7 +5,6 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
-#include "exec.h"
 
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
@@ -15,10 +14,9 @@ void shell_init() {
 	static char buffer[MAX_COMMAND_LENGTH];
 	static char command[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
-	os_ipc_create("exec",10);
 	int background = 0;
 	int exit = 0;
-	printf("\nARQ TPE Group 2");
+	printf("\nSO TPE Group 4");
 	printf("\nWhat module would you like to execute? (try 'help')");
 
 	while (!exit) {

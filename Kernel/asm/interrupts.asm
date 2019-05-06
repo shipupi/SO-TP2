@@ -415,32 +415,32 @@ _syscall:
   call sys_ipc_list
   jmp .continue
 
-.syscall17
+.syscall17:
   mov rdi, rsi
   call sys_ipc_close
   jmp .continue
 
-.syscall18
+.syscall18:
   mov rdi, rsi
   call sys_mut_create
   jmp .continue
 
-.syscall19
+.syscall19:
   mov rdi, rsi
   call sys_mut_request
   jmp .continue
 
-.syscall1A
+.syscall1A:
   mov rdi, rsi
   call sys_mut_release
   jmp .continue
 
-.syscall1B
+.syscall1B:
   mov rdi, rsi
   call sys_mut_delete
   jmp .continue
 
-.syscall1C
+.syscall1C:
   call sys_mut_list
   jmp .continue
 
@@ -450,7 +450,7 @@ _syscall:
 
 
 .syscall1E:
-  hlt
+  jmp .continue
 
 ; EXCEPTIONS 
 
