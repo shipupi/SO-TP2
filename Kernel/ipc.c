@@ -9,39 +9,46 @@
 
 IPC arrIPC[MAX_IPCS];
 
-int IPCCounter = 0;
+int ipcIndex = 0;
+int IPCcounter = 0;
 
-int ipc_create (char * id, uint64_t size){
-    int i;
-    struct IPC newIPC;
-    void * address = requestMemorySpace(size * BLOCK_SIZE);
-    memcpy(newIPC.id,id,ID_SIZE);
-    newIPC.address = address;
-    newIPC.write = 0;
-    newIPC.read = 0;
-    newIPC.unread = 0;
-    newIPC.free = size;
-    newIPC.waiting = 0;
-    for (i = 0; i < MAX_QUEUE; ++i)
-    {
-        newIPC.waitPids[i] = -1;
-    }
-    arrIPC[IPCCounter] = newIPC;
-    IPCCounter++;
-	return 1;
-}
 
 int findId( char * id) {
     int foundId = -1;
-    for (int i = 0; i < IPCCounter; ++i)
+    for (int i = 0; i < IPCcounter; ++i)
     {
         if (strcmp(arrIPC[i].id, id) == 0) {
             foundId = i;
+            return i;
             break;
         }
     }
     return foundId;
 }
+
+int ipc_create (char * id, uint64_t size){
+    if(findId(id)==-1){
+        int i;
+        struct IPC newIPC;
+        void * address = requestMemorySpace(size * BLOCK_SIZE);
+        memcpy(newIPC.id,id,ID_SIZE);
+        newIPC.address = address;
+        newIPC.write = 0;
+        newIPC.read = 0;
+        newIPC.unread = 0;
+        newIPC.free = size;
+        newIPC.waiting = 0;
+        for (i = 0; i < MAX_QUEUE; ++i)
+        {
+            newIPC.waitPids[i] = -1;
+        }
+        arrIPC[IPCcounter] = newIPC;
+        IPCcounter++;
+        return 1;
+    }
+	return -1;
+}
+
 
 void ipc_write(char * id,char * string,uint64_t messageSize){
     int ipcId = findId(id);
@@ -96,7 +103,7 @@ void ipc_list(){
     nextLine();
     printWhiteString("id | addresss | IPCcounter | Read/Unread");
     nextLine();
-    for (i = 0; i < IPCCounter ; ++i)
+    for (i = 0; i < IPCcounter ; ++i)
     {
         printWhiteString(arrIPC[i].id);
         printWhiteString("   |     ");

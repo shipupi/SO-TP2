@@ -154,7 +154,7 @@ void sys_ipc_write(char * id,char * string,uint64_t messageSize){
 }
 
 void sys_ipc_read(char * id,char * string,uint64_t messageSize){
-	printWhiteString("IPC_READ");
+	ipc_read(id,string,messageSize);
 }
 
 void sys_sleepPID(int pid){

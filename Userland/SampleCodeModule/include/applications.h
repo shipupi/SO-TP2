@@ -9,6 +9,6 @@ void sleepPID(int pid);
 void wakePID(int pid);
 void prodcons();
 void testIPC();
+void testReadWriteIPC();
 #endif
-
 

@@ -141,6 +141,9 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "testIPC") == 0 || strcmp(command, "&testIPC") == 0){
 		testIPC();
 	}
+	else if (strcmp(command, "testReadWriteIPC") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
+		testReadWriteIPC();
+	}
 	else {
 		printf("\nshell: ");
 		printf(command);
