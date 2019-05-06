@@ -4,6 +4,7 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
+#include "time.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -17,11 +18,17 @@
 
 static int PIDCounter = 0;
 static int activeProcess = -1;
+static int m_ticket = 0;
 
 
-int rand(){return getSeconds();}
+int rand(int n){
+	printUint(seconds_elapsed());
+	return getSeconds();}
 
-static PCB processes[MAXPROCESSES]; 
+
+static PCB processes[MAXPROCESSES];
+static int ticket[MAXPROCESSES][MAXPROCESSES]; 
+//static int lottery[MAXPROCESSES];
 
 
 int chooseNextProcess2(int ap[], int n) {
@@ -39,17 +46,57 @@ int chooseNextProcess2(int ap[], int n) {
 
 int chooseNextProcess(int ap[], int n) {
 	
-	int ticket[n][MAXPROCESSES]; // maximum required
+	//int ticket[n][MAXPROCESSES]; // maximum required
 	int lottery[MAXPROCESSES];
-	int p=1,m_ticket=0;
+	int p=1;
 	int priority[n];
 	int i,z;
 	int winner = 0;
+	int winner_ticket = (rand(n)%m_ticket)+1;
+	//printUint(winner_ticket);
+	//int index[n];
+	/*pl("el m_tickets de choose ");
+	printUint(m_ticket);
+	pl(" ");
+	int winner_ticket = (rand(n)%m_ticket)+1;
+	pl(" el gandor es ");
+	printUint(winner_ticket);
+	pl(" ");*/
+	//printUint(winner_ticket);
+	//printUint(m_ticket);
 
-	//initialize prioritys
+	    //initialize prioritys
 	int t = 0;
 	int index[n];
-	for (i = 0; i < MAXPROCESSES && t<n; ++i)
+	for (i = 0; i < MAXPROCESSES; ++i)
+	{
+		if (processes[i].status == PCB_READY)
+		{
+	
+			priority[t] = processes[i].priority;
+			index[t] = i;
+			t++;
+		}
+		
+
+	}
+	
+	for(i =0;i<n;i++){
+
+		
+
+        for(z=0;z<priority[i];z++){
+            if(ticket[i][z]==winner_ticket){
+                winner=i;
+                //ticket[i][z] = -1;
+            }
+        }
+    }
+
+    //initialize prioritys
+	//int t = 0;
+	//int index[n];
+	for (i = 0; i < MAXPROCESSES; ++i)
 	{
 		if (processes[i].status == PCB_READY)
 		{
@@ -62,28 +109,6 @@ int chooseNextProcess(int ap[], int n) {
 
 	}
 
-	for(i=0;i<n;i++)
-	{
-		lottery[i]=(priority[i])+1;
-
-		for (z=0;z<lottery[i];z++) 
-		{
-
-            ticket[i][z] = p++;
-            m_ticket = p;
-        }
-	}
-
-	int winner_ticket = (rand()%m_ticket-1)+ 1;
-	
-	for(i =0;i<n;i++){
-
-        for(z=0;z<lottery[i];z++){
-            if(ticket[i][z]==winner_ticket){
-                winner=i;
-            }
-        }
-    }
     return index[winner];
 }
 
@@ -119,7 +144,8 @@ void * schedule(void * oldStack) {
 		processes[activeProcess].stackAddress = oldStack;
 	} 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess2(ap, n);;
+	activeProcess = chooseNextProcess2(ap, n);
+
 	return processes[activeProcess].stackAddress;
 }
 
@@ -144,7 +170,7 @@ void * schedulet(void * oldStack) {
 	}
 	for(i=0;i<n;i++)
 	{
-		brust[i] = rand();
+		//brust[i] = rand();
 		priority[i] = processes[i].priority;
 	}
 	
@@ -184,11 +210,13 @@ void * schedulet(void * oldStack) {
 		{
 
             ticket[i][z] = p++;
+            printWhiteString("-------------");
+            printUint(m_ticket);
             m_ticket = p;
         }
 	}
 	
-	int winner = (rand()%m_ticket-1)+ 1;
+	int winner = (rand(n)%m_ticket-1)+ 1;
 	nextLine();
 	printUint(winner);
 	nextLine();
@@ -196,6 +224,63 @@ void * schedulet(void * oldStack) {
 
 	//return processes[0].stackAddress;
 	return  processes[winner].stackAddress;
+}
+
+void lottery(){
+	int i,z;
+	int n = 0;
+	int ap[MAXPROCESSES];
+	for (i = 0; i < MAXPROCESSES; ++i)
+	{
+		if (processes[i].status == PCB_READY)
+		{
+			ap[n] = i;
+			n++;
+		}
+	}
+	pl("la cant");
+	printUint(n);
+	pl("hola");
+	int lottery[MAXPROCESSES];
+	int p=1;
+	m_ticket=0;
+	int priority[n];
+	
+	int winner = 0;
+
+	//initialize prioritys
+	int t = 0;
+	int index[n];
+	for (i = 0; i < MAXPROCESSES; ++i)
+	{
+		if (processes[i].status == PCB_READY)
+		{
+	
+			priority[t] = processes[i].priority;
+			index[t] = i;
+			t++;
+		}
+		
+
+	}
+
+
+	for(i=0;i<n;i++)
+	{
+		lottery[i]=(priority[i])+1;
+
+		for (z=0;z<lottery[i];z++) 
+		{
+			m_ticket = p;
+            ticket[i][z] = p++;
+            
+            
+        }
+	}
+	pl("can tickets ");
+	printUint(m_ticket);
+
+	
 }
 
 // Returns pid?
@@ -212,6 +297,9 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.size = size;
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
+	pl("pid.priority");
+	printUint(priority);
+	lottery();
 	return 1;
 
 }
