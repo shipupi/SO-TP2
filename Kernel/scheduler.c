@@ -23,13 +23,14 @@ static int m_ticket = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
-	return ticks_elapsed()*31*17*11;
+	int runi = (ticks_elapsed()*31*17*11)%(MAXPROCESSES*MAXPROCESSES);
+	;
+	return runi;
 }
 
 
 static PCB processes[MAXPROCESSES];
 static int ticket[MAXPROCESSES][MAXPROCESSES]; 
-//static int lottery[MAXPROCESSES];
 
 
 int chooseNextProcess2(int ap[], int n) {
@@ -47,8 +48,6 @@ int chooseNextProcess2(int ap[], int n) {
 
 int chooseNextProcess(int ap[], int n) {
 	
-	//int ticket[n][MAXPROCESSES]; // maximum required
-	int lottery[MAXPROCESSES];
 	int p=1;
 	int priority[n];
 	int i,z;
@@ -72,13 +71,9 @@ int chooseNextProcess(int ap[], int n) {
 	}
 	
 	for(i =0;i<n;i++){
-
-		
-
         for(z=0;z<priority[i];z++){
             if(ticket[i][z]==winner_ticket){
                 winner=i;
-                //ticket[i][z] = -1;
             }
         }
     }
@@ -132,43 +127,34 @@ void * schedule(void * oldStack) {
 	} 
 	// Setteo el nuevo activeprocess con el que me toco
 	activeProcess = chooseNextProcess(ap, n);
-	//printUint(activeProcess);
 	return processes[activeProcess].stackAddress;
 }
 
 void lottery(){
-	int i,z;
+	int i,z,t;
 	int n = 0;
-	int ap[MAXPROCESSES];
 	for (i = 0; i < MAXPROCESSES; ++i)
 	{
 		if (processes[i].status == PCB_READY)
 		{
-			ap[n] = i;
 			n++;
 		}
 	}
+
 	int lottery[MAXPROCESSES];
 	int p=1;
 	m_ticket=0;
 	int priority[n];
-	
-	int winner = 0;
 
 	//initialize prioritys
-	int t = 0;
-	int index[n];
-	for (i = 0; i < MAXPROCESSES; ++i)
+	t=0;
+	for (i = 0; i < MAXPROCESSES || t != n; ++i)
 	{
 		if (processes[i].status == PCB_READY)
 		{
-	
 			priority[t] = processes[i].priority;
-			index[t] = i;
 			t++;
 		}
-		
-
 	}
 
 
@@ -179,9 +165,7 @@ void lottery(){
 		for (z=0;z<lottery[i];z++) 
 		{
 			m_ticket = p;
-            ticket[i][z] = p++;
-            
-            
+            ticket[i][z] = p++;            
         }
 	}
 	
