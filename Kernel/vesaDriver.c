@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <string.h>
+#include "lib.h"
 
 typedef struct ModeInfoBlock {
   uint16_t attributes;

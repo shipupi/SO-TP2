@@ -47,7 +47,6 @@ void shell_init() {
 
 		if(command[0] == '&'){
 			background = 1;
-			printf("background\n");
 		}
 		exit = shell_execute(command,background, arguments);
 	}

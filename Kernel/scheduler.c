@@ -49,7 +49,6 @@ int chooseNextProcess2(int ap[], int n) {
 
 int chooseNextProcess(int ap[], int n) {
 	
-	int p=1;
 	int priority[n];
 	int i,z;
 	int winner = 0;
@@ -67,8 +66,6 @@ int chooseNextProcess(int ap[], int n) {
 			index[t] = i;
 			t++;
 		}
-		
-
 	}
 	
 	for(i =0;i<n;i++){

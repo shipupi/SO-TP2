@@ -568,11 +568,8 @@ _exception0Handler:
 _exception6Handler:
 	exception invalidOp
 	
-
 timer_tick:
-  start
   int 20h
-  finish
 
 haltcpu:
 	cli

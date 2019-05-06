@@ -4,6 +4,7 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
+#include "string.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 #include "ipc/mutex.h"
@@ -106,7 +107,8 @@ int mut_delete(char * id){
 }
 
 void mut_list(){
-	int i, j;
+	int i;
+    // int j;
     nextLine();
     printWhiteString("id | value | waiting");
     nextLine();
