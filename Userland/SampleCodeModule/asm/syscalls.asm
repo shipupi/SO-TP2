@@ -21,6 +21,11 @@ GLOBAL os_sleepPID
 GLOBAL os_wakePID
 GLOBAL os_ipc_list
 GLOBAL os_ipc_close
+GLOBAL os_mut_create
+GLOBAL os_mut_request
+GLOBAL os_mut_release
+GLOBAL os_mut_delete
+GLOBAL os_mut_list
 
 section .text
 
@@ -269,11 +274,46 @@ os_ipc_close:
 	int 80h
 	finish
 
+os_mut_create:
+	start
+	mov rsi, rdi
+	mov rdi, 0x18
+	int 80h
+	finish
+
+os_mut_request:
+	start
+	mov rsi, rdi
+	mov rdi, 0x19
+	int 80h
+	finish
+
+os_mut_release:
+	start
+	mov rsi, rdi
+	mov rdi, 0x1A
+	int 80h
+	finish
+
+os_mut_delete:
+	start
+	mov rsi, rdi
+	mov rdi, 0x1B
+	int 80h
+	finish
+
+os_mut_list:
+	start
+	mov rdi, 0x1C
+	int 80h
+	finish
+
 section .data
 	timeArray times 6 DW 0
 
 section .bb
 	aux resb 4	; para enteros
+
 
 
 

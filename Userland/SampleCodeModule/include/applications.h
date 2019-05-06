@@ -12,5 +12,7 @@ void testIPC();
 void testReadWriteIPC();
 void testReadWriteIPC2();
 void testReadWriteIPC3();
+int ticks();
+void test_mutex();
 #endif
 

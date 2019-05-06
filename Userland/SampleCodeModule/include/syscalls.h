@@ -25,5 +25,10 @@ void os_sleepPID(int pid);
 void os_wakePID(int pid);
 void os_ipc_list();
 void os_ipc_close(char *);
-#endif
+int os_mut_create(char * id);
+int os_mut_request(char * id);
+int os_mut_release(char * id);
+int os_mut_delete(char * id);
+void os_mut_list();
 
+#endif

@@ -31,6 +31,11 @@ void sys_sleepPID(int pid);
 void sys_wakePID(int pid);
 void sys_ipc_list();
 void sys_ipc_close(char *);
+int sys_mut_create(char * id);
+int sys_mut_request(char * id);
+int sys_mut_release(char * id);
+int sys_mut_delete(char * id);
+void sys_mut_list();
 #endif /* SYSTEMCALLS_H */
 
 

@@ -1,4 +1,4 @@
-#include <stdint.h>
+ #include <stdint.h>
 #include "memoryManager/memoryManager.h"
 #include "include/lib.h"
 #include "ipc/ipc.h"
@@ -45,6 +45,7 @@ int ipc_create (char * id, uint64_t size){
             newIPC.waitPids[i] = -1;
         }
         arrIPC[IPCcounter] = newIPC;
+        newIPC.IPCcounter = IPCcounter;
         IPCcounter++;
         return 1;
     }
@@ -61,12 +62,11 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     
     IPC ipc = arrIPC[ipcId];
 
-    if (messageSize > BLOCK_SIZE) {
+    if (messageSize > BLOCK_SIZE){
         // No entra, retornamos
         return;
     }
-    if (ipc.free == 0)
-    {
+    if (ipc.free == 0){
         // No hay bloques libres en el ipc, retornamos
         return;
     }
@@ -162,6 +162,8 @@ void ipc_list(){
         nextLine();
     }
 }
+
+
 
 
 

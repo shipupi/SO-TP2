@@ -8,6 +8,7 @@
 #include "memoryManager/memoryManager.h"
 #include "scheduler/scheduler.h"
 #include "include/ipc/ipc.h"
+#include "include/ipc/mutex.h"
 
 
 #define SYSCALLNUMBER 11
@@ -177,4 +178,27 @@ void sys_ipc_list(){
 void sys_ipc_close(char * id){
 
 }
+
+int sys_mut_create(char * id){
+	mut_create(id);
+	return 0;
+}
+int sys_mut_request(char * id){
+	mut_request(id);
+	return 0;
+}
+int sys_mut_release(char * id){
+	mut_release(id);
+	return 0;
+}
+int sys_mut_delete(char * id){
+	mut_delete(id);
+	return 0;
+}
+void sys_mut_list(){
+	mut_list();
+}
+
+
+
 

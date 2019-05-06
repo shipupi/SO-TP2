@@ -135,8 +135,8 @@ int shell_execute(char *command,int background, char *arguments) {
 			printf("Error, argument needed");
 		}
 	}
-	else if (strcmp(command, "createIPC") == 0 || strcmp(command, "&createIPC") == 0){
-		//os_ipc_create();
+	else if (strcmp(command, "mut") == 0 || strcmp(command, "&mut") == 0){
+		test_mutex();
 	}
 	else if (strcmp(command, "ipcs") == 0 || strcmp(command, "&testIPC") == 0){
 		testIPC();
@@ -144,16 +144,19 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "trw") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
 		testReadWriteIPC();
 	}
-
+	else if (strcmp(command, "ticks") == 0 || strcmp(command, "&ticks") == 0){
+		int n = 0;
+		n = ticks();
+		if(n){
+			printf("Hace algo pero no se como imprimirlo\n");
+		}
+	}
 	else if (strcmp(command, "trw2") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
 		os_addProcess(&testReadWriteIPC2,1,'c',1,4000);
 	}
 	else if (strcmp(command, "trw3") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
 		testReadWriteIPC3();
 	}
-
-
-	
 	else {
 		printf("\nshell: ");
 		printf(command);

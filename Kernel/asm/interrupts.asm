@@ -40,8 +40,15 @@ EXTERN sys_ipc_write
 EXTERN sys_ipc_read
 EXTERN sys_sleepPID
 EXTERN sys_wakePID
-EXTERN sys_ipc_list;
-EXTERN sys_ipc_close;
+EXTERN sys_ipc_list
+EXTERN sys_ipc_close
+
+EXTERN sys_mut_create
+EXTERN sys_mut_request
+EXTERN sys_mut_release
+EXTERN sys_mut_delete
+EXTERN sys_mut_list
+
 EXTERN printWhiteString
 EXTERN registerValueToString
 EXTERN printUint
@@ -49,6 +56,7 @@ EXTERN nextLine
 EXTERN reboot
 EXTERN schedule
 EXTERN sleep
+EXTERN timer_handler
 
 SECTION .text
 
@@ -144,7 +152,7 @@ _irq00Handler:
   ; Partes sacadas de rowdaboat
   ; Context Switch
   pushState
-
+  call timer_handler
   mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
   call schedule  
   ; push rax
@@ -251,6 +259,21 @@ _syscall:
 
   cmp rdi, 0x17   ; syscall de ipc_close
   je .syscall17
+
+  cmp rdi, 0x18   ; mut_create
+  je .syscall18
+
+  cmp rdi, 0x19   ; mut_request
+  je .syscall19
+
+  cmp rdi, 0x1A   ; mut_release
+  je .syscall1A
+
+  cmp rdi, 0x1B   ; mut_delete
+  je .syscall1B
+
+  cmp rdi, 0x1C   ; mut_list
+  je .syscall1C
 
 .continue:
 	iretq	;Dont use ret when returning from int call
@@ -384,8 +407,32 @@ _syscall:
   jmp .continue
 
 .syscall17
-  call sys_ipc_close
   mov rdi, rsi
+  call sys_ipc_close
+  jmp .continue
+
+.syscall18
+  mov rdi, rsi
+  call sys_mut_create
+  jmp .continue
+
+.syscall19
+  mov rdi, rsi
+  call sys_mut_request
+  jmp .continue
+
+.syscall1A
+  mov rdi, rsi
+  call sys_mut_release
+  jmp .continue
+
+.syscall1B
+  mov rdi, rsi
+  call sys_mut_delete
+  jmp .continue
+
+.syscall1C
+  call sys_mut_list
   jmp .continue
 
 
@@ -542,8 +589,6 @@ section .data
   regR13 db "R13: ", 0
   regR14 db "R14: ", 0
   regR15 db "R15: ", 0
-
-
 
 
 

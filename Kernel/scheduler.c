@@ -46,7 +46,7 @@ int chooseNextProcess(int ap[], int n) {
 	int i,z;
 	int winner = 0;
 
-	//initialize prioritys
+	//initialize priorities
 	int t = 0;
 	int index[n];
 	for (i = 0; i < MAXPROCESSES && t<n; ++i)
@@ -77,7 +77,6 @@ int chooseNextProcess(int ap[], int n) {
 	int winner_ticket = (rand()%m_ticket-1)+ 1;
 	
 	for(i =0;i<n;i++){
-
         for(z=0;z<lottery[i];z++){
             if(ticket[i][z]==winner_ticket){
                 winner=i;
@@ -87,7 +86,7 @@ int chooseNextProcess(int ap[], int n) {
     return index[winner];
 }
 
-void * schedule(void * oldStack) {
+void * schedule(void * oldStack){
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
@@ -126,7 +125,7 @@ void * schedule(void * oldStack) {
 
 
 
-void * schedulet(void * oldStack) {
+void * schedulet(void * oldStack) { // Esto no , "scheduler tomi"
 
 
 	int n,i,j,k,temp=65,flag=0;
@@ -275,3 +274,6 @@ void wakePID(int pid) {
 int pid() {
 	return activeProcess;
 }
+
+
+
