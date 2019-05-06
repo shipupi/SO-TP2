@@ -4,24 +4,28 @@
 #include "ipc/ipc.h"
 #include "include/string.h"
 #include "include/drivers/vesaDriver.h"
+#include "include/drivers/vesaDriver.h"
+#include "include/interrupts.h"
 
-#define N 20
+IPC arrIPC[MAX_IPCS];
 
-
-IPC arrIPC[N];
-
-int ipcIndex = 0;
 int IPCCounter = 0;
 
 int ipc_create (char * id, uint64_t size){
+    int i;
     struct IPC newIPC;
-    void * address = requestMemorySpace(size);
+    void * address = requestMemorySpace(size * BLOCK_SIZE);
     memcpy(newIPC.id,id,ID_SIZE);
     newIPC.address = address;
     newIPC.write = 0;
     newIPC.read = 0;
     newIPC.unread = 0;
     newIPC.free = size;
+    newIPC.waiting = 0;
+    for (i = 0; i < MAX_QUEUE; ++i)
+    {
+        newIPC.waitPids[i] = -1;
+    }
     arrIPC[IPCCounter] = newIPC;
     IPCCounter++;
 	return 1;
@@ -41,38 +45,50 @@ int findId( char * id) {
 
 void ipc_write(char * id,char * string,uint64_t messageSize){
     int ipcId = findId(id);
+    if (ipcId == -1){
+        return;
+    }
     IPC ipc = arrIPC[ipcId];
 
-    if (messageSize > ipc.size) {
+    if (messageSize > BLOCK_SIZE) {
         // No entra, retornamos
         return;
     }
 
-    if (messageSize > ipc.free) {
-        // No entra, retornamos
-        return;
-    }
-
-    if (ipc.write + messageSize > ipc.size)
+    if (ipc.free == 0)
     {
-        // Hay q copiar la mitad y la otra mitad al principio
-        uint64_t endSize = ipc.size - ipc.write;
-        uint64_t startSize = messageSize - endSize;
-        memcpy(ipc.address + ipc.write, string, endSize);
-        memcpy(ipc.address, string + endSize, startSize);
-        ipc.write = startSize;
-    } else {
-        // hay lugar para todo, vamos a copiar el string al buffer
-        memcpy(ipc.address + ipc.write, string, messageSize);
-        ipc.write += messageSize;
+        // No hay bloques libres en el ipc, retornamos
+        return;
     }
 
-    ipc.free -= messageSize;
-    ipc.unread += messageSize;
+    void * writeAddress = ipc.address + BLOCK_SIZE * ipc.write;
+    memset(writeAddress, 0, BLOCK_SIZE);
+    memcpy(writeAddress, string, messageSize);
+
+    ipc.write = (ipc.write + 1) % ipc.size;
+    ipc.free -= 1;
+    ipc.unread += 1;
 }
 
 void ipc_read(char * id,char * string,uint64_t messageSize){
+    int ipcId = findId(id);
+    if ( ipcId == -1)
+    {
+        return;
+    }
+    
+    IPC ipc = arrIPC[ipcId];
 
+    while (!ipc.unread)
+    {
+        _syscall(16); // Syscall de sleep para dormir ( en teoria vuelve aca despues, hay q probarlo)
+    }
+    // Hay bloques sin leer
+    memcpy(string, ipc.address + BLOCK_SIZE * ipc.read, messageSize);
+    ipc.free += 1;
+    ipc.unread -= 1;
+    ipc.read = (ipc.read + 1) % ipc.size;
+    
 }
 
 void ipc_list(){
