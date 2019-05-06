@@ -7,6 +7,7 @@
 
 typedef struct IPC{
     char id[ID_SIZE];
+    int IPCcounter;
     void * address;
     uint64_t write;
     uint64_t read;
@@ -15,8 +16,4 @@ typedef struct IPC{
 } IPC;
 
 #endif
-
-
-
-
 
