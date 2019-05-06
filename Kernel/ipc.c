@@ -6,6 +6,7 @@
 #include "include/drivers/vesaDriver.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
+#include "include/scheduler/scheduler.h"
 
 IPC arrIPC[MAX_IPCS];
 
@@ -37,6 +38,7 @@ int ipc_create (char * id, uint64_t size){
         newIPC.read = 0;
         newIPC.unread = 0;
         newIPC.free = size;
+        newIPC.size = size;
         newIPC.waiting = 0;
         for (i = 0; i < MAX_QUEUE; ++i)
         {
@@ -55,13 +57,14 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     if (ipcId == -1){
         return;
     }
+
+    
     IPC ipc = arrIPC[ipcId];
 
     if (messageSize > BLOCK_SIZE) {
         // No entra, retornamos
         return;
     }
-
     if (ipc.free == 0)
     {
         // No hay bloques libres en el ipc, retornamos
@@ -72,9 +75,24 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     memset(writeAddress, 0, BLOCK_SIZE);
     memcpy(writeAddress, string, messageSize);
 
+
+    
+
+    if (ipc.waiting > 0) {
+        int nextPid = ipc.waitPids[0];
+        ipc.waitPids[0] = -1;
+        for (int i = 1; i < ipc.waiting - 1; ++i)
+        {
+            ipc.waitPids[i -1 ] = ipc.waitPids[i];
+        }
+        ipc.waiting -= 1;
+        wakePID(nextPid);
+    }
+
     ipc.write = (ipc.write + 1) % ipc.size;
     ipc.free -= 1;
     ipc.unread += 1;
+    arrIPC[ipcId] = ipc;
 }
 
 void ipc_read(char * id,char * string,uint64_t messageSize){
@@ -86,22 +104,26 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     
     IPC ipc = arrIPC[ipcId];
 
-    while (!ipc.unread)
+    if (!ipc.unread)
     {
-        _syscall(16); // Syscall de sleep para dormir ( en teoria vuelve aca despues, hay q probarlo)
+        ipc.waitPids[ipc.waiting] = pid();
+        ipc.waiting += 1;
+        arrIPC[ipcId] = ipc;
+        ipc_sleep(); // Pongo el proceso a dormir hasta q lo despierten (por ejemplo con sys_write)
     }
+    ipc = arrIPC[ipcId];
     // Hay bloques sin leer
     memcpy(string, ipc.address + BLOCK_SIZE * ipc.read, messageSize);
     ipc.free += 1;
     ipc.unread -= 1;
     ipc.read = (ipc.read + 1) % ipc.size;
-    
+    arrIPC[ipcId] = ipc;
 }
 
 void ipc_list(){
-    int i;
+    int i, j;
     nextLine();
-    printWhiteString("id | addresss | IPCcounter | Read/Unread");
+    printWhiteString("id | addresss | IPCcounter | Read | Write | Unread | Free | Size | Waiting");
     nextLine();
     for (i = 0; i < IPCcounter ; ++i)
     {
@@ -116,9 +138,27 @@ void ipc_list(){
 
         printUint((uint64_t) (uintptr_t)arrIPC[i].read);
         printWhiteString("    |    ");
+        printUint((uint64_t) (uintptr_t)arrIPC[i].write);
+        printWhiteString("    |    ");
 
         printUint((uint64_t) (uintptr_t)arrIPC[i].unread);
+        printWhiteString("    |    ");
+        printUint((uint64_t) (uintptr_t)arrIPC[i].free);
+        printWhiteString("    |    ");
+        printUint((uint64_t) (uintptr_t)arrIPC[i].size);
+        printWhiteString("    |    ");
+        printUint((uint64_t) (uintptr_t)arrIPC[i].waiting);
 
+        if (arrIPC[i].waiting > 0)
+        {
+            nextLine();
+            printWhiteString("Waiting PIDS:");
+            for (j = 0; j < arrIPC[i].waiting; ++j)
+            {
+                printInt(arrIPC[i].waitPids[j]);
+                printWhiteString(", ");
+            }
+        }
         nextLine();
     }
 }

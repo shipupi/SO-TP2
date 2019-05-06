@@ -272,8 +272,6 @@ void wakePID(int pid) {
 	}
 }
 
-
-
-
-
-
+int pid() {
+	return activeProcess;
+}

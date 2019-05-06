@@ -359,14 +359,14 @@ _syscall:
   mov rdi, rsi
   mov rsi, rdx
   mov rdx, rcx
-  call sys_ipc_write
+  call sys_ipc_read
   jmp .continue
 
 .syscall13:
   mov rdi, rsi
   mov rsi, rdx
   mov rdx, rcx
-  call sys_ipc_read
+  call sys_ipc_write
   jmp .continue
 
 .syscall14:

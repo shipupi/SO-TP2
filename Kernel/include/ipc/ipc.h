@@ -21,6 +21,14 @@ typedef struct IPC{
     int64_t waitPids[MAX_QUEUE];
 } IPC;
 
+
+// ipc.c
+void ipc_read(char * id,char * string,uint64_t messageSize);
+void ipc_write(char * id,char * string,uint64_t messageSize);
+int ipc_create (char * id, uint64_t size);
+void ipc_list();
+// ipc.asm
+void ipc_sleep();
 #endif
 
 

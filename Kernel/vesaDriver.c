@@ -459,3 +459,8 @@ void printInt(int num) {
   }
   printWhiteString(string);
 }
+
+void pl(char * string) {
+  nextLine();
+  printWhiteString(string);
+}

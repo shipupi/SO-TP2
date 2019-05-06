@@ -7,6 +7,7 @@
 #include "drivers/time.h"
 #include "memoryManager/memoryManager.h"
 #include "scheduler/scheduler.h"
+#include "include/ipc/ipc.h"
 
 
 #define SYSCALLNUMBER 11
@@ -149,11 +150,11 @@ void sys_ipc_create(char * id,uint64_t size){
 	ipc_create(id,size);
 }
 
-void sys_ipc_write(char * id,char * string,uint64_t messageSize){
-	printWhiteString("IPC_WRITE");
+void sys_ipc_write(char * id, char * string, uint64_t messageSize){
+	ipc_write(id, string, messageSize);
 }
 
-void sys_ipc_read(char * id,char * string,uint64_t messageSize){
+void sys_ipc_read(char * id, char * string, uint64_t messageSize){
 	ipc_read(id,string,messageSize);
 }
 

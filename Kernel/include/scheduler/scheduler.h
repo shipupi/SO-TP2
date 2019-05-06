@@ -9,4 +9,5 @@ void listProcesses();
 void sleepPID(int pid);
 void wakePID(int pid);
 void sleep();
+int pid();
 #endif

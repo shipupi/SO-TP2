@@ -138,12 +138,22 @@ int shell_execute(char *command,int background, char *arguments) {
 	else if (strcmp(command, "createIPC") == 0 || strcmp(command, "&createIPC") == 0){
 		//os_ipc_create();
 	}
-	else if (strcmp(command, "testIPC") == 0 || strcmp(command, "&testIPC") == 0){
+	else if (strcmp(command, "ipcs") == 0 || strcmp(command, "&testIPC") == 0){
 		testIPC();
 	}
-	else if (strcmp(command, "testReadWriteIPC") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
+	else if (strcmp(command, "trw") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
 		testReadWriteIPC();
 	}
+
+	else if (strcmp(command, "trw2") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
+		os_addProcess(&testReadWriteIPC2,1,'c',1,4000);
+	}
+	else if (strcmp(command, "trw3") == 0 || strcmp(command, "&testReadWriteIPC") == 0){
+		testReadWriteIPC3();
+	}
+
+
+	
 	else {
 		printf("\nshell: ");
 		printf(command);

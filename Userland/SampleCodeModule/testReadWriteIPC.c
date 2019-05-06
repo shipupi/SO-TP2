@@ -10,19 +10,23 @@ void testReadWriteIPC(){
 	
 	os_ipc_create("uno",10);
 	os_ipc_create("dos",20);
-	os_ipc_create("tres",30);
-	os_ipc_create("cuatro",40);
-	os_ipc_create("bajan",50);
+	os_ipc_create("tre",30);
+	os_ipc_create("cua",40);
+	os_ipc_create("baj",50);
 
 	//todo probar crear cosas q ya existen 
 
 	//todo probar que pasa si escribo mas de lo q entra
 
-	os_ipc_write("bajan","Bajan Cerati Spinetta",55);
+	os_ipc_write("baj","Bajan Cerati Spinetta",55);
 
 	char msg[55];
+	msg[0] = '1';
+	msg[1] = 0;
 
-	os_ipc_read("bajan",msg,55);
+	os_ipc_list();
+
+	os_ipc_read("baj",msg,55);
 
 	printf(msg);
 
@@ -30,5 +34,19 @@ void testReadWriteIPC(){
 }
 
 
+void testReadWriteIPC2(){
+	char msg[55];
+	msg[0] = '1';
+	msg[1] = 0;
+	os_ipc_create("baj",3);
+	while(1) {
+		os_ipc_read("baj",msg,55);
+		printf(msg);
+	}
 
+}
 
+void testReadWriteIPC3() {
+	os_ipc_create("baj",3);	
+	os_ipc_write("baj","Bajan Cerati Spinetta",55);
+}
