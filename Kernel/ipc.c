@@ -3,6 +3,7 @@
 #include "include/lib.h"
 #include "ipc/ipc.h"
 #include "include/string.h"
+#include "include/utils.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
 #include "include/scheduler/scheduler.h"

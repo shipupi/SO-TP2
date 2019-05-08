@@ -1,15 +1,11 @@
 #include <stdint.h>
 #include "memoryManager/memoryManager.h"
-#include "scheduler/PCB.h"
-#include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
 #include "string.h"
-#include <naiveLegacy/naiveClock.h>
-#include <naiveLegacy/naiveConsole.h>
 #include "ipc/mutex.h"
 #include "include/lib.h"
-#include "include/interrupts.h"
+#include "include/utils.h"
 #include "include/scheduler/scheduler.h"
 
 
@@ -30,6 +26,24 @@ int findIdMUT( char * id) {
     }
     return foundId;
 }
+
+void addProcessToQueue(int mId) {
+    // int pid;
+    // pid = getPid();
+    // for (int i = 0; i < arrMUT[mId].waiting; ++i)
+    // {
+    //     if (arrMUT[mId].waitPids[i] == pid)
+    //     {
+    //         return;
+    //     }
+    // }
+    // arrMUT[mId].waitPids[arrMUT[mId].waiting] = pid;
+    // arrMUT[mId].waiting += 1;
+    // return;
+
+
+}
+
 
 int mut_create(char * id){
 	if(findIdMUT(id)==-1){
@@ -87,15 +101,16 @@ int mut_request(char * id){
     if (mId == -1){
         return -1;
     }
-    MUT m = arrMUT[mId];
-    if (m.value == MUT_LOCKED)
-    {
-        m.waitPids[m.waiting] = pid();
-        m.waiting += 1;
-        arrMUT[mId] = m;
-        printInt(pid());
-        ipc_sleep();
-    }
+    MUT m;
+    
+    while(1) {
+        int a = MUT_LOCKED;
+        exch(a, (uintptr_t)&arrMUT[mId].value);
+        if (a == MUT_LOCKED) {
+            addProcessToQueue(mId);
+            ipc_sleep();
+        }
+    }    
     m.value = MUT_LOCKED;
     arrMUT[mId] = m;
     return 1;
