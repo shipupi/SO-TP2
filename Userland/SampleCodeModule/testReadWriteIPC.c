@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "syscalls.h"
 #include "applications.h"
+#include "PCB.h"
 
 void testReadWriteIPC(){
 	printf("\ntestIPC\n");
@@ -34,6 +35,15 @@ void testReadWriteIPC(){
 
 
 void testReadWriteIPC2(){
+	PCB p;
+	os_pstat(&p);
+	if (p.foreground == PCB_FOREGROUND)
+	{
+		printf("This application can only be run on the background\n");
+		return;
+	}
+
+
 	char msg[55];
 	msg[0] = '1';
 	msg[1] = 0;

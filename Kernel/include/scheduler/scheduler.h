@@ -12,4 +12,5 @@ void wakePID(int pid);
 void sleep();
 
 int pid();
+void process_status(void * pcbAddr);
 #endif

@@ -5,6 +5,6 @@
 
 
 void int20();
-void exch(int val, int memPos);
+int exch(int val, int pos);
 void halt();
 #endif

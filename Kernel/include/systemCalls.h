@@ -24,6 +24,7 @@ uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t for
 void sys_endProcess(int pid);
 void sys_listProcesses();
 int sys_pid();
+void sys_pstat(void * pcbAddr);
 void sys_sleep();
 void sys_ipc_create(char * id,uint64_t size);
 void sys_ipc_write(char * id,char * string,uint64_t messageSize);
@@ -40,8 +41,3 @@ void sys_mut_list();
 void sys_halt();
 void timer_tick();
 #endif /* SYSTEMCALLS_H */
-
-
-
-
-

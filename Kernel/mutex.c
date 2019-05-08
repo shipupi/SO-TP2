@@ -7,7 +7,7 @@
 #include "include/lib.h"
 #include "include/utils.h"
 #include "include/scheduler/scheduler.h"
-
+#include "include/scheduler/scheduler.h"
 
 MUT arrMUT[MAX_MUTS];
 
@@ -28,18 +28,19 @@ int findIdMUT( char * id) {
 }
 
 void addProcessToQueue(int mId) {
-    // int pid;
-    // pid = getPid();
-    // for (int i = 0; i < arrMUT[mId].waiting; ++i)
-    // {
-    //     if (arrMUT[mId].waitPids[i] == pid)
-    //     {
-    //         return;
-    //     }
-    // }
-    // arrMUT[mId].waitPids[arrMUT[mId].waiting] = pid;
-    // arrMUT[mId].waiting += 1;
-    // return;
+    int pId;
+    pId = pid();
+    // printWhiteString("adding pid to queue:"); printInt(pId); 
+    for (int i = 0; i < arrMUT[mId].waiting; ++i)
+    {
+        if (arrMUT[mId].waitPids[i] == pId)
+        {
+            return;
+        }
+    }
+    arrMUT[mId].waitPids[arrMUT[mId].waiting] = (uint64_t)pId;
+    arrMUT[mId].waiting += 1;
+    return;
 
 
 }
@@ -77,7 +78,7 @@ int mut_release(char * id){
     if (mId == -1){
         return -1;
     }
-
+    arrMUT[mId].value = MUT_UNLOCKED;
     MUT m = arrMUT[mId];
     int nextPid = -1;
 	if (m.waiting > 0) {
@@ -89,10 +90,8 @@ int mut_release(char * id){
         }
         m.waiting -= 1;
         wakePID(nextPid);
-        m.value = MUT_LOCKED;
     }
     arrMUT[mId] = m;
-
 	return 0;
 }
 
@@ -101,19 +100,16 @@ int mut_request(char * id){
     if (mId == -1){
         return -1;
     }
-    MUT m;
-    
     while(1) {
         int a = MUT_LOCKED;
-        exch(a, (uintptr_t)&arrMUT[mId].value);
+        a = exch(a, (uintptr_t)&arrMUT[mId].value);
         if (a == MUT_LOCKED) {
             addProcessToQueue(mId);
             ipc_sleep();
+        } else {
+            return 1;
         }
-    }    
-    m.value = MUT_LOCKED;
-    arrMUT[mId] = m;
-    return 1;
+    }
 }
 
 int mut_delete(char * id){
@@ -123,7 +119,7 @@ int mut_delete(char * id){
 
 void mut_list(){
 	int i;
-    // int j;
+    int j;
     nextLine();
     printWhiteString("id | value | waiting");
     nextLine();
@@ -132,13 +128,12 @@ void mut_list(){
     {
         printWhiteString(arrMUT[i].id);
         printWhiteString("   |     ");
-
-        printUint((uint64_t) (uintptr_t) arrMUT[i].value);
+        printWhiteString(arrMUT[i].value == MUT_LOCKED? "lck" : "unlck");
         printWhiteString("    |    ");
 
         printUint((uint64_t) (uintptr_t)arrMUT[i].waiting);
         //printWhiteString("    |    ");
-/*
+
         if (arrMUT[i].waiting > 0)
         {
             nextLine();
@@ -149,7 +144,7 @@ void mut_list(){
                 printWhiteString(", ");
             }
         }
-*/
+
         nextLine();
 
     }

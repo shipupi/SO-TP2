@@ -19,6 +19,4 @@ typedef struct MUT{
 
 #define MUT_UNLOCKED 2
 #define MUT_LOCKED 1
-
 #endif
-

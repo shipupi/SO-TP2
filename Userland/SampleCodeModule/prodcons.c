@@ -1,63 +1,77 @@
-#include "shell.h"
 #include "modules.h"
 #include "string.h"
 #include "stdio.h"
 #include "syscalls.h"
-#include "ipc/ipc.h"
-#include "ipc/mutex.h"
-#include "lib.h"
+#include "PCB.h"
 
-typedef char * ITEM;
-typedef char * ID;
-typedef char * MUTID;
 
-#define ITEM_SIZE 20;
+#define ITEM_SIZE 5
+#define ITEM_VAL "hola"
+#define FILL_MUTEX "fillMut"
+#define BUFFER_MUTEX "buffMut"
+#define EMPTY_MUTEX "emptyMut"
+#define IPC_SIZE 10
+#define IPC_NAME "prodcon"
 
-ITEM produceItem(MUTID id){
-	ITEM item;
-	item = requestMemorySpace(ITEM_SIZE);
-	ipc_read(id,item,ITEM_SIZE);
-	return item;
-}
 
-void consumeItem(MUTID id,ITEM item){
-	ipc_write(MUTID id,item,ITEM_SIZE);
-}
+// Codigo sacado de wikipedia: https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem
+// procedure producer() 
+// {
+//     while (true) 
+//     {
+//         item = produceItem();
+//         down(emptyCount);
+//         down(buffer_mutex);
+//         putItemIntoBuffer(item);
+//         up(buffer_mutex);
+//         up(fillCount);
+//     }
+// }
 
+// procedure consumer() 
+// {
+//     while (true) 
+//     {
+//         down(fillCount);
+//         down(buffer_mutex);
+//         item = removeItemFromBuffer();
+//         up(buffer_mutex);
+//         up(emptyCount);
+//         consumeItem(item);
+//     }
+// }
+
+// Codigo adaptado:
 void producer(){
-    while(true){
-    	MUTID emptyCount = "mut1";
-    	MUTID buffer_mutex = "mut2";
-    	ITEM item;
-    	item = requestMemorySpace(ITEM_SIZE);
-        memcpy(item,produceITEM(buffer_mutex),ITEM_SIZE);
-        
-        mut_request(emptyCount);
-        mut_request(buffer_mutex);
-        ipc_write(buffer_mutex,item,ITEM_SIZE);
-        mut_release(buffer_mutex);
-        mut_release(emptyCount)
+    while(1){
+        os_mut_request(EMPTY_MUTEX);
+        os_mut_request(BUFFER_MUTEX);
+        os_ipc_write(IPC_NAME, ITEM_VAL, ITEM_SIZE);
+        os_mut_release(BUFFER_MUTEX);
+        os_mut_release(FILL_MUTEX);
     }
 }
 
 void consumer(){
-    while(true){
-    	MUTID fillCount = "mut3";
-    	MUTID buffer_mutex = "mut4";
-        
-        mut_request(fillCount);
-        mut_request(buffer_mutex);
-        ipc_read(buffer_mutex,item,ITEM_SIZE)
-        mut_release(buffer_mutex);
-        mut_release(fillCount);
-        
-        consumeItem(buffer_mutex,item);
+    while(1){
+        char item[ITEM_SIZE];
+        os_mut_request(FILL_MUTEX);
+        os_mut_request(BUFFER_MUTEX);
+        os_ipc_read(IPC_NAME,item,ITEM_SIZE);
+        os_mut_release(BUFFER_MUTEX);
+        os_mut_release(EMPTY_MUTEX);
+        printf(item);
+        printf("\n");
     }
 }
 
-void prodcons(){
-		//producer();
-		//consumer();
+void prodCons(){
+    os_mut_create(EMPTY_MUTEX);
+    os_mut_create(FILL_MUTEX);
+    os_mut_create(BUFFER_MUTEX);
+    os_ipc_create(IPC_NAME, IPC_SIZE);
+    os_addProcess(&producer,10,'c',PCB_BACKGROUND,4000);
+    os_addProcess(&consumer,1,'c',PCB_BACKGROUND,4000);
 }
 
 

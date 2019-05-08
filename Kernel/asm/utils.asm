@@ -14,7 +14,8 @@ int20:
 exch:
 	; rdi = value
 	; rsi = memPos
-	xchg rdi, rsi
+	mov rax, rdi
+	xchg rax, [rsi]
 	ret
 
 

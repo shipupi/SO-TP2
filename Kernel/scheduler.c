@@ -7,6 +7,7 @@
 #include "ipc/ipc.h"
 #include "include/drivers/time.h"
 #include "include/utils.h"
+#include "include/lib.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -238,7 +239,7 @@ void listProcesses() {
 		printUint(processes[i].name);
 		printWhiteString("    |    ");
 
-		printUint(processes[i].foreground);
+		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
 		printWhiteString("    |    ");
 
 		printUint(processes[i].size);
@@ -268,3 +269,9 @@ void wakePID(int pid) {
 int pid() {
 	return activeProcess;
 }
+
+void process_status(void * pcbAddr) {
+	PCB p = processes[activeProcess];
+	memcpy(pcbAddr,(void *)(uintptr_t) &p, (int) sizeof(PCB));
+}
+

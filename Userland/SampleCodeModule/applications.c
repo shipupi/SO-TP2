@@ -19,7 +19,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "pong", (uintptr_t)&pong);
 	loadShortcut(scArr, "exceptionInvalidOp", (uintptr_t)&exceptionInvalidOp);
 	loadShortcut(scArr, "clear", (uintptr_t)&clear);
-	// loadShortcut(scArr, "prodCons", (uintptr_t)&prodCons);
+	loadShortcut(scArr, "prodCons", (uintptr_t)&prodCons);
 	loadShortcut(scArr, "testMemoryManager", (uintptr_t)&testMemoryManager);
 	loadShortcut(scArr, "lot", (uintptr_t)&testLottery);
 	loadShortcut(scArr, "mut", (uintptr_t)&list_mutex);

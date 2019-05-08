@@ -18,6 +18,7 @@ uint8_t os_addProcess(void * entryPoint , uint64_t priority , char name,uint8_t 
 void os_endProcess(int pid);
 void os_listProcesses();
 int os_pid();
+void os_pstat();
 void os_sleep();
 int os_ipc_create (char * id, uint64_t size);
 void os_ipc_write(char * id,char * string,uint64_t messageSize);
