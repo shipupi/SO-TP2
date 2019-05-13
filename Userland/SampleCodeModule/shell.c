@@ -5,6 +5,7 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
+#include "PCB.h"
 
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
@@ -71,7 +72,7 @@ int shell_execute(char *command,int background, char *arguments) {
 	if (found != -1) {
 		char * ptr = shortcuts[found].pointer;
 		if (bg) {
-			os_addProcess(ptr,1,'c',1,4000);
+			os_addProcess(ptr,1,'c',PCB_BACKGROUND,4000);
 		} else {
 			((EntryPoint)(ptr))();
 		}

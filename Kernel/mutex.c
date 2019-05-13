@@ -1,17 +1,13 @@
 #include <stdint.h>
 #include "memoryManager/memoryManager.h"
-#include "scheduler/PCB.h"
-#include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
 #include "string.h"
-#include <naiveLegacy/naiveClock.h>
-#include <naiveLegacy/naiveConsole.h>
 #include "ipc/mutex.h"
 #include "include/lib.h"
-#include "include/interrupts.h"
+#include "include/utils.h"
 #include "include/scheduler/scheduler.h"
-
+#include "include/scheduler/scheduler.h"
 
 MUT arrMUT[MAX_MUTS];
 
@@ -30,6 +26,25 @@ int findIdMUT( char * id) {
     }
     return foundId;
 }
+
+void addProcessToQueue(int mId) {
+    int pId;
+    pId = pid();
+    // printWhiteString("adding pid to queue:"); printInt(pId); 
+    for (int i = 0; i < arrMUT[mId].waiting; ++i)
+    {
+        if (arrMUT[mId].waitPids[i] == pId)
+        {
+            return;
+        }
+    }
+    arrMUT[mId].waitPids[arrMUT[mId].waiting] = (uint64_t)pId;
+    arrMUT[mId].waiting += 1;
+    return;
+
+
+}
+
 
 int mut_create(char * id){
 	if(findIdMUT(id)==-1){
@@ -63,7 +78,7 @@ int mut_release(char * id){
     if (mId == -1){
         return -1;
     }
-
+    arrMUT[mId].value = MUT_UNLOCKED;
     MUT m = arrMUT[mId];
     m.value = MUT_UNLOCKED;
     arrMUT[mId] = m;
@@ -79,7 +94,6 @@ int mut_release(char * id){
         wakePID(nextPid);
     }
     arrMUT[mId] = m;
-
 	return 0;
 }
 
@@ -88,21 +102,18 @@ int mut_request(char * id){
     if (mId == -1){
         return -1;
     }
-    MUT m = arrMUT[mId];
-    // exhange 1, m.value
-    int a = 1;
-    // exc(a,m.value)
-    if (m.value == MUT_LOCKED)
-    {
-        m.waitPids[m.waiting] = pid();
-        m.waiting += 1;
-        arrMUT[mId] = m;
-        printInt(pid());
-        ipc_sleep();
+
+    
+    while(1) {
+        int a = MUT_LOCKED;
+        a = exch(a, (uintptr_t)&arrMUT[mId].value);
+        if (a == MUT_LOCKED) {
+            addProcessToQueue(mId);
+            ipc_sleep();
+        } else {
+            return 1;
+        }
     }
-    m.value = MUT_LOCKED;
-    arrMUT[mId] = m;
-    return 1;
 }
 
 int mut_delete(char * id){
@@ -112,7 +123,7 @@ int mut_delete(char * id){
 
 void mut_list(){
 	int i;
-    // int j;
+    int j;
     nextLine();
     printWhiteString("id | value | waiting");
     nextLine();
@@ -121,13 +132,12 @@ void mut_list(){
     {
         printWhiteString(arrMUT[i].id);
         printWhiteString("   |     ");
-
-        printUint((uint64_t) (uintptr_t) arrMUT[i].value);
+        printWhiteString(arrMUT[i].value == MUT_LOCKED? "lck" : "unlck");
         printWhiteString("    |    ");
 
         printUint((uint64_t) (uintptr_t)arrMUT[i].waiting);
         //printWhiteString("    |    ");
-/*
+
         if (arrMUT[i].waiting > 0)
         {
             nextLine();
@@ -138,7 +148,7 @@ void mut_list(){
                 printWhiteString(", ");
             }
         }
-*/
+
         nextLine();
 
     }

@@ -6,6 +6,8 @@
 #include "interrupts.h"
 #include "ipc/ipc.h"
 #include "include/drivers/time.h"
+#include "include/utils.h"
+#include "include/lib.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -20,12 +22,11 @@
 static int PIDCounter = 0;
 static int activeProcess = -1;
 static int m_ticket = 0;
-
+static int a = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
 	int runi = (ticks_elapsed()*31*17*11)%(MAXPROCESSES*MAXPROCESSES);
-	;
 	return runi;
 }
 
@@ -111,11 +112,14 @@ void * schedule(void * oldStack) {
 		}
 	}
 
+
 	// Si no hay processescesos activos, hago un halt
 	// Pero hay q ver como arreglo el stack?
+
 	if (n == 0)
 	{
-		// sleep?
+		pl("no active processes, goodnight!");
+		halt();
 	}
 
 	// Tengo la cantidad de procesos activos y los tengo metidos en un array
@@ -186,7 +190,6 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	PIDCounter++;
 	lottery();
 	return 1;
-
 }
 
 // Ends the process
@@ -236,7 +239,7 @@ void listProcesses() {
 		printUint(processes[i].name);
 		printWhiteString("    |    ");
 
-		printUint(processes[i].foreground);
+		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
 		printWhiteString("    |    ");
 
 		printUint(processes[i].size);
@@ -267,4 +270,8 @@ int pid() {
 	return activeProcess;
 }
 
+void process_status(void * pcbAddr) {
+	PCB p = processes[activeProcess];
+	memcpy(pcbAddr,(void *)(uintptr_t) &p, (int) sizeof(PCB));
+}
 

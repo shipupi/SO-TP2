@@ -27,6 +27,7 @@ GLOBAL os_mut_release
 GLOBAL os_mut_delete
 GLOBAL os_mut_list
 GLOBAL os_pid
+GLOBAL os_pstat
 
 section .text
 
@@ -312,6 +313,13 @@ os_mut_list:
 os_pid:
 	start
 	mov rdi, 0x1D
+	int 80h
+	finish
+
+os_pstat:
+	start
+	mov rsi,rdi
+	mov rdi, 0x1E
 	int 80h
 	finish
 

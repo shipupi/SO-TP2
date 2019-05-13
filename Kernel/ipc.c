@@ -27,6 +27,23 @@ int findId( char * id) {
     return foundId;
 }
 
+void addProcessToIPCQueue(int ipcId) {
+    int p;
+    p = pid();   
+    IPC ipc = arrIPC[ipcId];
+    for (int i = 0; i < arrIPC[ipcId].waiting; ++i)
+    {
+        if (arrIPC[ipcId].waitPids[i] == p)
+        {
+            return;
+        }
+    }
+    ipc.waitPids[ipc.waiting] = p;
+    ipc.waiting += 1;
+    arrIPC[ipcId] = ipc;
+    return;
+}
+
 int ipc_create (char * id, uint64_t size){
     if(findId(id)==-1){
         int i;
@@ -64,7 +81,7 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
         return;
     }
 
-    mut_request(id);
+    mut_request(id);    
 
 
     //  ZONA CRITICA 
@@ -108,16 +125,17 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     mut_request(id);
     // ZONA CRITICA
     IPC ipc = arrIPC[ipcId];
-
-    if (!ipc.unread)
-    {
-        ipc.waitPids[ipc.waiting] = pid();
-        ipc.waiting += 1;
-        arrIPC[ipcId] = ipc;
-        mut_release(id);
-        ipc_sleep(); // Pongo el proceso a dormir hasta q lo despierten (por ejemplo con sys_write)
-        mut_request(id);
-    } else 
+    while(1) {
+        if (!arrIPC[ipcId].unread)
+        {
+            addProcessToIPCQueue(ipcId);
+            mut_release(id);
+            ipc_sleep(); // Pongo el proceso a dormir hasta q lo despierten (por ejemplo con sys_write)
+            mut_request(id);
+        } else {
+            break;
+        }
+    }
     ipc = arrIPC[ipcId];
     // Hay bloques sin leer
     memcpy(string, ipc.address + BLOCK_SIZE * ipc.read, messageSize);
@@ -126,9 +144,10 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     ipc.read = (ipc.read + 1) % ipc.size;
     arrIPC[ipcId] = ipc;
 
-    // FIN ZONA CRITICA
+    // FIN DE ZONA CRITICA
     mut_release(id);
 }
+
 
 void ipc_list(){
     int i, j;

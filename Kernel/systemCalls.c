@@ -203,4 +203,9 @@ int  sys_pid() {
 	return pid();
 }
 
+void sys_pstat(void * pcbAddr) {
+	process_status(pcbAddr);
+	return;
+}
+
 

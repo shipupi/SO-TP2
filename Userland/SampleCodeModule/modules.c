@@ -7,21 +7,49 @@
 
 void help() {
 	printf("\nHelp Manual for TPEG2");
+
 	printf("\nclear:");
 	printf("\n\tIt will clear the screen");
+
 	printf("\ntime:");
 	printf("\n\tIt will display on screen the current time in hh:mm:ss format");
-	printf("\nexceptionDiv:");
-	printf("\n\tIt will launch test program to verify the correct implementation of the handled exception: DivisionByZeroException");
-	printf("\n\tException occurs when division by 0 is attempted");
-	printf("\nexceptionInvalidOp:");
-	printf("\n\tIt will launch test program to verify the correct implementation of the handled exception: WrongOpcodeException");
-	printf("\n\tException occurs with the wrong use of operands");
-	printf("\npong:");
-	printf("\n\tIt will launch the game Pong");
-	printf("\n\tUse WS and IK to move up and down the paddles. CTRL + c to exit the game.");
-	printf("\nexit:");
-	printf("\n\tcloses the terminal");
+
+	printf("\ntestMemoryManager:");
+	printf("\n\tTests the memory manager");
+
+	printf("\nnumbers:");
+	printf("\n\tPrint numbers");
+
+	printf("\nprodCons:");
+	printf("\n\tsolution to the producers consumers problem");
+
+	printf("\ntrw:");
+	printf("\n\tCrea 4 IPC y los lista");
+
+	printf("\ntrw1:");
+	printf("\n\tEs un consumidor del IPC con id 'baj' (loop infinito) ");
+
+	printf("\ntrw2:");
+	printf("\n\tEs un productor del IPC con id 'baj' (solo una vez)");
+
+	printf("\nmut:");
+	printf("\n\tlist mutexes");
+
+	printf("\nmut1:");
+	printf("\n\tEs un consumidor del MUTEX con id 'test (loop infinito)'");
+
+	printf("\nmut2:");
+	printf("\n\tEs un productor del MUTEX con id 'test (solo una vez)'");
+
+	printf("\nps:");
+	printf("\n\tlist proccesses");
+
+	printf("\nlot:");
+	printf("\n\ttest the lottery scheduling with two processes of differnt priorities");
+
+	printf("\nipcs:");
+	printf("\n\tipcs");
+	
 }
 
 void showTime() {
