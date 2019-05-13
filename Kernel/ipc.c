@@ -2,6 +2,7 @@
 #include "memoryManager/memoryManager.h"
 #include "include/lib.h"
 #include "ipc/ipc.h"
+#include "ipc/mutex.h"
 #include "include/string.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
@@ -38,6 +39,7 @@ int ipc_create (char * id, uint64_t size){
         newIPC.unread = 0;
         newIPC.free = size;
         newIPC.size = size;
+        mut_create(id);
         newIPC.waiting = 0;
         for (i = 0; i < MAX_QUEUE; ++i)
         {
@@ -57,25 +59,24 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     if (ipcId == -1){
         return;
     }
-
-    
-    IPC ipc = arrIPC[ipcId];
-
     if (messageSize > BLOCK_SIZE){
         // No entra, retornamos
         return;
     }
+
+    mut_request(id);
+
+
+    //  ZONA CRITICA 
+    IPC ipc = arrIPC[ipcId];
     if (ipc.free == 0){
         // No hay bloques libres en el ipc, retornamos
+        mut_release(id);
         return;
     }
-
     void * writeAddress = ipc.address + BLOCK_SIZE * ipc.write;
     memset(writeAddress, 0, BLOCK_SIZE);
     memcpy(writeAddress, string, messageSize);
-
-
-    
 
     if (ipc.waiting > 0) {
         int nextPid = ipc.waitPids[0];
@@ -92,6 +93,9 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     ipc.free -= 1;
     ipc.unread += 1;
     arrIPC[ipcId] = ipc;
+
+    // FIN DE ZONA CRITICA
+    mut_release(id);
 }
 
 void ipc_read(char * id,char * string,uint64_t messageSize){
@@ -101,6 +105,8 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
         return;
     }
     
+    mut_request(id);
+    // ZONA CRITICA
     IPC ipc = arrIPC[ipcId];
 
     if (!ipc.unread)
@@ -108,8 +114,10 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
         ipc.waitPids[ipc.waiting] = pid();
         ipc.waiting += 1;
         arrIPC[ipcId] = ipc;
+        mut_release(id);
         ipc_sleep(); // Pongo el proceso a dormir hasta q lo despierten (por ejemplo con sys_write)
-    }
+        mut_request(id);
+    } else 
     ipc = arrIPC[ipcId];
     // Hay bloques sin leer
     memcpy(string, ipc.address + BLOCK_SIZE * ipc.read, messageSize);
@@ -117,6 +125,9 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     ipc.unread -= 1;
     ipc.read = (ipc.read + 1) % ipc.size;
     arrIPC[ipcId] = ipc;
+
+    // FIN ZONA CRITICA
+    mut_release(id);
 }
 
 void ipc_list(){

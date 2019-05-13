@@ -65,6 +65,8 @@ int mut_release(char * id){
     }
 
     MUT m = arrMUT[mId];
+    m.value = MUT_UNLOCKED;
+    arrMUT[mId] = m;
     int nextPid = -1;
 	if (m.waiting > 0) {
         nextPid = m.waitPids[0];
@@ -75,7 +77,6 @@ int mut_release(char * id){
         }
         m.waiting -= 1;
         wakePID(nextPid);
-        m.value = MUT_LOCKED;
     }
     arrMUT[mId] = m;
 
@@ -88,6 +89,9 @@ int mut_request(char * id){
         return -1;
     }
     MUT m = arrMUT[mId];
+    // exhange 1, m.value
+    int a = 1;
+    // exc(a,m.value)
     if (m.value == MUT_LOCKED)
     {
         m.waitPids[m.waiting] = pid();
