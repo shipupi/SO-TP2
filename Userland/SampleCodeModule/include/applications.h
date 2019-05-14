@@ -14,6 +14,8 @@ void sleep();
 void sleepPID(int pid);
 void wakePID(int pid);
 void prodCons();
+void addProd();
+void addCons();
 void testIPC();
 void testLottery();
 void testReadWriteIPC();

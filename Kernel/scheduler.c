@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "memoryManager/memoryManager.h"
+#include "include/memoryManager/memoryManager.h"
 #include "scheduler/PCB.h"
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
@@ -22,7 +22,6 @@
 static int PIDCounter = 0;
 static int activeProcess = -1;
 static int m_ticket = 0;
-static int a = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){

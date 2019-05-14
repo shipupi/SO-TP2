@@ -96,6 +96,7 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     memcpy(writeAddress, string, messageSize);
 
     if (ipc.waiting > 0) {
+
         int nextPid = ipc.waitPids[0];
         ipc.waitPids[0] = -1;
         for (int i = 1; i < ipc.waiting - 1; ++i)
@@ -121,8 +122,8 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     {
         return;
     }
-    
     mut_request(id);
+
     // ZONA CRITICA
     IPC ipc = arrIPC[ipcId];
     while(1) {
@@ -152,7 +153,7 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
 void ipc_list(){
     int i, j;
     nextLine();
-    printWhiteString("id | addresss | IPCcounter | Read | Write | Unread | Free | Size | Waiting");
+    printWhiteString("id        |     addresss   |  IPCID  |   Read  |  Write  |  Unread |  Free    |  Size    |  Waiting");
     nextLine();
     for (i = 0; i < IPCcounter ; ++i)
     {
