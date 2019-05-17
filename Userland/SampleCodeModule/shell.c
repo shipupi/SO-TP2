@@ -13,7 +13,10 @@ void shell_init() {
 	//Start Shell
 	programs = initializeShortcutsArray(shortcuts);
 	static char buffer[MAX_COMMAND_LENGTH];
+	static char rightpipe[MAX_COMMAND_LENGTH];
+	static char leftpipe[MAX_COMMAND_LENGTH];	
 	static char command[MAX_COMMAND_LENGTH];
+	static char commandright[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
 	int background = 0;
 	int exit = 0;
@@ -26,8 +29,51 @@ void shell_init() {
 		printf("\n$>");
 		scanf(buffer, MAX_COMMAND_LENGTH);
 		int length = strlen(buffer);
-		int i;
+		int i,j;
 		int found = 0;
+		int foundleft = 0;
+		int foundright = 0;
+		int foundpipe = 0;
+		int pipeindex=0;
+
+
+		// busco pipes en el buffer
+		for (i = 0; i< length; i++){
+			if(buffer[i] == '|'){
+				foundpipe = 1;
+				pipeindex = i;
+			}
+		}
+
+		// si encuentro un pipe llamo a los dos procesos por separado
+		for(i = 0; i< pipeindex && foundpipe == 1; i++){
+			leftpipe[i] = buffer[i];
+			//copio y pego la forma de llamar 
+			if (buffer[i] == '|' && i != length-1) {
+				memcopy((void *) (uintptr_t) command, leftpipe, i);
+				command[i+1] = 0;
+				memcopy((void *) (uintptr_t) arguments, leftpipe + i + 1, length - i - 1);
+				arguments[length -i] = 0;
+				foundright = 1;
+				break;
+			}
+
+		}
+
+		for (i = pipeindex, j = 0 ; i <length && foundpipe == 1 ; i++, j++){
+			rightpipe[j] = buffer[i];
+			//copio y pego la forma de llamar 
+			if (buffer[i] == ' ' && i != length-1) {
+				memcopy((void *) (uintptr_t) commandright, rightpipe, i);
+				command[i+1] = 0;
+				memcopy((void *) (uintptr_t) arguments, rightpipe + i + 1, length - i - 1);
+				arguments[length -i] = 0;
+				foundleft = 1;
+				break;
+			}
+			
+		}
+
 		for (i = 0; i < length; ++i)
 		{
 			if (buffer[i] == ' ' && i != length-1) {
