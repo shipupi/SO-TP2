@@ -31,6 +31,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "trw", (uintptr_t)&testReadWriteIPC);
 	loadShortcut(scArr, "trw1", (uintptr_t)&testReadWriteIPC2);
 	loadShortcut(scArr, "trw2", (uintptr_t)&testReadWriteIPC3);
+	loadShortcut(scArr, "pipe", (uintptr_t)&pipe);
 
 	return i;
 }

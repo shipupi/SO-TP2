@@ -26,5 +26,6 @@ void test_mutex();
 void list_mutex();
 void mut1();
 void mut2();
+void pipe();
 #endif
 
