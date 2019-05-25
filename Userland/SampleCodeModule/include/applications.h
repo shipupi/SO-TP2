@@ -27,5 +27,8 @@ void list_mutex();
 void mut1();
 void mut2();
 void pipe();
+void changePriority();
 #endif
+
+
 

@@ -10,7 +10,6 @@
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
 
-
 #define SYSCALLNUMBER 11
 
 static void * systemCallsArray[] = {
@@ -225,5 +224,10 @@ void sys_pipe_read(char * pipeid , char * buffer , int messageSize){
 
 void sys_pipe_write(char * pipeid , char * buffer , int messageSize){
 	pipe_write(pipeid,buffer,messageSize);
+	return;
+}
+
+void sys_change_priority(uint64_t pid , int priority){
+	//changePriority(pid,priority);
 	return;
 }

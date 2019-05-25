@@ -67,6 +67,8 @@ EXTERN sys_pipe_delete
 EXTERN sys_pipe_read
 EXTERN sys_pipe_write
 
+EXTERN sys_change_priority
+
 SECTION .text
 
 %macro pushState 0
@@ -302,6 +304,9 @@ _syscall:
   cmp rdi, 0x22   ; pipe write
   je .syscall22
 
+  cmp rdi, 0x23   ; change priority
+  je .syscall23
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -493,6 +498,12 @@ _syscall:
   mov rsi, rdx
   mov rdx, rcx
   call sys_pipe_write
+  jmp .continue
+
+  .syscall23:
+  mov rdi, rsi
+  mov rsi, rdx
+  call sys_change_priority
   jmp .continue
 
 ; EXCEPTIONS 

@@ -34,6 +34,8 @@ GLOBAL os_pipe_delete
 GLOBAL os_pipe_read
 GLOBAL os_pipe_write
 
+GLOBAL os_change_priority
+
 section .text
 
 %macro start 0
@@ -357,6 +359,14 @@ os_pipe_write:
 	mov rdx,rsi
 	mov rsi,rdi
 	mov rdi, 0x22
+	int 80h
+	finish
+
+os_change_priority:
+	start
+	mov rdx,rsi
+	mov rsi,rdi
+	mov rdi, 0x23
 	int 80h
 	finish
 
