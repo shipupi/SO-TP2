@@ -28,6 +28,7 @@ GLOBAL os_mut_delete
 GLOBAL os_mut_list
 GLOBAL os_pid
 GLOBAL os_pstat
+GLOBAL os_pipe_create
 
 section .text
 
@@ -320,6 +321,15 @@ os_pstat:
 	start
 	mov rsi,rdi
 	mov rdi, 0x1E
+	int 80h
+	finish
+
+os_pipe_create:
+	start
+	mov rcx,rdx
+	mov rdx,rsi
+	mov rsi,rdi
+	mov rdi, 0x1F
 	int 80h
 	finish
 

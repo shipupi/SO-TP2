@@ -208,4 +208,9 @@ void sys_pstat(void * pcbAddr) {
 	return;
 }
 
+void sys_pipe_create(char * pipeid){
+	printWhiteString(pipeid);
+	printInt(1901);
+}
+
 

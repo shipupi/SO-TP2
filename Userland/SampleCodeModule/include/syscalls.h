@@ -32,5 +32,6 @@ int os_mut_request(char * id);
 int os_mut_release(char * id);
 int os_mut_delete(char * id);
 void os_mut_list();
+void os_pipe_create(char * pipeid);
 
 #endif

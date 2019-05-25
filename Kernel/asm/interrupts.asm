@@ -62,6 +62,8 @@ EXTERN schedule
 EXTERN sleep
 EXTERN timer_handler
 
+EXTERN sys_pipe_create
+
 SECTION .text
 
 %macro pushState 0
@@ -285,6 +287,9 @@ _syscall:
   cmp rdi, 0x1E   ; pstat
   je .syscall1E
 
+  cmp rdi, 0x1F   ; crreate pipe
+  je .syscall1F
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -452,6 +457,11 @@ _syscall:
 .syscall1E:
   mov rdi, rsi
   call sys_pstat
+  jmp .continue
+
+  .syscall1F:
+  mov rdi, rsi
+  call sys_pipe_create
   jmp .continue
 
 ; EXCEPTIONS 
