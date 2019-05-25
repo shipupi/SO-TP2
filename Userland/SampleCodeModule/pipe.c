@@ -6,6 +6,9 @@
 #include "applications.h"
 void pipe(){
 	printf("\nPIPE");
-	//os_listProcesses();
+	os_pipe_create("abc");
 	return ;
 }
+
+
+

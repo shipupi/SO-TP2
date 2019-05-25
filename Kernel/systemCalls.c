@@ -209,8 +209,10 @@ void sys_pstat(void * pcbAddr) {
 }
 
 void sys_pipe_create(char * pipeid){
-	printWhiteString(pipeid);
-	printInt(1901);
+	//printWhiteString(pipeid);
+	//printInt(1901);
+	pipe_create(pipeid);
+	return;
 }
 
 
