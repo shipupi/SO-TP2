@@ -9,6 +9,11 @@
 #include "include/ipc/pipe.h"
 
 void pipe_create(char * pipeid){
+	printWhiteString("	");
+	printWhiteString(pipeid);
+	printWhiteString("	");
 	printWhiteString("Aca estoy");
+	printWhiteString("	");
 	return;
 }
+
