@@ -41,4 +41,7 @@ void sys_mut_list();
 void sys_halt();
 void timer_tick();
 void sys_pipe_create(char * pipeid);
+void sys_pipe_delete(char * pipeid);
+void sys_pipe_read(char * pipeid , char * buffer , int messageSize);
+void sys_pipe_write(char * pipeid , char * buffer , int messageSize);
 #endif /* SYSTEMCALLS_H */

@@ -209,10 +209,21 @@ void sys_pstat(void * pcbAddr) {
 }
 
 void sys_pipe_create(char * pipeid){
-	//printWhiteString(pipeid);
-	//printInt(1901);
 	pipe_create(pipeid);
 	return;
 }
 
+void sys_pipe_delete(char * pipeid){
+	pipe_delete(pipeid);
+	return;
+}
 
+void sys_pipe_read(char * pipeid , char * buffer , int messageSize){
+	pipe_read(pipeid,buffer,messageSize);
+	return;
+}
+
+void sys_pipe_write(char * pipeid , char * buffer , int messageSize){
+	pipe_write(pipeid,buffer,messageSize);
+	return;
+}

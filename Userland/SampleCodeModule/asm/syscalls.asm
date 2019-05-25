@@ -28,7 +28,11 @@ GLOBAL os_mut_delete
 GLOBAL os_mut_list
 GLOBAL os_pid
 GLOBAL os_pstat
+
 GLOBAL os_pipe_create
+GLOBAL os_pipe_delete
+GLOBAL os_pipe_read
+GLOBAL os_pipe_write
 
 section .text
 
@@ -327,9 +331,32 @@ os_pstat:
 os_pipe_create:
 	start
 	mov rcx,rdx
+	mov rdi, 0x1F
+	int 80h
+	finish
+
+os_pipe_delete:
+	start
+	mov rcx,rdx
+	mov rdi, 0x20
+	int 80h
+	finish
+
+os_pipe_read:
+	start
+	mov rcx,rdx
 	mov rdx,rsi
 	mov rsi,rdi
-	mov rdi, 0x1F
+	mov rdi, 0x21
+	int 80h
+	finish
+
+os_pipe_write:
+	start
+	mov rcx,rdx
+	mov rdx,rsi
+	mov rsi,rdi
+	mov rdi, 0x22
 	int 80h
 	finish
 
@@ -338,7 +365,5 @@ section .data
 
 section .bb
 	aux resb 4	; para enteros
-
-
 
 

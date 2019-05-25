@@ -63,6 +63,9 @@ EXTERN sleep
 EXTERN timer_handler
 
 EXTERN sys_pipe_create
+EXTERN sys_pipe_delete
+EXTERN sys_pipe_read
+EXTERN sys_pipe_write
 
 SECTION .text
 
@@ -287,8 +290,17 @@ _syscall:
   cmp rdi, 0x1E   ; pstat
   je .syscall1E
 
-  cmp rdi, 0x1F   ; crreate pipe
+  cmp rdi, 0x1F   ; create pipe
   je .syscall1F
+
+  cmp rdi, 0x20   ; delete pipe
+  je .syscall20
+
+  cmp rdi, 0x21   ; pipe read
+  je .syscall21
+
+  cmp rdi, 0x22   ; pipe write
+  je .syscall22
 
 .continue:
 	iretq	;Dont use ret when returning from int call
@@ -462,6 +474,25 @@ _syscall:
   .syscall1F:
   mov rdi, rsi
   call sys_pipe_create
+  jmp .continue
+
+  .syscall20:
+  mov rdi, rsi
+  call sys_pipe_delete
+  jmp .continue
+
+  .syscall21:
+  mov rdi, rsi
+  mov rsi, rdx
+  mov rdx, rcx
+  call sys_pipe_read
+  jmp .continue
+
+  .syscall22:
+  mov rdi, rsi
+  mov rsi, rdx
+  mov rdx, rcx
+  call sys_pipe_write
   jmp .continue
 
 ; EXCEPTIONS 
