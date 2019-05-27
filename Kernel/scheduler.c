@@ -191,6 +191,39 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	return 1;
 }
 
+/*
+
+void editPriority(uint64_t pid , int priority){
+	
+}
+
+*/
+
+void changePriority(uint64_t pid , int priority){
+	printWhiteString("	");
+	printWhiteString("changePriority");
+	printWhiteString("	");
+	printWhiteString("	");
+	printWhiteString("pid");
+	printWhiteString("	");
+	printWhiteString("	");
+	printWhiteString("priority");
+	printWhiteString("	");
+	printWhiteString("	");
+	printUint(pid);
+	printWhiteString("	");
+	printWhiteString("	");
+	printUint(priority);
+	("	");
+	//CAMBIAR LA PRIORIDAD DEL PROCESO CON PID pid Y DARLE LA PRIORIDAD priority
+
+	processes[pid].priority = priority;
+
+	return;
+}
+
+
+
 // Ends the process
 void endProcess(int pid) {
 	processes[pid].status = PCB_ENDED;

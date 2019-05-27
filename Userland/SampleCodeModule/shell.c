@@ -120,7 +120,7 @@ int shell_execute(char *command,int background, char *arguments) {
 		if (bg) {
 			os_addProcess(ptr,1,'c',PCB_BACKGROUND,4000);
 		} else {
-			((EntryPoint)(ptr))();
+			((EntryPoint)(ptr))(arguments);
 		}
 	} else {
 		printf("\nshell: ");

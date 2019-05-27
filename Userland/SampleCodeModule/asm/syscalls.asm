@@ -232,7 +232,7 @@ os_sleep:
 
 os_ipc_create:
 	start
-	mov rdx, rsi
+	mov rdx,rsi
 	mov rsi,rdi
 	mov rdi, 0x11
 	int 80h
@@ -332,14 +332,15 @@ os_pstat:
 
 os_pipe_create:
 	start
-	mov rcx,rdx
+
+	mov rsi,rdi
 	mov rdi, 0x1F
 	int 80h
 	finish
 
 os_pipe_delete:
 	start
-	mov rcx,rdx
+	mov rsi,rdi
 	mov rdi, 0x20
 	int 80h
 	finish

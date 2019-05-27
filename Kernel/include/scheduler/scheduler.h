@@ -11,7 +11,9 @@ void runProcess(uintptr_t entryPoint);
 void sleepPID(int pid);
 void wakePID(int pid);
 void sleep();
-
+void changePriority(uint64_t pid , int priority);
 int pid();
 void process_status(void * pcbAddr);
 #endif
+
+
