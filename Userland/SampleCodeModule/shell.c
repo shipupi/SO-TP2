@@ -26,6 +26,8 @@ void shell_init() {
 	while (!exit) {
 		memclear(command, MAX_COMMAND_LENGTH);
 		memclear(arguments, MAX_COMMAND_LENGTH);
+		memclear(leftpipe, MAX_COMMAND_LENGTH);
+		memclear(rightpipe, MAX_COMMAND_LENGTH);
 		printf("\n$>");
 		scanf(buffer, MAX_COMMAND_LENGTH);
 		int length = strlen(buffer);
@@ -39,63 +41,75 @@ void shell_init() {
 
 		// busco pipes en el buffer
 		for (i = 0; i< length; i++){
-			if(buffer[i] == '|'){
+			if(buffer[i] == '!'){
 				foundpipe = 1;
 				pipeindex = i;
 			}
 		}
 
-		// si encuentro un pipe llamo a los dos procesos por separado
-		for(i = 0; i< pipeindex && foundpipe == 1; i++){
-			leftpipe[i] = buffer[i];
-			//copio y pego la forma de llamar 
-			if (buffer[i] == '|' && i != length-1) {
-				memcopy((void *) (uintptr_t) command, leftpipe, i);
-				command[i+1] = 0;
-				memcopy((void *) (uintptr_t) arguments, leftpipe + i + 1, length - i - 1);
-				arguments[length -i] = 0;
-				foundright = 1;
-				break;
-			}
 
-		}
-
-		for (i = pipeindex, j = 0 ; i <length && foundpipe == 1 ; i++, j++){
-			rightpipe[j] = buffer[i];
-			//copio y pego la forma de llamar 
-			if (buffer[i] == ' ' && i != length-1) {
-				memcopy((void *) (uintptr_t) commandright, rightpipe, i);
-				command[i+1] = 0;
-				memcopy((void *) (uintptr_t) arguments, rightpipe + i + 1, length - i - 1);
-				arguments[length -i] = 0;
-				foundleft = 1;
-				break;
-			}
+		if (foundpipe) {
 			
-		}
+			//Creamos un pipe
 
-		for (i = 0; i < length; ++i)
-		{
-			if (buffer[i] == ' ' && i != length-1) {
-				memcopy((void *) (uintptr_t) command, buffer, i);
-				command[i+1] = 0;
-				memcopy((void *) (uintptr_t) arguments, buffer + i + 1, length - i - 1);
-				arguments[length -i] = 0;
-				found = 1;
-				break;
+			//Ejecutamos producer y le ponemos como fdOut el pipe creado
+			memcopy((void *) (uintptr_t) command, buffer, pipeindex - 1);
+			command[i+1] = 0;
+			//memcopy((void *) (uintptr_t) arguments, pipeindex + 2, length - i - 1);
+			//arguments[length -i] = 0;
+			//foundright = 1;
+		
+			printf("\n");
+			printf("Ejecutamos producer: ");
+			printf(command);
+			printf(" con parametros: ");
+			printf(arguments);
+			printf("\n");
+
+			// Ejecutamos consumer y le ponemos como FdInt el pipe creado
+			for (i = pipeindex, j = 0 ; i <length && foundpipe == 1 ; i++, j++){
+				rightpipe[j] = buffer[i];
+				//copio y pego la forma de llamar 
+				if (buffer[i] == ' ' && i != length-1) {
+					memcopy((void *) (uintptr_t) commandright, rightpipe, i);
+					command[i+1] = 0;
+					memcopy((void *) (uintptr_t) arguments, rightpipe + i + 1, length - i - 1);
+					arguments[length -i] = 0;
+					foundleft = 1;
+					break;
+				}	
 			}
-		}
 
-		if (!found)
-		{
-			memcopy((void *) (uintptr_t) command, buffer, length);
-			arguments[0] = 0;
-		}
 
-		if(command[0] == '&'){
-			background = 1;
+			printf("Ejecutamos consumer: ");
+			printf(command);
+			printf(" con parametros: ");
+			printf(arguments);
+			printf("\n");
+		} else {
+			for (i = 0; i < length; ++i)
+			{
+				if (buffer[i] == ' ' && i != length-1) {
+					memcopy((void *) (uintptr_t) command, buffer, i);
+					command[i+1] = 0;
+					memcopy((void *) (uintptr_t) arguments, buffer + i + 1, length - i - 1);
+					arguments[length -i] = 0;
+					found = 1;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				memcopy((void *) (uintptr_t) command, buffer, length);
+				arguments[0] = 0;
+			}
+
+			if(command[0] == '&'){
+				background = 1;
+			}
+			exit = shell_execute(command,background, arguments);
 		}
-		exit = shell_execute(command,background, arguments);
 	}
 	printf("\nGoodbye.");
 	return;
@@ -118,7 +132,7 @@ int shell_execute(char *command,int background, char *arguments) {
 	if (found != -1) {
 		char * ptr = shortcuts[found].pointer;
 		if (bg) {
-			os_addProcess(ptr,1,PCB_BACKGROUND,4000,"","");
+			addDefaultProcess(ptr,1,PCB_BACKGROUND,4000);
 		} else {
 			((EntryPoint)(ptr))(arguments);
 		}
@@ -129,4 +143,8 @@ int shell_execute(char *command,int background, char *arguments) {
 	}
 
 	return exit;
+}
+
+void addDefaultProcess(char * ptr, int priority, int background, int size) {
+	os_addProcess(ptr, priority, background, size, DEFAULT_FDIN, DEFAULT_FDOUT);
 }

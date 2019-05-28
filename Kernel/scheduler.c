@@ -182,9 +182,10 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , 
 	newPCB.pid = PIDCounter;
 	newPCB.status = PCB_READY;
 	newPCB.priority = priority;
-	//newPCB.name = name;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
+	memcpy(newPCB.fdIn, fdIn, MAXFDSIZE);
+	memcpy(newPCB.fdOut, fdOut, MAXFDSIZE);
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
 	lottery();
@@ -241,7 +242,7 @@ void runProcess(uintptr_t entryPoint) {
 void listProcesses() {
 	int i;
 	nextLine();
-	printWhiteString("PID | Stack Addresss | Status | Priority | Nombre | Foreground | Reserved Memory ");
+	printWhiteString("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
 	nextLine();
 	for (i = 0; i < PIDCounter; ++i)
 	{
@@ -263,19 +264,21 @@ void listProcesses() {
 				printWhiteString("lck");
 				break;
 		}
-		printWhiteString("    |    ");
+		printWhiteString(" |    ");
 
 		printInt(processes[i].priority);
-		printWhiteString("    |    ");
 
-		printUint(processes[i].name);
-		printWhiteString("    |    ");
+		printWhiteString("      |    ");
 
 		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
-		printWhiteString("    |    ");
+		printWhiteString("      |    ");
+		
 
 		printUint(processes[i].size);
-
+		printWhiteString("           |     ");
+		printWhiteString(processes[i].fdIn);
+		printWhiteString("   |    ");
+		printWhiteString(processes[i].fdOut);
 		nextLine();
 	}
 }

@@ -64,7 +64,7 @@ void reboot()
 int main()
 {	
 	initializeMemoryManager();
-	addProcess(sampleCodeModuleAddress, 1, 2, 50, "", "");
+	addProcess(sampleCodeModuleAddress, 1, 2, 50, "KERBOARD", "chau");
 	load_idt();
 	while(1) {
 		_hlt();

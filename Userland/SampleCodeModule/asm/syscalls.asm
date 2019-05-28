@@ -202,6 +202,7 @@ os_schedule:
 
 os_addProcess:
 	start
+	mov r10, r9
 	mov r9, r8
 	mov r8, rcx
 	mov rcx,rdx
