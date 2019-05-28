@@ -4,7 +4,7 @@
 
 int rand();
 void schedule();
-uint8_t addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size);
+uint8_t addProcess(void * entryPoint,uint64_t priority,uint8_t foreground,uint64_t size,char * fdIn,char * fdOut);
 void endProcess(int pid);
 void listProcesses();
 void runProcess(uintptr_t entryPoint);

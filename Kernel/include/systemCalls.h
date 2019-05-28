@@ -20,7 +20,7 @@ void sys_unbeep();
 void * sys_requestMemorySpace(uint64_t requestedSpace);
 void sys_freeMemorySpace (void * freeBaseAddress,int32_t size);
 void sys_schedule();
-uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size);
+uint8_t sys_addProcess(void * entryPoint,uint64_t priority,uint8_t foreground,uint64_t size,char * fdIn,char * fdOut);
 void sys_endProcess(int pid);
 void sys_listProcesses();
 int sys_pid();

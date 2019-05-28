@@ -173,7 +173,7 @@ void lottery(){
 }
 
 // Returns pid?
-uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t foreground , uint64_t size){
+uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , uint64_t size, char * fdIn, char * fdOut){
 	struct PCB newPCB;
 	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
 	newPCB.stackAddress = newStack;
@@ -182,7 +182,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.pid = PIDCounter;
 	newPCB.status = PCB_READY;
 	newPCB.priority = priority;
-	newPCB.name = name;
+	//newPCB.name = name;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
 	processes[PIDCounter] = newPCB;
