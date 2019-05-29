@@ -12,6 +12,7 @@
 #include "include/drivers/vesaDriver.h"
 #include "include/scheduler/scheduler.h"
 #include "include/scheduler/PCB.h"
+#include "include/screenManager.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -64,6 +65,7 @@ void reboot()
 void initializeDrivers() {
 	initializeKeyboardDriver();
 	initializeVideoDriver();
+	addProcess(&screenManager, 1,2,50, DEFAULT_FDOUT, INVALID_FD);
 }
 
 int main()

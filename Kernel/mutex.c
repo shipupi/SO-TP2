@@ -30,7 +30,7 @@ int findIdMUT( char * id) {
 void addProcessToQueue(int mId) {
     int pId;
     pId = pid();
-    // printWhiteString("adding pid to queue:"); printInt(pId); 
+    // printf("adding pid to queue:"); printn(pId); 
     for (int i = 0; i < arrMUT[mId].waiting; ++i)
     {
         if (arrMUT[mId].waitPids[i] == pId)
@@ -117,39 +117,39 @@ int mut_request(char * id){
 }
 
 int mut_delete(char * id){
-	nextLine();
+	printf("Deleting mut (not implemented)\n");
 	return 0;
 }
 
 void mut_list(){
 	int i;
     int j;
-    nextLine();
-    printWhiteString("id | value | waiting");
-    nextLine();
-    //printInt(MUTcounter);
+    printf("\n");
+    printf("id | value | waiting");
+    printf("\n");
+    //printn(MUTcounter);
     for (i = 0; i < MUTcounter ; ++i)
     {
-        printWhiteString(arrMUT[i].id);
-        printWhiteString("   |     ");
-        printWhiteString(arrMUT[i].value == MUT_LOCKED? "lck" : "unlck");
-        printWhiteString("    |    ");
+        printf(arrMUT[i].id);
+        printf("   |     ");
+        printf(arrMUT[i].value == MUT_LOCKED? "lck" : "unlck");
+        printf("    |    ");
 
-        printUint((uint64_t) (uintptr_t)arrMUT[i].waiting);
-        //printWhiteString("    |    ");
+        printn((uint64_t) (uintptr_t)arrMUT[i].waiting);
+        //printf("    |    ");
 
         if (arrMUT[i].waiting > 0)
         {
-            nextLine();
-            printWhiteString("Waiting PIDS:");
+            printf("\n");
+            printf("Waiting PIDS:");
             for (j = 0; j < arrMUT[i].waiting; ++j)
             {
-                printInt(arrMUT[i].waitPids[j]);
-                printWhiteString(", ");
+                printn(arrMUT[i].waitPids[j]);
+                printf(", ");
             }
         }
 
-        nextLine();
+        printf("\n");
 
     }
 }

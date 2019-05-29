@@ -154,44 +154,43 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
 
 void ipc_list(){
     int i, j;
-    nextLine();
-    printWhiteString("id              |     addresss   |  IPCID  |   Read  |  Write  |  Unread |  Free    |  Size    |  Waiting");
-    nextLine();
+    printf("\n");
+    printf("id              |     addresss   |  IPCID  |   Read  |  Write  |  Unread |  Free    |  Size    |  Waiting");
+    printf("\n");
     for (i = 0; i < IPCcounter ; ++i)
     {
-        printWhiteString(arrIPC[i].id);
-        printWhiteString("   |     ");
+        printf(arrIPC[i].id);
+        printf("   |     ");
 
-        printUint((uint64_t) (uintptr_t) arrIPC[i].address);
-        printWhiteString("    |    ");
+        printn((uint64_t) (uintptr_t) arrIPC[i].address);
+        printf("    |    ");
 
-        printInt(arrIPC[i].IPCcounter);
-        printWhiteString("    |    ");
+        printn(arrIPC[i].IPCcounter);
+        printf("    |    ");
+        printn((uint64_t) (uintptr_t)arrIPC[i].read);
+        printf("    |    ");
+        printn((uint64_t) (uintptr_t)arrIPC[i].write);
+        printf("    |    ");
 
-        printUint((uint64_t) (uintptr_t)arrIPC[i].read);
-        printWhiteString("    |    ");
-        printUint((uint64_t) (uintptr_t)arrIPC[i].write);
-        printWhiteString("    |    ");
-
-        printUint((uint64_t) (uintptr_t)arrIPC[i].unread);
-        printWhiteString("    |    ");
-        printUint((uint64_t) (uintptr_t)arrIPC[i].free);
-        printWhiteString("    |    ");
-        printUint((uint64_t) (uintptr_t)arrIPC[i].size);
-        printWhiteString("    |    ");
-        printUint((uint64_t) (uintptr_t)arrIPC[i].waiting);
+        printn((uint64_t) (uintptr_t)arrIPC[i].unread);
+        printf("    |    ");
+        printn((uint64_t) (uintptr_t)arrIPC[i].free);
+        printf("    |    ");
+        printn((uint64_t) (uintptr_t)arrIPC[i].size);
+        printf("    |    ");
+        printn((uint64_t) (uintptr_t)arrIPC[i].waiting);
 
         if (arrIPC[i].waiting > 0)
         {
-            nextLine();
-            printWhiteString("Waiting PIDS:");
+            printf("\n");
+            printf("Waiting PIDS:");
             for (j = 0; j < arrIPC[i].waiting; ++j)
             {
-                printInt(arrIPC[i].waitPids[j]);
-                printWhiteString(", ");
+                printn(arrIPC[i].waitPids[j]);
+                printf(", ");
             }
         }
-        nextLine();
+        printf("\n");
     }
 }
 

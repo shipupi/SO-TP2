@@ -8,4 +8,6 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 
 char *cpuVendor(char *result);
 
+void printf(char * str);
+void printn(uint64_t num);
 #endif

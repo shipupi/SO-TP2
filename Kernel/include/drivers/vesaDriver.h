@@ -14,7 +14,6 @@ void printWhiteString(char *str);
 void printString(char *str, unsigned char r, unsigned char g, unsigned char b);
 void deleteChar();
 void printInt(int num);
-void printUint(uint64_t num);
 void pl(char * string);
 void initializeVideoDriver();
 #endif

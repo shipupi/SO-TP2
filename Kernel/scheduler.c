@@ -121,10 +121,10 @@ void * schedule(void * oldStack) {
 	if (activeProcess != -1) {
 		// Piso el stack del proceso anterior
 		// nextLine();
-		// printWhiteString("Saving stack of process: "); 
-		// printUint(activeProcess);
-		// printWhiteString(". Address: ");
-		// printUint((uintptr_t)oldStack);
+		// printf("Saving stack of process: "); 
+		// printn(activeProcess);
+		// printf(". Address: ");
+		// printn((uintptr_t)oldStack);
 		// nextLine();
 
 		processes[activeProcess].stackAddress = oldStack;
@@ -213,20 +213,20 @@ void editPriority(uint64_t pid , int priority){
 */
 
 void changePriority(uint64_t pid , int priority){
-	printWhiteString("	");
-	printWhiteString("changePriority");
-	printWhiteString("	");
-	printWhiteString("	");
-	printWhiteString("pid");
-	printWhiteString("	");
-	printWhiteString("	");
-	printWhiteString("priority");
-	printWhiteString("	");
-	printWhiteString("	");
-	printUint(pid);
-	printWhiteString("	");
-	printWhiteString("	");
-	printUint(priority);
+	printf("	");
+	printf("changePriority");
+	printf("	");
+	printf("	");
+	printf("pid");
+	printf("	");
+	printf("	");
+	printf("priority");
+	printf("	");
+	printf("	");
+	printn(pid);
+	printf("	");
+	printf("	");
+	printn(priority);
 	("	");
 	//CAMBIAR LA PRIORIDAD DEL PROCESO CON PID pid Y DARLE LA PRIORIDAD priority
 
@@ -253,45 +253,39 @@ void runProcess(uintptr_t entryPoint) {
 
 void listProcesses() {
 	int i;
-	nextLine();
-	printWhiteString("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
-	nextLine();
+	printf("\n");
+	printf("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
+	printf("\n");
 	for (i = 0; i < PIDCounter; ++i)
 	{
 		if (processes[i].status == PCB_ENDED)
 		{
 			continue;
 		}
-		printUint(processes[i].pid);
-		printWhiteString("   | 	   ");
+		printn(processes[i].pid);
+		printf("   | 	   ");
 
-		printUint((uint64_t) (uintptr_t) processes[i].stackAddress);
-		printWhiteString("    |    ");
-
+		printn((uint64_t) (uintptr_t) processes[i].stackAddress);
+		printf("    |    ");
 		switch(processes[i].status) {
 			case PCB_READY:
-				printWhiteString("rdy");
+				printf("rdy");
 				break;
 			case PCB_LOCK:
-				printWhiteString("lck");
+				printf("lck");
 				break;
 		}
-		printWhiteString(" |    ");
-
-		printInt(processes[i].priority);
-
-		printWhiteString("      |    ");
-
-		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
-		printWhiteString("      |    ");
-		
-
-		printUint(processes[i].size);
-		printWhiteString("           |     ");
-		printWhiteString(processes[i].fdIn);
-		printWhiteString("   |    ");
-		printWhiteString(processes[i].fdOut);
-		nextLine();
+		printf(" |    ");
+		printn(processes[i].priority);
+		printf("      |    ");
+		printf(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
+		printf("      |    ");		
+		printn(processes[i].size);
+		printf("           |     ");
+		printf(processes[i].fdIn);
+		printf("   |    ");
+		printf(processes[i].fdOut);
+		printf("\n");
 	}
 }
 

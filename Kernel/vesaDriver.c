@@ -320,11 +320,17 @@ int maxX() {
 }
 
 void printChar(unsigned char myChar, unsigned char r, unsigned char g, unsigned char b) {
-  drawChar(cursorX, cursorY, myChar, r,g,b);
-  cursorX += 8;
-  if (cursorX >= maxX())
-  {
-    nextLine();
+  if (myChar == '\n') {
+      nextLine();
+  } else if (myChar == '\b') {
+      deleteChar();
+  } else {
+    drawChar(cursorX, cursorY, myChar, r,g,b);
+    cursorX += 8;
+    if (cursorX >= maxX())
+    {
+      nextLine();
+    }
   }
 }
 
@@ -337,18 +343,28 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b) {
   int pitch = infoBlock->pitch;
   char* pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
   int len = strlength(str);
+  char c;
   for (int i = 0; i < len; i++)
   {
-    drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
-    cursorX += 8;
-    if (cursorX >= (infoBlock->Xres - 5 - cursorXStart))
-    {
+    c = str[i];
+    if ( c == 0 ) {
+      return;
+    } else if (c == '\n') {
       nextLine();
-      pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+    } else if (c == '\b') {
+      deleteChar();
     } else {
-      pos += fontWidth * pixelWidth;
+      drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
+      cursorX += 8;
+      if (cursorX >= (infoBlock->Xres - 5 - cursorXStart))
+      {
+        nextLine();
+        pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+      } else {
+        pos += fontWidth * pixelWidth;
+      }
+
     }
-    /* code */
   }
 
 }
@@ -385,37 +401,6 @@ void clearAll() {
   clearFrom(0,0);
   cursorX = cursorXStart;
   cursorY = cursorYStart;
-}
-
-
-void printUint(uint64_t num) {
-  char string[10];
-  int remainder;
-  int index = 0;
-  int reverseIndex = 0;
-  char aux;
-  int length;
-  if (num == 0){
-    string[0] = '0';
-    printWhiteString(string);
-    return;
-  }
-  else {
-    while (num > 0){
-      remainder = num % 10;
-      string[index++] = remainder + '0';
-      num /= 10;
-    }
-  }
-  string[index] = 0;
-  length = index;
-  while (reverseIndex < length / 2){
-    aux = string[--index];
-    string[index] = string[reverseIndex];
-    string[reverseIndex++] = aux;
-  }
-
-  printWhiteString(string);
 }
 
 void printInt(int num) {

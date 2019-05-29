@@ -57,21 +57,7 @@ uint64_t sys_read(uint64_t fd, char *buffer, uint64_t size){
 uint64_t sys_write(uint64_t fd, char *buffer, uint64_t size){
 	char * fdOut = getFdOut();
 	
-	if (!strcmp(fdOut,DEFAULT_FDOUT)) {
-		while(size--) {
-			char c = *buffer;
-			if (c == '\n') {
-				nextLine();
-			} else if (c == '\b') {
-				deleteChar();
-			} else {
-				printChar(c,255,255,255);
-			}
-			buffer++;
-		}
-	} else {
-		ipc_write(fdOut, buffer,size);	
-	}
+	ipc_write(fdOut, buffer,size);
 	return 1;
 }
 
