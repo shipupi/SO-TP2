@@ -48,16 +48,16 @@ int sys_sec (int * result) {
 //We will only read from the keyboard buffer for this project --> fd = 0 (stdin)
 uint64_t sys_read(uint64_t fd, char *buffer, uint64_t size){
 	// FD Variable obsolete atm
-	memset(buffer,0,size);
-	ipc_read(DEFAULT_FDIN, buffer,size);
+	char * fdIn = getFdIn();
+	ipc_read(fdIn, buffer,size);
 	return 1;
 }
 
 //We will only write to the screen for this project --> fd = 1 (stdout)
 uint64_t sys_write(uint64_t fd, char *buffer, uint64_t size){
-	uint64_t bytesRead = 0;
-
-	if (fd == STDOUT) {
+	char * fdOut = getFdOut();
+	
+	if (!strcmp(fdOut,DEFAULT_FDOUT)) {
 		while(size--) {
 			char c = *buffer;
 			if (c == '\n') {
@@ -68,11 +68,11 @@ uint64_t sys_write(uint64_t fd, char *buffer, uint64_t size){
 				printChar(c,255,255,255);
 			}
 			buffer++;
-			bytesRead++;
 		}
+	} else {
+		ipc_write(fdOut, buffer,size);	
 	}
-
-	return bytesRead;
+	return 1;
 }
 
 uint64_t * sys_time(uint64_t * timeArray) {

@@ -322,3 +322,14 @@ void process_status(void * pcbAddr) {
 	memcpy(pcbAddr,(void *)(uintptr_t) &p, (int) sizeof(PCB));
 }
 
+
+
+char * getFdIn() {
+	if(activeProcess == -1) return DEFAULT_FDIN;
+	return processes[activeProcess].fdIn;	
+}
+
+char * getFdOut() {
+	if(activeProcess == -1) return DEFAULT_FDOUT;
+	return processes[activeProcess].fdOut;
+}

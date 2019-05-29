@@ -4,7 +4,7 @@ int strcmp(char * str1, char * str2) {
 	while(1) {
 		if (*str1 != *str2) {
 			return *str1 < *str2 ? -1 : 1;
-		} else if (*str1 == '\0') {
+		} else if (*str1 == '\0' && *str2 == '\0') {
 			return 0;
 		}
 		str1++;
@@ -31,7 +31,7 @@ int pow(int base,int n){
 }
 
 int to_num(char * s , int dim){
-	int n;
+	int n = 0;
 	for(int i = 0 ; s[i]!='\0';i++){
 		n += pow(10,dim - i - 1)*(s[i]-'0');
 	}

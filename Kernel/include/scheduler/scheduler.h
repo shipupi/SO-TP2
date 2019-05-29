@@ -15,7 +15,8 @@ void changePriority(uint64_t pid , int priority);
 int pid();
 void process_status(void * pcbAddr);
 
-
+char * getFdIn();
+char * getFdOut();
 #endif
 
 

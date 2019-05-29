@@ -12,7 +12,9 @@ int main() {
 	// printUint(&shell_init);
 	// char name = 'A';
 	//os_pipe_create("crando pipe");
-	addDefaultProcess(&shell_init,1,PCB_FOREGROUND,50);
+	addDefaultProcess((char *) &shell_init,1,PCB_FOREGROUND,50);
+	// os_pipe_create("otrofd");
+	// os_addProcess(&shell_init, 1, PCB_FOREGROUND, 50, "otrofd", DEFAULT_FDOUT);
 	// os_addProcess(&shell_init,2,name,1,50);
 	// os_addProcess(&shell_init,3,name,1,50);
 	// os_endProcess(1);
