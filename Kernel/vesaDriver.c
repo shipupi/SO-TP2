@@ -465,3 +465,7 @@ void pl(char * string) {
   nextLine();
   printWhiteString(string);
 }
+
+void initializeVideoDriver() {
+  
+}

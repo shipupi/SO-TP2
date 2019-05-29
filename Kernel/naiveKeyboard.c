@@ -2,6 +2,8 @@
 #include "naiveLegacy/naiveConsole.h"
 #include "pure/getKey.h"
 #include "drivers/keyMap.h"
+#include "memoryManager/memoryManager.h"
+#include "include/ipc/ipc.h"
 
 //150 was chosen at random
 #define BUFFER_SIZE 200
@@ -113,4 +115,21 @@ char getChar() {
 	readIndex = (readIndex + 1)%BUFFER_SIZE;
 
 	return c;
+}
+
+
+void initializeKeyboardDriver() {
+	ipc_create(KEYBOARD_IPC_NAME,KEYBOARD_IPC_SIZE);
+}
+
+uint64_t refreshKeyboardIpc(int maxSize) {
+	char * str = requestMemorySpace(maxSize);
+	uint64_t bytesRead = 0;
+	char c;
+	while(maxSize > 0 && (c = getChar())) {	//getChar returns 0 when the keboard buffer is empty
+		str[bytesRead++] = c;
+		maxSize--;
+	}
+	ipc_write(KEYBOARD_IPC_NAME, str, maxSize);
+	return bytesRead;
 }

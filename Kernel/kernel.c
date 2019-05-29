@@ -61,10 +61,17 @@ void reboot()
 	main();
 }
 
+void initializeDrivers() {
+	initializeKeyboardDriver();
+	initializeVideoDriver();
+	pl("initialized drivers");
+}
+
 int main()
 {	
 	initializeMemoryManager();
 	addProcess(sampleCodeModuleAddress, 1, 2, 50, "", "");
+	initializeDrivers();
 	load_idt();
 	while(1) {
 		_hlt();
