@@ -384,6 +384,7 @@ _syscall:
   mov rdx, rcx
   mov rcx, r8
   mov r8 , r9
+  mov r9 , r10
   call sys_addProcess
   jmp .continue
 

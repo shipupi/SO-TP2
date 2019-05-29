@@ -10,6 +10,8 @@ void shell_init();
 int shell_execute(char *command,int background, char *arguments);
 int shell_bgexec(uintptr_t path);
 
+void addDefaultProcess(char * ptr, int priority, int background, int size);
+
 typedef struct SHORTCUT {
 	char id[MAX_COMMAND_LENGTH];
 	char * pointer;
