@@ -37,13 +37,24 @@ void shell_init() {
 		int foundright = 0;
 		int foundpipe = 0;
 		int pipeindex=0;
-
-
+		int space_index1 = 0;
+		int space_index2 = 0;
+		int find_space = 0 ;
 		// busco pipes en el buffer
 		for (i = 0; i< length; i++){
 			if(buffer[i] == '!'){
 				foundpipe = 1;
 				pipeindex = i;
+				find_space = 1;
+			}
+			if(buffer[i] == ' ' && find_space == 0){
+				space_index1 = i;
+				find_space++;
+			}
+
+			if(buffer[i] == ' ' && find_space == 1){
+				space_index2 = i;
+				find_space++;
 			}
 		}
 
@@ -53,32 +64,28 @@ void shell_init() {
 			//Creamos un pipe
 
 			//Ejecutamos producer y le ponemos como fdOut el pipe creado
-			memcopy((void *) (uintptr_t) command, buffer, pipeindex - 1);
-			command[i+1] = 0;
-			//memcopy((void *) (uintptr_t) arguments, pipeindex + 2, length - i - 1);
-			//arguments[length -i] = 0;
+			memcopy((void *) (uintptr_t) command, buffer, space_index1);
+			command[pipeindex - space_index1 - 1+1] = 0;
+			memcopy((void *) (uintptr_t) arguments, buffer + space_index1 +1, pipeindex - space_index1 -1);
+			arguments[pipeindex - space_index1] = 0;
 			//foundright = 1;
 		
 			printf("\n");
 			printf("Ejecutamos producer: ");
 			printf(command);
+			//prntUint(space_index1);
 			printf(" con parametros: ");
 			printf(arguments);
 			printf("\n");
 
-			// Ejecutamos consumer y le ponemos como FdInt el pipe creado
-			for (i = pipeindex, j = 0 ; i <length && foundpipe == 1 ; i++, j++){
-				rightpipe[j] = buffer[i];
-				//copio y pego la forma de llamar 
-				if (buffer[i] == ' ' && i != length-1) {
-					memcopy((void *) (uintptr_t) commandright, rightpipe, i);
-					command[i+1] = 0;
-					memcopy((void *) (uintptr_t) arguments, rightpipe + i + 1, length - i - 1);
-					arguments[length -i] = 0;
-					foundleft = 1;
-					break;
-				}	
-			}
+			memclear(command, MAX_COMMAND_LENGTH);
+			memclear(arguments, MAX_COMMAND_LENGTH);
+
+			memcopy((void *) (uintptr_t) command, buffer + pipeindex+1, space_index2 - pipeindex -1 );
+			command[space_index2-pipeindex] = 0;
+			memcopy((void *) (uintptr_t) arguments, buffer + space_index2+1, length - space_index2 -1 );
+			arguments[length - space_index2] = 0;
+
 
 
 			printf("Ejecutamos consumer: ");
