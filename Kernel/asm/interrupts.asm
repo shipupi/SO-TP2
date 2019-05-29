@@ -120,7 +120,6 @@ SECTION .text
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
-
 	popState
 	iretq
 %endmacro
@@ -166,10 +165,6 @@ _irq00Handler:
   call timer_handler
   mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
   call schedule  
-  ; push rax
-  ; mov rdi, rax
-  ; call printUint
-  ; pop rax
   mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
   mov al, 20h ; Send end of interrupt
   out 20h, al

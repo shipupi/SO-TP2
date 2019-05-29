@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 int rand();
-void schedule();
+void * schedule(void * oldStack);
 uint8_t addProcess(void * entryPoint,uint64_t priority,uint8_t foreground,uint64_t size,char * fdIn,char * fdOut);
 void endProcess(int pid);
 void listProcesses();
@@ -14,6 +14,8 @@ void sleep();
 void changePriority(uint64_t pid , int priority);
 int pid();
 void process_status(void * pcbAddr);
+
+
 #endif
 
 

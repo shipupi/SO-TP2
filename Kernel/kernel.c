@@ -64,14 +64,13 @@ void reboot()
 void initializeDrivers() {
 	initializeKeyboardDriver();
 	initializeVideoDriver();
-	pl("initialized drivers");
 }
 
 int main()
 {	
 	initializeMemoryManager();
 	initializeDrivers();
-	addProcess(sampleCodeModuleAddress, 1, 2, 50, "KERBOARD", "chau");
+	addProcess(sampleCodeModuleAddress, 1, 2, 50, DEFAULT_FDIN, DEFAULT_FDOUT);
 	load_idt();
 	while(1) {
 		_hlt();

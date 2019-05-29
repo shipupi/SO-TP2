@@ -111,12 +111,12 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
     ipc.free -= 1;
     ipc.unread += 1;
     arrIPC[ipcId] = ipc;
-
     // FIN DE ZONA CRITICA
     mut_release(id);
 }
 
 void ipc_read(char * id,char * string,uint64_t messageSize){
+
     int ipcId = findId(id);
     if ( ipcId == -1)
     {
@@ -126,6 +126,7 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
 
     // ZONA CRITICA
     IPC ipc = arrIPC[ipcId];
+
     while(1) {
         if (!arrIPC[ipcId].unread)
         {
@@ -137,6 +138,7 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
             break;
         }
     }
+
     ipc = arrIPC[ipcId];
     // Hay bloques sin leer
     memcpy(string, ipc.address + BLOCK_SIZE * ipc.read, messageSize);
@@ -153,7 +155,7 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
 void ipc_list(){
     int i, j;
     nextLine();
-    printWhiteString("id        |     addresss   |  IPCID  |   Read  |  Write  |  Unread |  Free    |  Size    |  Waiting");
+    printWhiteString("id              |     addresss   |  IPCID  |   Read  |  Write  |  Unread |  Free    |  Size    |  Waiting");
     nextLine();
     for (i = 0; i < IPCcounter ; ++i)
     {

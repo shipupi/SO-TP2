@@ -9,6 +9,11 @@
 #include "scheduler/scheduler.h"
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
+#include "include/ipc/pipe.h"
+#include "include/scheduler/PCB.h"
+#include "include/interrupts.h"
+#include "include/string.h"
+#include "include/lib.h"
 
 #define SYSCALLNUMBER 11
 
@@ -42,15 +47,10 @@ int sys_sec (int * result) {
 
 //We will only read from the keyboard buffer for this project --> fd = 0 (stdin)
 uint64_t sys_read(uint64_t fd, char *buffer, uint64_t size){
-	uint64_t bytesRead = 0;
-	char c;
-	if (fd == STDIN){							//read from the keyboard buffer (stdin)
-		while(size > 0 && (c = getChar())) {	//getChar returns 0 when the keboard buffer is empty
-			buffer[bytesRead++] = c;
-			size--;
-		}
-	}
-	return bytesRead;
+	// FD Variable obsolete atm
+	memset(buffer,0,size);
+	ipc_read(DEFAULT_FDIN, buffer,size);
+	return 1;
 }
 
 //We will only write to the screen for this project --> fd = 1 (stdout)
@@ -130,7 +130,8 @@ void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
 
 // Processes
 void sys_schedule() {
-	schedule();
+	pl("alguien llamo a sys schedule");
+	schedule(0);
 }
 uint8_t sys_addProcess(void * entryPoint,uint64_t priority,uint8_t foreground,uint64_t size,char * fdIn,char * fdOut) {
 	return addProcess(entryPoint,priority,foreground,size,fdIn,fdOut);
@@ -204,31 +205,25 @@ int  sys_pid() {
 
 void sys_pstat(void * pcbAddr) {
 	process_status(pcbAddr);
-	return;
 }
 
 void sys_pipe_create(char * pipeid){
 	pipe_create(pipeid);
-	return;
 }
 
 void sys_pipe_delete(char * pipeid){
 	pipe_delete(pipeid);
-	return;
 }
 
 void sys_pipe_read(char * pipeid , char * buffer , int messageSize){
 	pipe_read(pipeid,buffer,messageSize);
-	return;
 }
 
 void sys_pipe_write(char * pipeid , char * buffer , int messageSize){
 	pipe_write(pipeid,buffer,messageSize);
-	return;
 }
 
 void sys_change_priority(uint64_t pid , int priority){
 	changePriority(pid,priority);
-	return;
 }
 

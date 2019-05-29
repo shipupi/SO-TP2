@@ -37,8 +37,8 @@ void os_pipe_delete(char * pipeid);
 void os_pipe_read(char * pipeid , char * buffer , int messageSize);
 void os_pipe_write(char * pipeid , char * buffer , int messageSize);
 void os_change_priority(uint64_t pid , int priority);
+void die();
 #endif
-
 
 
 

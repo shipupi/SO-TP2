@@ -33,6 +33,7 @@ GLOBAL os_pipe_create
 GLOBAL os_pipe_delete
 GLOBAL os_pipe_read
 GLOBAL os_pipe_write
+GLOBAL die
 
 GLOBAL os_change_priority
 
@@ -379,3 +380,7 @@ section .bb
 	aux resb 4	; para enteros
 
 
+die:
+	cli
+	hlt
+	ret

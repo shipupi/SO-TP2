@@ -20,4 +20,7 @@ exch:
 
 
 halt: 
+	mov al, 20h
+	out 20h, al
+	sti
 	hlt

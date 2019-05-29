@@ -4,6 +4,11 @@
 #include "drivers/keyMap.h"
 #include "memoryManager/memoryManager.h"
 #include "include/ipc/ipc.h"
+#include "include/drivers/vesaDriver.h"
+#include "include/scheduler/PCB.h"
+#include "include/scheduler/scheduler.h"
+#include "include/interrupts.h"
+#include "include/utils.h"
 
 //150 was chosen at random
 #define BUFFER_SIZE 200
@@ -14,8 +19,8 @@
 
 //We are going to use a cyclic buffer, hopefully we never run out of space
 static char buffer[BUFFER_SIZE] = {0};
+static char letter[3] = {0,0,0};
 
-static int writeIndex = 0;			//To know where in the buffer to put next char
 static int readIndex = 0;			//To know where in the buffer to start reading from
 static int size = 0;				//To know how many chars are currently stored in buffer (beware of its cyclic nature)
 
@@ -84,6 +89,13 @@ void keyboard_handler() {
 				break;
 		}
 	}
+
+	if(pid() == -1) {
+		halt();
+	} else {
+		return;
+	}
+	pl("After Keyboard Halt (If you are seeing this message. There is a bug");
 }
 
 //Handles the Ctrl + key, wich should not add a char to buffer, but execute an action (Try to do Ctrl + Shift + Alt)
@@ -98,9 +110,8 @@ void handleCtrl(unsigned int code) {
 
 //It adds the char to the buffer
 void addChar(char c) {
-	buffer[writeIndex] = c;
-	writeIndex = (writeIndex + 1)%BUFFER_SIZE;
-	size++;
+	letter[0] = c;
+	ipc_write(DEFAULT_FDIN,letter,1);
 }
 
 //It returns the next char in buffer or 0 if buffer is empty
@@ -108,7 +119,6 @@ char getChar() {
 	if (size <= 0) {
 		return 0;
 	}
-
 	//We read the char, decrease size and increase index
 	char c = buffer[readIndex];
 	size--;
@@ -119,17 +129,5 @@ char getChar() {
 
 
 void initializeKeyboardDriver() {
-	ipc_create(KEYBOARD_IPC_NAME,KEYBOARD_IPC_SIZE);
-}
-
-uint64_t refreshKeyboardIpc(int maxSize) {
-	char * str = requestMemorySpace(maxSize);
-	uint64_t bytesRead = 0;
-	char c;
-	while(maxSize > 0 && (c = getChar())) {	//getChar returns 0 when the keboard buffer is empty
-		str[bytesRead++] = c;
-		maxSize--;
-	}
-	ipc_write(KEYBOARD_IPC_NAME, str, maxSize);
-	return bytesRead;
+	ipc_create(DEFAULT_FDIN,MAXFDSIZE);
 }

@@ -8,6 +8,7 @@
 #include "include/drivers/time.h"
 #include "include/utils.h"
 #include "include/lib.h"
+#include "include/scheduler/scheduler.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -93,10 +94,12 @@ int chooseNextProcess(int ap[], int n) {
 }
 
 void * schedule(void * oldStack) {
+	
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
-		return oldStack;
+		pl("PID Counter = 0");
+		halt();
 	}
 
 	int i;
@@ -114,18 +117,27 @@ void * schedule(void * oldStack) {
 
 	// Si no hay processescesos activos, hago un halt
 	// Pero hay q ver como arreglo el stack?
-
-	if (n == 0)
-	{
-		pl("no active processes, goodnight!");
-		halt();
-	}
-
 	// Tengo la cantidad de procesos activos y los tengo metidos en un array
 	if (activeProcess != -1) {
 		// Piso el stack del proceso anterior
+		// nextLine();
+		// printWhiteString("Saving stack of process: "); 
+		// printUint(activeProcess);
+		// printWhiteString(". Address: ");
+		// printUint((uintptr_t)oldStack);
+		// nextLine();
+
 		processes[activeProcess].stackAddress = oldStack;
 	} 
+
+
+	if (n == 0)
+	{
+		// pl("schedule ( no active processes) ");
+		activeProcess = -1;
+		halt();
+	}
+
 	// Setteo el nuevo activeprocess con el que me toco
 	activeProcess = chooseNextProcess(ap, n);
 	return processes[activeProcess].stackAddress;

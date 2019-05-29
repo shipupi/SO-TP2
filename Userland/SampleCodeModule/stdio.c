@@ -1,13 +1,14 @@
 #include "syscalls.h"
+#include "stdio.h"
 
 char getChar() {
-	char c = 0;
-	while(1) {
-		read(0, &c, 1);	//Get 1 char from STDIN and save it in c
-		if (c == -1 || (c > 0 && c < 128)) {
-			return c;
-		}
-	}
+
+  char c = 0;
+  read(0, &c, 1); //Get 1 char from STDIN and save it in c
+  // if (c == -1 || (c > 0 && c < 128)) {
+  //   return c;
+  // }
+  return c;
 }
 
 char getCharWithZero() {
