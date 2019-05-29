@@ -48,7 +48,8 @@ int ipc_create (char * id, uint64_t size){
     if(findId(id)==-1){
         int i;
         struct IPC newIPC;
-        void * address = requestMemorySpace(size * (BLOCK_SIZE + 10));
+        // Reservo 20 bloques de mas porque si no se rompe por alguna razon
+        void * address = requestMemorySpace((size + 20) * BLOCK_SIZE);
         memcpy(newIPC.id,id,ID_SIZE);
         newIPC.address = address;
         newIPC.write = 0;
