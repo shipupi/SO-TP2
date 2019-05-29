@@ -6,7 +6,7 @@
 #define ID_SIZE 40
 #define MAX_QUEUE 100
 #define MAX_IPCS 100
-#define BLOCK_SIZE 255
+#define BLOCK_SIZE 1024
 
 typedef struct IPC{
     char id[ID_SIZE];

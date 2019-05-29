@@ -53,7 +53,7 @@ EXTERN sys_mut_list
 EXTERN sys_pid
 EXTERN sys_pstat
 
-EXTERN printWhiteString
+EXTERN printf
 EXTERN registerValueToString
 EXTERN printUint
 EXTERN nextLine
@@ -524,14 +524,14 @@ _syscall:
 %macro printName 1
   call nextLine
   mov rdi, %1             
-  call printWhiteString
+  call printf
 %endmacro
 
 %macro printValue 0
   mov rsi, convertedString
   call registerValueToString   
   mov rdi, rax
-  call printWhiteString
+  call printf
 %endmacro
 
 %macro exception 1
@@ -541,10 +541,10 @@ _syscall:
   pushAllRegisters
   call nextLine
   mov rdi, %1             ; print type of error
-  call printWhiteString
+  call printf
   call nextLine
   mov rdi, registerLabel  ; print Register Values:
-  call printWhiteString
+  call printf
 
   printName regRIP
   mov rdi, [rbp + 8]      ; value of RIP

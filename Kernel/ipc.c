@@ -48,7 +48,7 @@ int ipc_create (char * id, uint64_t size){
     if(findId(id)==-1){
         int i;
         struct IPC newIPC;
-        void * address = requestMemorySpace(size * BLOCK_SIZE);
+        void * address = requestMemorySpace(size * (BLOCK_SIZE + 10));
         memcpy(newIPC.id,id,ID_SIZE);
         newIPC.address = address;
         newIPC.write = 0;
@@ -92,6 +92,7 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
         return;
     }
     void * writeAddress = ipc.address + BLOCK_SIZE * ipc.write;
+    
     memset(writeAddress, 0, BLOCK_SIZE);
     memcpy(writeAddress, string, messageSize);
 
@@ -106,7 +107,6 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
         ipc.waiting -= 1;
         wakePID(nextPid);
     }
-
     ipc.write = (ipc.write + 1) % ipc.size;
     ipc.free -= 1;
     ipc.unread += 1;

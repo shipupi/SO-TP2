@@ -196,8 +196,8 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , 
 	newPCB.priority = priority;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
-	memcpy(newPCB.fdIn, fdIn, MAXFDSIZE);
-	memcpy(newPCB.fdOut, fdOut, MAXFDSIZE);
+	memcpy(newPCB.fdIn, fdIn, FD_NAME_SIZE);
+	memcpy(newPCB.fdOut, fdOut, FD_NAME_SIZE);
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
 	lottery();

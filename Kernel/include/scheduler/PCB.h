@@ -14,6 +14,7 @@
 #define MAXFDSIZE 255
 #define PCB_FOREGROUND 1
 #define PCB_BACKGROUND 2
+#define FD_NAME_SIZE 255
 
 typedef struct PCB {
 	uint64_t pid;
@@ -23,8 +24,8 @@ typedef struct PCB {
 	uint64_t priority;
 	uint8_t foreground;
 	uint64_t size;
-	char fdIn[MAXFDSIZE];
-	char fdOut[MAXFDSIZE];
+	char fdIn[FD_NAME_SIZE];
+	char fdOut[FD_NAME_SIZE];
 } PCB;
 
 #endif
