@@ -24,15 +24,16 @@ void screenManager() {
 void screenManager2() {
 	while(1) {
 		ipc_read(SPLIT_FD, buf2, MAXFDSIZE);
+		printString(buf2, 255, 255, 255, 2);
 	}
 
 }
 
 void splitScreen() {
-	printWhiteString("(screen manager) splitting screen....");
+	// printWhiteString("(screen manager) splitting screen....");
+	ipc_create(SPLIT_FD, MAXFDSIZE);
+	addProcess(&screenManager2, 1,2,50, SPLIT_FD, INVALID_FD);
 	vesa_addSplit();
-	// ipc_create(SPLIT_FD, MAXFDSIZE);
-	// addProcess(&screenManager2, 1,2,50, SPLIT_FD, INVALID_FD);
 }
 
 void unsplitScreen() {

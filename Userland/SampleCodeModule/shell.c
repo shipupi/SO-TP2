@@ -143,7 +143,7 @@ int shell_execute(char *command,int background, char *arguments, char * fdIn, ch
 	if (found != -1) {
 		char * ptr = shortcuts[found].pointer;
 		if (bg) {
-			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, fdOut);
+			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, "SPLIT_FD");
 		} else {
 			((EntryPoint)(ptr))(arguments);
 		}

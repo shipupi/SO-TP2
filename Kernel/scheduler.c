@@ -94,7 +94,6 @@ int chooseNextProcess(int ap[], int n) {
 }
 
 void * schedule(void * oldStack) {
-	
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
@@ -126,7 +125,6 @@ void * schedule(void * oldStack) {
 		// printf(". Address: ");
 		// printn((uintptr_t)oldStack);
 		// nextLine();
-
 		processes[activeProcess].stackAddress = oldStack;
 	} 
 

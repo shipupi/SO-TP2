@@ -43,6 +43,8 @@ static int cursorY = 10;
 static int cursorX2 = 10;
 static int cursorY2 = 10;
 static int splits = 1;
+
+static int cursorX2Start;
 // static int maxY = cursorYStart + 20 * maxLines;
 // const int cursorYStart = 10;
 
@@ -321,7 +323,7 @@ void prevLine(int section) {
     cursorX2 = infoBlock->Xres - 14;
   } else if (section == 1 && splits == 2) {
     cursorY -= 20;
-    cursorX = (infoBlock->Xres / 2) - 14; // Arreglar este
+    cursorX = (infoBlock->Xres / 2) - 14; 
   } else if( splits == 1) {
     cursorY -= 20;
     cursorX = infoBlock->Xres - 14;
@@ -329,13 +331,32 @@ void prevLine(int section) {
  } 
 
 void nextLine(int section) {
+
+  if(section == 2 && splits == 2) {
+    cursorX2 = cursorX2Start;
+    cursorY += 20; 
+    if (cursorY == maxY)
+    {
+      shiftUp(section);
+    }
+  } else if (section == 1 && splits == 2) {
   
-  cursorX = cursorXStart;
-  cursorY += 20; 
-  if (cursorY == maxY)
-  {
-    shiftUp(section);
-  }
+    cursorX = cursorXStart;
+    cursorY += 20; 
+    if (cursorY == maxY)
+    {
+      shiftUp(section);
+    }
+
+  } else if( splits == 1) {
+    cursorX = cursorXStart;
+    cursorY += 20; 
+    if (cursorY == maxY)
+    {
+      shiftUp(section);
+    }
+  }    
+
 }
 
 int maxX(int section) {
@@ -370,12 +391,21 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b, i
   unsigned char pixelWidth = infoBlock->bpp / 8;
   int pitch = infoBlock->pitch;
   char* pos;
+  int* cx;
+  int* cy;
+  int cxs;
+
   if (splits == 1)  section = 1;
   if (section == 2) {
-    pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+    cx = &cursorX2;
+    cy = &cursorY2;
+    cxs = cursorXStart + infoBlock->Xres / 2;
   } else {
-    pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+    cx = &cursorX;
+    cy = &cursorY;
+    cxs = cursorXStart;
   }
+  pos = (char *)(uintptr_t) infoBlock->physbase + (*cx)*pixelWidth + (*cy)*pitch;
   int len = strlength(str);
   char c;
   for (int i = 0; i < len; i++)
@@ -389,11 +419,11 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b, i
       deleteChar(section);
     } else {
       drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
-      cursorX += 8;
-      if (cursorX >= (infoBlock->Xres - 5 - cursorXStart))
+      (*cx) += 8;
+      if ((*cx) >= maxX(section))
       {
         nextLine(section);
-        pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+        pos = (char *)(uintptr_t) infoBlock->physbase + (*cx)*pixelWidth + (*cy)*pitch;
       } else {
         pos += fontWidth * pixelWidth;
       }
@@ -404,6 +434,9 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b, i
 
 void shiftUp(int section) {
     
+  // FALTA ARREGLAR ESTA FUNCION ( SI LA PANTALLA ESTA PARTIDA NO PUEDO COPIAR UN BLOQUE ENTERO, TENGO QUE 
+  // COPIAR VARIOS BLOQUES A LA VEZ) 
+
    int pitch = infoBlock->pitch;
    int destY = cursorYStart;
    char* dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
@@ -437,7 +470,7 @@ void clearAll() {
   
   if(splits > 1) {
     drawSplitSeparator();
-    cursorX2 = cursorXStart + infoBlock->Xres / 2;
+    cursorX2 = cursorX2Start;
     cursorY2 = cursorYStart;
   }
 }
@@ -491,7 +524,7 @@ void pl(char * string) {
 }
 
 void initializeVideoDriver() {
-  
+   cursorX2Start = cursorXStart + infoBlock->Xres / 2;
 }
 
 void drawSplitSeparator() {  fillRect(512, 0, 4, infoBlock->Yres, 255, 0, 0);
