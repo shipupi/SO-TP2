@@ -6,6 +6,7 @@
 #include "drivers/soundDriver.h"
 #include "drivers/time.h"
 #include "memoryManager/memoryManager.h"
+#include "include/screenManager.h"
 #include "scheduler/scheduler.h"
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
@@ -215,3 +216,10 @@ void sys_change_priority(uint64_t pid , int priority){
 	changePriority(pid,priority);
 }
 
+void sys_split_screen() {
+	splitScreen();
+}
+
+void sys_unsplit_screen() {
+	unsplitScreen();
+}

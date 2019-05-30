@@ -52,6 +52,9 @@ EXTERN sys_mut_delete
 EXTERN sys_mut_list
 EXTERN sys_pid
 EXTERN sys_pstat
+EXTERN sys_split_screen
+EXTERN sys_unsplit_screen
+
 
 EXTERN printf
 EXTERN registerValueToString
@@ -302,6 +305,12 @@ _syscall:
   cmp rdi, 0x23   ; change priority
   je .syscall23
 
+  cmp rdi, 0x24   ; split screen
+  je .syscall24
+
+  cmp rdi, 0x25   ; unsplit screen
+  je .syscall25
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -500,6 +509,14 @@ _syscall:
   mov rdi, rsi
   mov rsi, rdx
   call sys_change_priority
+  jmp .continue
+
+  .syscall24:
+  call sys_split_screen
+  jmp .continue
+
+  .syscall25:
+  call sys_unsplit_screen
   jmp .continue
 
 ; EXCEPTIONS 

@@ -35,6 +35,8 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "chpr", (uintptr_t)&changePriority);
 	loadShortcut(scArr, "write2", (uintptr_t)&write2);
 	loadShortcut(scArr, "read2", (uintptr_t)&read2);
+	loadShortcut(scArr, "split", (uintptr_t)&split);
+	loadShortcut(scArr, "unsplit", (uintptr_t)&unsplit);
 	return i;
 }
 

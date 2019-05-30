@@ -28,6 +28,8 @@ GLOBAL os_mut_delete
 GLOBAL os_mut_list
 GLOBAL os_pid
 GLOBAL os_pstat
+GLOBAL os_split_screen
+GLOBAL os_unsplit_screen
 
 GLOBAL os_pipe_create
 GLOBAL os_pipe_delete
@@ -370,6 +372,17 @@ os_change_priority:
 	mov rdx,rsi
 	mov rsi,rdi
 	mov rdi, 0x23
+	int 80h
+	finish
+
+os_split_screen:
+	start
+	mov rdi, 0x24
+	int 80h
+	finish
+os_unsplit_screen:
+	start
+	mov rdi, 0x25
 	int 80h
 	finish
 

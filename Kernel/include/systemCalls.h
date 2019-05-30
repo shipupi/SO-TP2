@@ -45,4 +45,6 @@ void sys_pipe_delete(char * pipeid);
 void sys_pipe_read(char * pipeid , char * buffer , int messageSize);
 void sys_pipe_write(char * pipeid , char * buffer , int messageSize);
 void sys_change_priority(uint64_t pid , int priority);
+void sys_split_screen();
+void sys_unsplit_screen();
 #endif /* SYSTEMCALLS_H */
