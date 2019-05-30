@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 void shell_init();
-int shell_execute(char *command,int background, char *arguments);
+int shell_execute(char *command,int background, char *arguments, char * fdIn, char * fdOut);
 int shell_bgexec(uintptr_t path);
 
 void addDefaultProcess(char * ptr, int priority, int background, int size);

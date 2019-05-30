@@ -13,5 +13,4 @@ void screenManager() {
 		ipc_read(DEFAULT_FDOUT,buf, MAXFDSIZE);
 		printWhiteString(buf);
 	}
-
 }

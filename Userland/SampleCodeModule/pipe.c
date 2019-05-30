@@ -14,6 +14,24 @@ void pipe(){
 	return ;
 }
 
+void write2() {
+	int a = 0;
+	int b = 0;
+	while(1) {
+		a++;
+		if(a % 100000000 == 0) {
+			b++;
+			printf("2");
+		}
+		if(b == 5) return;
+	}
+}
 
-
-
+void read2() {
+	char c;
+	char str[2] = {0,0};
+	while(1) {
+		c = getChar();
+		pint((c - '0') * 2);
+	}
+}

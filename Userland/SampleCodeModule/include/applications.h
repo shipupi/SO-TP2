@@ -28,6 +28,8 @@ void mut1();
 void mut2();
 void pipe();
 void changePriority();
+void write2();
+void read2();
 #endif
 
 
