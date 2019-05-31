@@ -512,7 +512,9 @@ _syscall:
   jmp .continue
 
   .syscall24:
+  cli
   call sys_split_screen
+  sti
   jmp .continue
 
   .syscall25:

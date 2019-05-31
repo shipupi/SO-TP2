@@ -15,15 +15,18 @@ void pipe(){
 }
 
 void write2() {
-	int a = 0;
+	uint64_t a = 0;
 	int b = 0;
 	while(1) {
 		a++;
-		if(a % 100000000 == 0) {
+		if(a % 1000001 == 0) {
+
 			b++;
-			printf("2");
+			// printf("2");
+			puint(a % 10);
+			// pint(5);
 		}
-		if(b == 5) return;
+		// if(b == 5) return;
 	}
 }
 

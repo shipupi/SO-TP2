@@ -334,8 +334,8 @@ void nextLine(int section) {
 
   if(section == 2 && splits == 2) {
     cursorX2 = cursorX2Start;
-    cursorY += 20; 
-    if (cursorY == maxY)
+    cursorY2 += 20; 
+    if (cursorY2 == maxY)
     {
       shiftUp(section);
     }
@@ -399,7 +399,7 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b, i
   if (section == 2) {
     cx = &cursorX2;
     cy = &cursorY2;
-    cxs = cursorXStart + infoBlock->Xres / 2;
+    cxs = cursorX2Start;
   } else {
     cx = &cursorX;
     cy = &cursorY;
@@ -436,15 +436,44 @@ void shiftUp(int section) {
     
   // FALTA ARREGLAR ESTA FUNCION ( SI LA PANTALLA ESTA PARTIDA NO PUEDO COPIAR UN BLOQUE ENTERO, TENGO QUE 
   // COPIAR VARIOS BLOQUES A LA VEZ) 
+  int pitch = infoBlock->pitch;
+  int srcY = cursorYStart + 20;
+  int destY = cursorYStart;
+  char* dest;
+  char* src;
+  int size;
+  if(splits == 2 && section == 2) {
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch + cursorX2Start * infoBlock->bpp / 8;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch + cursorX2Start * infoBlock->bpp / 8;
+    cursorY2 -= 20;
+    // src[0] = 0;
+    // src[1] = 0;
+    // src[2] = 255;
+  } else if (splits == 2 && section == 1) {
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
+    cursorY -= 20;
+  } else {
+    // Hay solo 1 split, puedo mover todo el bloque junto
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
+    size = infoBlock->Xres * pitch;
+    memcpy(dest, src, size);
+    cursorY -= 20;
+    return;
+  }
 
-   int pitch = infoBlock->pitch;
-   int destY = cursorYStart;
-   char* dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
-   int srcY = cursorYStart + 20;
-   char* src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
-   int size = infoBlock->Xres * pitch;
-   memcpy(dest, src, size);
-   cursorY -= 20;
+  // Hay 2 splits, tengo que ir copiando linea por linea para arriba
+
+  // Checkeo de que los puntos esten
+  
+  size = (infoBlock->Xres / 2) * infoBlock->bpp / 8;
+  int i;
+  for (i = 0; i < infoBlock->Yres * 2; ++i) {
+    memcpy(dest, src, size);
+    dest += pitch;
+    src += pitch;
+  }
 
 }
 

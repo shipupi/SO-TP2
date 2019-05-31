@@ -35,7 +35,7 @@ void printf(char * str) {
 
 
 void pint(int num) {
-  char string[10];
+  char string[10] = {0,0,0,0,0,0,0,0,0,0};
   int remainder;
   int index = 0;
   int reverseIndex = 0;
@@ -50,6 +50,9 @@ void pint(int num) {
   }
   if (num == 0){
     string[0] = '0';
+    string[1] = 0;
+    printf(string);
+    return;
   }
   else {
     while (num > 0){

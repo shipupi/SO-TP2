@@ -137,7 +137,7 @@ void * schedule(void * oldStack) {
 	}
 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess(ap, n);
+	activeProcess = chooseNextProcess2(ap, n);
 	return processes[activeProcess].stackAddress;
 }
 
