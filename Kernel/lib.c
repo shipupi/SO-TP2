@@ -48,3 +48,20 @@ void * memcpy(void * destination, const void * source, uint64_t length)
 
 	return destination;
 }
+
+
+
+/* 
+	Codigo sacado de:
+		https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
+*/
+int upper_power_of_two(int v) {
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
+	return v;
+}

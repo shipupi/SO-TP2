@@ -64,8 +64,17 @@ void reboot()
 int main()
 {	
 	initializeMemoryManager();
-	addProcess(sampleCodeModuleAddress, 1, 'a', 2, 50);
-	load_idt();
+	void * addr1;
+	addr1 = requestMemorySpace(134217728 / 4 - 1); 
+	addr1 = requestMemorySpace(134217728 / 2 - 1); 
+	// addr1 = requestMemorySpace(4096 * 2 + 1);
+	if(addr1) {
+		printUint((uintptr_t)addr1);
+	} else {
+		pl("No blocks found");
+	}
+	// addProcess(sampleCodeModuleAddress, 1, 'a', 2, 50);
+	// load_idt();
 	while(1) {
 		_hlt();
 	}
