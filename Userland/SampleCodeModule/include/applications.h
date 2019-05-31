@@ -28,7 +28,7 @@ void mut1();
 void mut2();
 void pipe();
 void changePriority();
+void diph();
 #endif
-
 
 
