@@ -9,6 +9,54 @@
 
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
+
+int split(char * pars, char separetor, char out[20][20]){
+		
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		int avoid=0;
+		int getit = 0;
+		//fit it seareted by separetor
+		for(i = 0 ; i < strlen(pars); i++){
+
+			if(getit == 1 && pars[i] == separetor){
+				avoid =0;
+			}
+
+			if (pars[i] == separetor && avoid != 0){
+				out[j][k] = 0;
+				k = 0;
+				j++;
+				getit = 1;
+			}
+			if(pars[i] != separetor){
+				getit = 0;
+				out[j][k]=pars[i];
+				k++;
+			}
+
+			if(i !=0){
+				avoid = 1;
+			}
+
+		}
+
+
+		// finish out
+
+		for (int a = j+1;a <20; a++ ){
+			for (int b = 0; b<20; b++){
+				out[a][b] = 0;
+			}
+
+		}
+
+
+		return j;
+	}
+
+
 void shell_init() {
 	//Start Shell
 	programs = initializeShortcutsArray(shortcuts);
@@ -16,7 +64,6 @@ void shell_init() {
 	static char rightpipe[MAX_COMMAND_LENGTH];
 	static char leftpipe[MAX_COMMAND_LENGTH];	
 	static char command[MAX_COMMAND_LENGTH];
-	static char commandright[MAX_COMMAND_LENGTH];
 	static char arguments[MAX_COMMAND_LENGTH];
 	int background = 0;
 	int exit = 0;
@@ -31,33 +78,33 @@ void shell_init() {
 		printf("\n$>");
 		scanf(buffer, MAX_COMMAND_LENGTH);
 		int length = strlen(buffer);
-		int i,j;
+		int i;
 		int found = 0;
-		int foundleft = 0;
-		int foundright = 0;
+		
 		int foundpipe = 0;
-		int pipeindex=0;
-		int space_index1 = 0;
-		int space_index2 = 0;
-		int find_space = 0 ;
-		// busco pipes en el buffer
-		for (i = 0; i< length; i++){
-			if(buffer[i] == '!'){
-				foundpipe = 1;
-				pipeindex = i;
-				find_space = 1;
-			}
-			if(buffer[i] == ' ' && find_space == 0){
-				space_index1 = i;
-				find_space++;
-			}
-
-			if(buffer[i] == ' ' && find_space == 1){
-				space_index2 = i;
-				find_space++;
-			}
+		
+		
+		char * left;
+		char * raight;
+		
+		char pipeado[20][20];
+		int pip = split(buffer,'!', pipeado);
+		if(pip>0){
+			left= pipeado[0];
+			raight= pipeado[1];
+			foundpipe = 1;
 		}
 
+		char parseado_left[20][20];
+		int argumentos_left = split(left, ' ', parseado_left);
+		argumentos_left ++;
+		
+
+		char parseado_raight[20][20];
+		int argumentos_raight = split(raight,' ',parseado_raight);
+		argumentos_raight++;
+		
+		int aumento = 0;
 
 		if (foundpipe) {
 			
@@ -65,10 +112,14 @@ void shell_init() {
 			os_pipe_create("hola");
 
 			//Ejecutamos producer y le ponemos como fdOut el pipe creado
-			memcopy((void *) (uintptr_t) command, buffer, space_index1);
-			command[pipeindex - (pipeindex - space_index1)] = 0;
-			memcopy((void *) (uintptr_t) arguments, buffer + space_index1 +1, pipeindex - space_index1 -1);
-			arguments[pipeindex - space_index1] = 0;
+			memcopy((void *) (uintptr_t) command, parseado_left[0], strlen(parseado_left[0]));
+			command[strlen(left[0])+1] = 0;
+
+			for(i =1; i<argumentos_left; i++){
+				memcopy((void *) (uintptr_t) arguments + aumento, parseado_left[i], strlen(parseado_left[i]));
+				arguments[aumento + strlen(parseado_left[i])+1] = 0;
+				aumento += strlen(parseado_left[i]);
+			}
 			//foundright = 1;
 		
 			printf("\n");
@@ -84,10 +135,16 @@ void shell_init() {
 			memclear(command, MAX_COMMAND_LENGTH);
 			memclear(arguments, MAX_COMMAND_LENGTH);
 
-			memcopy((void *) (uintptr_t) command, buffer + pipeindex+1, space_index2 - pipeindex -1 );
-			command[space_index2-pipeindex] = 0;
-			memcopy((void *) (uintptr_t) arguments, buffer + space_index2+1, length - space_index2 -1 );
-			arguments[length - space_index2] = 0;
+			memcopy((void *) (uintptr_t) command, parseado_raight[0], strlen(parseado_raight[0]) );
+			command[strlen(parseado_raight[0])] = 0;
+			//printf(command); 
+			aumento = 0;
+			for(i =1; i<argumentos_raight; i++){
+				memcopy((void *) (uintptr_t) arguments + aumento, parseado_raight[i], strlen(parseado_raight[i]));
+				arguments[aumento + strlen(parseado_raight[i])+1] = 0;
+				aumento += strlen(parseado_raight[i]);
+			}
+			
 
 
 
