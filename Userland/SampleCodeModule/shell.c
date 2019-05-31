@@ -7,12 +7,6 @@
 #include "memory.h"
 #include "PCB.h"
 
-#define CORTE 0
-#define LETRA 1
-#define INIT 2
-
-
-
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
 
@@ -23,42 +17,29 @@ int split(char * pars, char separetor, char out[20][20]){
 		int k = 0;
 		int avoid=0;
 		int getit = 0;
-		int state = 2;
 		//fit it seareted by separetor
 		for(i = 0 ; i < strlen(pars); i++){
-			switch(state){
-				case INIT:
-					if (pars[i] == separetor){
-						state = CORTE;
-					}else{
-						out[j][k] = pars[i];
-						k++;
-						state = LETRA;
-					}
-					break;
-				case CORTE:
-					if(separetor == pars[i]){
-						state = CORTE;
-					}else{
-						out[j][k]=pars[i];
-						k++;
-					}
 
-					break;
-				case LETRA:
-						if(separetor == pars[i]){
-							state = CORTE;
-							out[j][k] = 0;
-							j++;
-							k = 0;
-						}else{
-							out[j][k] = pars[i];
-							k++;
-						}
-					break;
-
+			if(getit == 1 && pars[i] == separetor){
+				avoid =0;
 			}
-			
+
+			if (pars[i] == separetor && avoid != 0){
+				out[j][k] = 0;
+				k = 0;
+				j++;
+				getit = 1;
+			}
+			if(pars[i] != separetor){
+				getit = 0;
+				out[j][k]=pars[i];
+				k++;
+			}
+
+			if(i !=0){
+				avoid = 1;
+			}
+
 		}
 
 
@@ -102,14 +83,6 @@ void shell_init() {
 		memclear(parseado_raight,20);
 		printf("\n$>");
 
-		for( int a = 0; a < 19; a++){
-			for (int b = 0 ; b < 19; b++){
-				parseado_left[a][b] = 0;
-				parseado_raight[a][b] = 0;
-				pipeado[a][b] = 0;
-			}
-		}
-
 		scanf(buffer, MAX_COMMAND_LENGTH);
 		int length = strlen(buffer);
 		int i;
@@ -118,6 +91,14 @@ void shell_init() {
 		int foundpipe = 0;
 
 		char space[] = " ";
+
+		for(int a = 0; a < 19; a++){
+			for(int b = 0; b < 19; b++){
+				parseado_left[a][b] = 0;
+				parseado_raight[a][b] = 0;
+				pipeado[a][b] = 0;
+			}
+		}
 		
 		
 		char * left;
@@ -148,11 +129,11 @@ void shell_init() {
 
 			//Ejecutamos producer y le ponemos como fdOut el pipe creado
 			memcopy((void *) (uintptr_t) command, parseado_left[0], strlen(parseado_left[0]));
-			command[strlen(left[0])+1] = 0;
+			command[strlen(parseado_left[0])+1] = 0;
 
 			for(i =1; i<argumentos_left; i++){
 				memcopy((void *) (uintptr_t) arguments + aumento, parseado_left[i], strlen(parseado_left[i]));
-				memcopy((void *) (uintptr_t) arguments + aumento+1, space, 1);
+				memcopy((void *) (uintptr_t) arguments + aumento + strlen(parseado_left[i]), space, 1);
 				aumento++;
 					
 				arguments[aumento + strlen(parseado_left[i])+1] = 0;
@@ -181,7 +162,7 @@ void shell_init() {
 			aumento = 0;
 			for(i =1; i<argumentos_raight; i++){
 				memcopy((void *) (uintptr_t) arguments + aumento, parseado_raight[i], strlen(parseado_raight[i]));
-				memcopy((void *) (uintptr_t) arguments + aumento+1, space, 1);
+				memcopy((void *) (uintptr_t) arguments + aumento + strlen(parseado_raight[i]), space, 1);
 				aumento++;
 				arguments[aumento + strlen(parseado_raight[i])+1] = 0;
 				aumento += strlen(parseado_raight[i]);
