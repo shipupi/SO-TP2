@@ -7,6 +7,7 @@
 #include "drivers/time.h"
 #include "memoryManager/memoryManager.h"
 #include "scheduler/scheduler.h"
+#include "scheduler/sleeper.h"
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
 
@@ -130,7 +131,8 @@ void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
 
 // Processes
 void sys_schedule() {
-	schedule();
+	printWhiteString("Alguien llamo a schedule (no deberia pasar!)");
+	// schedule();
 }
 uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size) {
 	return addProcess(entryPoint,priority,name,foreground,size);
@@ -142,8 +144,9 @@ void sys_listProcesses() {
 	listProcesses();
 }
 
-void sys_sleep(){
-	printWhiteString("SLEEP");
+void sys_sleep_seconds(int seconds){
+	printWhiteString("Sleeping for"); printUint(seconds); printWhiteString(" seconds"); nextLine();
+	sleep_seconds(seconds);
 }
 
 void sys_ipc_create(char * id,uint64_t size){

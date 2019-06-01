@@ -8,6 +8,7 @@
 #include "include/drivers/time.h"
 #include "include/utils.h"
 #include "include/lib.h"
+#include "include/scheduler/scheduler.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -16,8 +17,7 @@
 // Process Control Block
 	
 
-#define MAXPROCESSES 256
-#define PROCESSSTACKSIZE 4096
+
 
 static int PIDCounter = 0;
 static int activeProcess = -1;

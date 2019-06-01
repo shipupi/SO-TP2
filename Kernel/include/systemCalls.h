@@ -25,7 +25,7 @@ void sys_endProcess(int pid);
 void sys_listProcesses();
 int sys_pid();
 void sys_pstat(void * pcbAddr);
-void sys_sleep();
+void sys_sleep_seconds(int seconds);
 void sys_ipc_create(char * id,uint64_t size);
 void sys_ipc_write(char * id,char * string,uint64_t messageSize);
 void sys_ipc_read(char * id,char * string,uint64_t messageSize);

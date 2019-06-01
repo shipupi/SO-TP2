@@ -81,30 +81,30 @@ void philosopher(){
 void diph(){
 	
 	printf("DIPH\n");
+	os_sleep_seconds(10);
+	// philos = N ;
 
-	philos = N ;
+ //    int i;
 
-    int i;
+ //    for(i=0;i<philos;i++){
+ //    	char * s;
+ //    	numberToString(i,s);
+ //    	os_mut_create(s);
+ //    }
 
-    for(i=0;i<philos;i++){
-    	char * s;
-    	numberToString(i,s);
-    	os_mut_create(s);
-    }
+ //    for(i=0;i<philos;i++){
+ //    	philosophers[i] = os_addProcess(&philosopher,1,'c',PCB_BACKGROUND,4000);
+ //    }
 
-    for(i=0;i<philos;i++){
-    	philosophers[i] = os_addProcess(&philosopher,1,'c',PCB_BACKGROUND,4000);
-    }
+ //    //IMPRIMIR
 
-    //IMPRIMIR
-
-    //CAMBIAR LA CANTIDAD DE FILOSOFOS EN RUNTIME
+ //    //CAMBIAR LA CANTIDAD DE FILOSOFOS EN RUNTIME
     
-    for(i=0;i<philos;i++){
-    	char * s;
-    	numberToString(i,s);
-    	os_mut_delete(s);
-    }
+ //    for(i=0;i<philos;i++){
+ //    	char * s;
+ //    	numberToString(i,s);
+ //    	os_mut_delete(s);
+ //    }
 }
 
 

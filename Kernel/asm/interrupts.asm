@@ -35,7 +35,7 @@ EXTERN sys_schedule
 EXTERN sys_addProcess
 EXTERN sys_endProcess
 EXTERN sys_listProcesses
-EXTERN sys_sleep
+EXTERN sys_sleep_seconds
 EXTERN sys_ipc_create
 EXTERN sys_ipc_write
 EXTERN sys_ipc_read
@@ -307,6 +307,9 @@ _syscall:
   cmp rdi, 0x23   ; change priority
   je .syscall23
 
+  cmp rdi, 0x24   ; sleep_seconds
+  je .syscall24
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -504,6 +507,11 @@ _syscall:
   mov rdi, rsi
   mov rsi, rdx
   call sys_change_priority
+  jmp .continue
+
+.syscall24:
+  mov rdi, rsi
+  call sys_sleep_seconds
   jmp .continue
 
 ; EXCEPTIONS 
