@@ -17,24 +17,20 @@ int random(){
 }
 
 void think(int time){
-	while(10000*time){
-
-	}
+	os_sleep_seconds(time);
 }
 
 void eat(){
 	int r = random();
-	while(10000*r){
-
-	}
+	os_sleep_seconds(r);
 }
 
 void philosopher(){
-	int i = 0;
+	// int i = 0;
 	//THINKING
 	while(1){
 		think(random());
-		char * s;
+		char * s = os_requestMemorySpace(1000);;
 		if(id%2==0){
 
 			//HUNGRY

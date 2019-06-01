@@ -10,7 +10,7 @@
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
 
-int split(char * pars, char separetor, char out[20][20]){
+int splitString(char * pars, char separetor, char out[20][20]){
 		
 		int i = 0;
 		int j = 0;
@@ -104,7 +104,7 @@ void shell_init() {
 		char * left;
 		char * raight;
 		
-		int pip = split(buffer,'!', pipeado);
+		int pip = splitString(buffer,'!', pipeado);
 		if(pip>0){
 			left= pipeado[0];
 			raight= pipeado[1];
@@ -112,12 +112,12 @@ void shell_init() {
 		}
 
 		
-		int argumentos_left = split(left, ' ', parseado_left);
+		int argumentos_left = splitString(left, ' ', parseado_left);
 		argumentos_left ++;
 		
 
 		
-		int argumentos_raight = split(raight,' ',parseado_raight);
+		int argumentos_raight = splitString(raight,' ',parseado_raight);
 		argumentos_raight++;
 		
 		int aumento = 0;

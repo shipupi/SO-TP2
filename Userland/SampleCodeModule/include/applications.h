@@ -33,6 +33,7 @@ void read2();
 void split();
 void unsplit();
 void diph();
+
 #endif
 
 

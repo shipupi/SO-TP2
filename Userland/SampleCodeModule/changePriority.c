@@ -13,8 +13,8 @@ void changePriority(char * args){
 	
 	//Chequear que se parseen bien los paramtetros
 	int i;
-	int flag = 0;
-	int counter = 0;
+	// int flag = 0;
+	// int counter = 0;
 	for(i = 0 ; args[i] !='\0' ; i++){
 		if(args[i] != ' '){
 

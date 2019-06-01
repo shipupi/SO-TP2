@@ -53,12 +53,7 @@ void sleep_seconds(int seconds) {
 }
 
 void wakeSleepers(int currentSeconds) {
-	if(head != 0) {
-		printWhiteString("Checking wake at  ");printUint(currentSeconds); printWhiteString(" segundos");nextLine();
-		printWhiteString("Current head waking at "); printUint(head->sec_end);printWhiteString(" Segundos"); nextLine(); nextLine();
-	}
 	while(head != 0 && head->sec_end <= currentSeconds) {
-		printWhiteString("Waking pid:");printUint(head->pid);
 		wakePID(head->pid);
 		head = head->next;
 	}

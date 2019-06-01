@@ -393,17 +393,14 @@ void printString(char *str, unsigned char r, unsigned char g, unsigned char b, i
   char* pos;
   int* cx;
   int* cy;
-  int cxs;
 
   if (splits == 1)  section = 1;
   if (section == 2) {
     cx = &cursorX2;
     cy = &cursorY2;
-    cxs = cursorX2Start;
   } else {
     cx = &cursorX;
     cy = &cursorY;
-    cxs = cursorXStart;
   }
   pos = (char *)(uintptr_t) infoBlock->physbase + (*cx)*pixelWidth + (*cy)*pitch;
   int len = strlength(str);

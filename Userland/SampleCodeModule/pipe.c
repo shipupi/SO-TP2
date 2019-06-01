@@ -32,7 +32,7 @@ void write2() {
 
 void read2() {
 	char c;
-	char str[2] = {0,0};
+	// char str[2] = {0,0};
 	while(1) {
 		c = getChar();
 		pint((c - '0') * 2);
