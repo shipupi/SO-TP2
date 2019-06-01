@@ -21,9 +21,9 @@ void write2() {
 		a++;
 		if(a % 1000001 == 0) {
 
-			b++;
-			// printf("2");
-			puint(a % 10);
+			// b++;
+			printf("2");
+			// puint(a % 10);
 			// pint(5);
 		}
 		// if(b == 5) return;

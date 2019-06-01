@@ -9,6 +9,8 @@
 
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
+static char pipeId[] = "pipe_M";
+char lastPipeId = '0';
 
 int splitString(char * pars, char separetor, char out[20][20]){
 		
@@ -125,7 +127,8 @@ void shell_init() {
 		if (foundpipe) {
 			
 			//Creamos un pipe
-			os_pipe_create("hola");
+			pipeId[5] = lastPipeId++;
+			os_pipe_create(pipeId);
 
 			//Ejecutamos producer y le ponemos como fdOut el pipe creado
 			memcopy((void *) (uintptr_t) command, parseado_left[0], strlen(parseado_left[0]));
@@ -151,7 +154,7 @@ void shell_init() {
 			printf("\n");
 
 
-			shell_execute(command,background,arguments, DEFAULT_FDIN, "hola");
+			shell_execute(command,background,arguments, DEFAULT_FDIN, pipeId);
 			memclear(command, MAX_COMMAND_LENGTH);
 			memclear(arguments, MAX_COMMAND_LENGTH);
 
@@ -176,7 +179,7 @@ void shell_init() {
 			printf(" con parametros: ");
 			printf(arguments);
 			printf("\n");
-			shell_execute(command,background,arguments, "hola", DEFAULT_FDOUT);
+			shell_execute(command,background,arguments, pipeId, DEFAULT_FDOUT);
 		} else {
 			for (i = 0; i < length; ++i)
 			{
@@ -224,11 +227,14 @@ int shell_execute(char *command,int background, char *arguments, char * fdIn, ch
 		char * ptr = shortcuts[found].pointer;
 
 		if (bg) {
-			if(isSplit()) {
+			if(isSplit() && strcmp(fdOut, DEFAULT_FDOUT) == 0) {
 				fdOut = "SPLIT_FD";
 			}
 			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, fdOut);
 		} else {
+			// Si no estoy saliendo por el fdOut default, habria que redirigir la salida de shell
+			// al fdout que vino por parametro. Y reapuntar a fdout una vez que se sale de 
+			// La funcion
 			((EntryPoint)(ptr))(arguments);
 		}
 	} else {
