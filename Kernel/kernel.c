@@ -73,6 +73,97 @@ int main()
 	} else {
 		pl("No blocks found");
 	}
+/*
+	pl("-----------");
+
+	nextLine();
+	pl("BASEADDRESS: ");
+	printUint((uintptr_t) BASEADDRESS );
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(0));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(1));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(2));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(3));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(4));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(5));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(6));
+
+	nextLine();
+
+	printUint((uintptr_t)getAddressForIndex(7));
+
+	nextLine();
+
+	//nextLine();
+
+	//printUint((uintptr_t)getAddressForIndex(8));
+
+	//nextLine();
+
+	pl("-----------");
+*/
+
+	pl("-----------");
+
+	nextLine();
+	
+	printUint(getIndexForAdress(9437184,32768));
+	
+	nextLine();
+
+	printUint(getIndexForAdress(9437184,16384));
+	
+	nextLine();
+
+	printUint(getIndexForAdress(76546048,16384));
+	
+	nextLine();
+
+	printUint(getIndexForAdress(9437184,8192));
+	
+	nextLine();
+
+	nextLine();
+
+	printUint(getIndexForAdress(429911616,8192));
+	
+	nextLine();
+
+	nextLine();
+
+	printUint(getIndexForAdress(76546048,8192));
+	
+	nextLine();
+
+	printUint(getIndexForAdress(110100480,8192));
+	
+	nextLine();
+
+	printUint(getIndexForAdress(9437184,4096));
+	
+	nextLine();
+
+	pl("-----------");
+
 	// addProcess(sampleCodeModuleAddress, 1, 'a', 2, 50);
 	// load_idt();
 	while(1) {
@@ -80,3 +171,4 @@ int main()
 	}
 	return 0;
 }
+

@@ -5,9 +5,9 @@
 #include "include/memoryManager/memoryManager.h"
 #include "include/drivers/vesaDriver.h"
 
-
 static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
 
+#define N 15 // 32768 = 2 ^ 15
 
 // Data Structure, arbol al estilo heap
 // Left child = 2*i + 1
@@ -51,10 +51,65 @@ int32_t getBlocksForSize(uint64_t requestedSize){
 }
 
 void * getAddressForIndex(int index) {
-	printWhiteString("Requesting address for block: "); printUint(index); nextLine();
-	return baseAddress;
+	int n = index + 1;
+
+	/*printWhiteString("n //inex + 1: "); 
+	printUint(n); 
+	nextLine();*/
+
+	int k = l2(n);
+
+	/*printWhiteString("level(k): "); 
+	printUint(k); 
+	nextLine();*/
+
+	int s = power(2,N-k);
+
+	/*printWhiteString("step(s): "); 
+	printUint(s); 
+	nextLine();*/
+
+	int p = n % power(2,k);
+
+	/*printWhiteString("position(p): "); 
+	printUint(p); 
+	nextLine();*/
+
+	int blockNumber = s * p ;
+
+	printWhiteString("Requesting address for block: "); 
+	printUint(index); 
+	nextLine();
+	printWhiteString("blockNumber: "); 
+	printUint(blockNumber); 
+	nextLine();
+
+	return baseAddress + BLOCKSIZE * blockNumber;
 }
 
+int getIndexForAdress(int address , int size){
+
+	address = address - (uint64_t) baseAddress;
+
+	printWhiteString("address - baseAddress: "); 
+	printUint(address); 
+	nextLine();
+
+	int k = N - l2(size);
+
+	printWhiteString("level(k): "); 
+	printUint(k); 
+	nextLine();
+
+	int step = address/size;
+
+	printWhiteString("step: "); 
+	printUint(step); 
+	nextLine();
+
+	return power(2,k) ; // + offset - 1
+
+}
 
 void updateStatus(int index) {
 	int leftVal = memoryNode[index * 2 + 1];
@@ -113,3 +168,7 @@ void * requestMemorySpace(uint64_t requestedSpace) {
 void freeMemorySpace (void * freeBaseAddress,int32_t size){
 
 }
+
+
+
+

@@ -65,3 +65,25 @@ int upper_power_of_two(int v) {
 	v++;
 	return v;
 }
+
+int l2(int n) {
+     if (n==0) return 0;
+     int logValue = -1;
+     while (n) {//
+         logValue++;
+         n >>= 1;
+     }
+     return logValue;
+ }
+
+
+int power(int base,int n){
+	int i , p;
+	p=1;
+	for(i=1;i<=n;++i){
+		p = p*base;
+	}
+	return p;
+}
+
+
