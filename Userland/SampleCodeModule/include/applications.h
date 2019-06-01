@@ -32,6 +32,7 @@ void write2();
 void read2();
 void split();
 void unsplit();
+int isSplit();
 void diph();
 
 #endif

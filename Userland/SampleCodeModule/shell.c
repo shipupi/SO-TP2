@@ -222,8 +222,12 @@ int shell_execute(char *command,int background, char *arguments, char * fdIn, ch
 	}
 	if (found != -1) {
 		char * ptr = shortcuts[found].pointer;
+
 		if (bg) {
-			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, "SPLIT_FD");
+			if(isSplit()) {
+				fdOut = "SPLIT_FD";
+			}
+			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, fdOut);
 		} else {
 			((EntryPoint)(ptr))(arguments);
 		}

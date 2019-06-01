@@ -84,6 +84,8 @@ int mut_release(char * id){
     arrMUT[mId] = m;
     int nextPid = -1;
 	if (m.waiting > 0) {
+        printf("Waking up mut: ");
+        printn(m.waitPids[0]);
         nextPid = m.waitPids[0];
         m.waitPids[0] = -1;
         for (int i = 1; i < m.waiting - 1; ++i)
