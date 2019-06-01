@@ -49,6 +49,12 @@ void help() {
 
 	printf("\nipcs:");
 	printf("\n\tipcs");
+
+	printf("\nchpr:");
+	printf("\n\tChange the priority of a process chpr pid newPriority");
+
+	printf("\ndiph:");
+	printf("\n\tFisolofos");
 	
 }
 

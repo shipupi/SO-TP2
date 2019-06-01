@@ -40,6 +40,7 @@ void os_change_priority(uint64_t pid , int priority);
 void os_split_screen();
 void os_unsplit_screen();
 void die();
+void os_sleep_seconds(int seconds);
 #endif
 
 

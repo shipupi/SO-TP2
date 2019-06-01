@@ -37,6 +37,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "read2", (uintptr_t)&read2);
 	loadShortcut(scArr, "split", (uintptr_t)&split);
 	loadShortcut(scArr, "unsplit", (uintptr_t)&unsplit);
+	loadShortcut(scArr, "diph", (uintptr_t)&diph);
 	return i;
 }
 
@@ -47,3 +48,6 @@ void loadShortcut(SHORTCUT scArr[], char * id, uintptr_t ptr) {
 	scArr[i] = shortcut;
 	i++;
 }
+
+
+

@@ -14,6 +14,7 @@ GLOBAL os_addProcess
 GLOBAL os_endProcess
 GLOBAL os_listProcesses
 GLOBAL os_sleep
+GLOBAL os_sleep_seconds
 GLOBAL os_ipc_create
 GLOBAL os_ipc_write
 GLOBAL os_ipc_read
@@ -383,6 +384,13 @@ os_split_screen:
 os_unsplit_screen:
 	start
 	mov rdi, 0x25
+	int 80h
+	finish
+
+os_sleep_seconds:
+	start
+	mov rsi, rdi
+	mov rdi, 0x26
 	int 80h
 	finish
 

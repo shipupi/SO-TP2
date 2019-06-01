@@ -17,8 +17,7 @@
 // Process Control Block
 	
 
-#define MAXPROCESSES 256
-#define PROCESSSTACKSIZE 4096
+
 
 static int PIDCounter = 0;
 static int activeProcess = -1;
@@ -211,25 +210,22 @@ void editPriority(uint64_t pid , int priority){
 */
 
 void changePriority(uint64_t pid , int priority){
-	printf("	");
-	printf("changePriority");
-	printf("	");
-	printf("	");
-	printf("pid");
-	printf("	");
-	printf("	");
-	printf("priority");
-	printf("	");
-	printf("	");
-	printn(pid);
-	printf("	");
-	printf("	");
-	printn(priority);
-	("	");
-	//CAMBIAR LA PRIORIDAD DEL PROCESO CON PID pid Y DARLE LA PRIORIDAD priority
-
+	// printf("	");
+	// printf("changePriority");
+	// printf("	");
+	// printf("	");
+	// printf("pid");
+	// printf("	");
+	// printf("	");
+	// printf("priority");
+	// printf("	");
+	// printf("	");
+	// printn(pid);
+	// printf("	");
+	// printf("	");
+	// printn(priority);
 	processes[pid].priority = priority;
-
+	lottery();
 	return;
 }
 

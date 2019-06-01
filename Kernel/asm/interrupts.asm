@@ -35,7 +35,7 @@ EXTERN sys_schedule
 EXTERN sys_addProcess
 EXTERN sys_endProcess
 EXTERN sys_listProcesses
-EXTERN sys_sleep
+EXTERN sys_sleep_seconds
 EXTERN sys_ipc_create
 EXTERN sys_ipc_write
 EXTERN sys_ipc_read
@@ -311,6 +311,9 @@ _syscall:
   cmp rdi, 0x25   ; unsplit screen
   je .syscall25
 
+  cmp rdi, 0x26   ; sleep_seconds
+  je .syscall26
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -519,6 +522,10 @@ _syscall:
 
   .syscall25:
   call sys_unsplit_screen
+
+  .syscall26:
+  mov rdi, rsi
+  call sys_sleep_seconds
   jmp .continue
 
 ; EXCEPTIONS 

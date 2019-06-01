@@ -8,6 +8,7 @@
 #include "memoryManager/memoryManager.h"
 #include "include/screenManager.h"
 #include "scheduler/scheduler.h"
+#include "scheduler/sleeper.h"
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
 #include "include/ipc/pipe.h"
@@ -130,8 +131,8 @@ void sys_listProcesses() {
 	listProcesses();
 }
 
-void sys_sleep(){
-	printWhiteString("SLEEP");
+void sys_sleep_seconds(int seconds){
+	sleep_seconds(seconds);
 }
 
 void sys_ipc_create(char * id,uint64_t size){
