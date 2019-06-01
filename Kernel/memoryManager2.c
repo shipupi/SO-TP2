@@ -90,13 +90,12 @@ void * getAddressForIndex(int index) {
 int getIndexForAdress(int address , int size){
 
 	address = address - (uint64_t) baseAddress;
-
-	printWhiteString("address - baseAddress: "); 
+	address = address / BLOCKSIZE;
+	printWhiteString("address - baseAddress (/ size) : "); 
 	printUint(address); 
 	nextLine();
 
 	int k = N - l2(size);
-
 	printWhiteString("level(k): "); 
 	printUint(k); 
 	nextLine();
@@ -107,7 +106,7 @@ int getIndexForAdress(int address , int size){
 	printUint(step); 
 	nextLine();
 
-	return power(2,k) ; // + offset - 1
+	return power(2,k) - 1 + step ; // + offset - 1
 
 }
 
