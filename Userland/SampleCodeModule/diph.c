@@ -6,7 +6,7 @@
 #include "applications.h"
 #include "include/PCB.h"
 #define N 4
-
+/*
 uint8_t philosophers[N];
 int philos;
 
@@ -102,9 +102,11 @@ void diph(){
  //    	os_mut_delete(s);
  //    }
 }
+*/
 
-
-
+void diph() {
+	
+}
 
 
 

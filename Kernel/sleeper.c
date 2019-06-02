@@ -35,6 +35,8 @@ void sleep_seconds(int seconds) {
     } else if(s->sec_end > newSleeper->sec_end) {
     	newSleeper->next = head;
     	head = newSleeper;
+        ipc_sleep();
+        return;
     }
 
     while(s->next != 0) {

@@ -129,5 +129,5 @@ char getChar() {
 
 
 void initializeKeyboardDriver() {
-	ipc_create(DEFAULT_FDIN,MAXFDSIZE);
+	//ipc_create(DEFAULT_FDIN,MAXFDSIZE);
 }

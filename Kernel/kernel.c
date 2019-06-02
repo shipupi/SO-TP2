@@ -13,6 +13,7 @@
 #include "include/scheduler/scheduler.h"
 #include "include/scheduler/PCB.h"
 #include "include/screenManager.h"
+#include "include/ipc/ipc.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -63,6 +64,7 @@ void reboot()
 }
 
 void initializeDrivers() {
+	initializeIPCS();
 	initializeKeyboardDriver();
 	initializeVideoDriver();
 	addProcess(&screenManager, 1,2,50, DEFAULT_FDOUT, INVALID_FD);

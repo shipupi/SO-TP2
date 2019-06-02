@@ -18,7 +18,7 @@ void split() {
 
 	splitVal = 1;
 	os_split_screen();
-	printf("Creado split . que pasa?\n");
+	printf("Creado split . Whaat?\n");
 }
 
 void unsplit() {
