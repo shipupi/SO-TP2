@@ -12,51 +12,57 @@ static int programs;
 static char pipeId[] = "pipe_M";
 char lastPipeId = '0';
 
+#define INITIAL 0
+#define SEP 1
+#define LETTER 2
+
 int splitString(char * pars, char separetor, char out[20][20]){
 		
-		int i = 0;
-		int j = 0;
-		int k = 0;
-		int avoid=0;
-		int getit = 0;
-		//fit it seareted by separetor
-		for(i = 0 ; i < strlen(pars); i++){
+	int state = INITIAL;
+	int j = 0;
+	int k = 0;
+	for(int i = 0; i< strlen(pars); i++){
+		switch(state){
 
-			if(getit == 1 && pars[i] == separetor){
-				avoid =0;
+		case INITIAL:
+				if(pars[i] == separetor){
+					state = SEP;
+				}else{
+					out[j][k] = pars[i];
+					k++;
+					state = LETTER;
+				}
+			break;
+		case SEP:
+			if(pars[i] == separetor){
+				state = SEP;
+			}else{
+				out[j][k] = pars[i];
+				k++;
+				state = LETTER;
 			}
 
-			if (pars[i] == separetor && avoid != 0){
-				out[j][k] = 0;
-				k = 0;
+			break;
+		case LETTER:
+			if(pars[i] == separetor){
+				out[j][k++]= 0;
 				j++;
-				getit = 1;
-			}
-			if(pars[i] != separetor){
-				getit = 0;
-				out[j][k]=pars[i];
+				k=0;
+				state = SEP;
+
+			}else{
+				out[j][k] = pars[i];
 				k++;
 			}
 
-			if(i !=0){
-				avoid = 1;
-			}
-
+			break;
 		}
-
-
-		// finish out
-
-		for (int a = j+1;a <20; a++ ){
-			for (int b = 0; b<20; b++){
-				out[a][b] = 0;
-			}
-
-		}
-
-
-		return j;
 	}
+
+	return j;
+		
+	}
+
 
 
 void shell_init() {
