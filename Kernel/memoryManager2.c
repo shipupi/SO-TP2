@@ -159,11 +159,13 @@ void * getBlock(int wantedBlockSize, int index, int currBlockSize) {
 
 // If no block found returns 0
 void * requestMemorySpace(uint64_t requestedSpace) {
+
 	int64_t n = getBlocksForSize(requestedSpace);
 	// Pasamos la cantidad de bloques pedidos a una potencia de 2
 	n = upper_power_of_two(n);
+	if(n > MAXBLOCKS) return 0;
 	//printWhiteString("Reqesting ");printUint(n); printWhiteString(" blocks"); nextLine();
-	return getBlock(n, 0, 32768);
+	return getBlock(n, 0, MAXBLOCKS);
 }
 
 
