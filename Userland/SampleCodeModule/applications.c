@@ -11,6 +11,7 @@ static int i;
 
 int initializeShortcutsArray(SHORTCUT scArr[]) {
 	i = 0;
+	
 	loadShortcut(scArr, "numbers", (uintptr_t)&printNumbers);
 	loadShortcut(scArr, "ps", (uintptr_t)&ps);
 	loadShortcut(scArr, "clear", (uintptr_t)&clear);
@@ -38,7 +39,9 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "split", (uintptr_t)&split);
 	loadShortcut(scArr, "unsplit", (uintptr_t)&unsplit);
 	loadShortcut(scArr, "diph", (uintptr_t)&diph);
+	loadShortcut(scArr, "filo", (uintptr_t)&filo);
 	loadShortcut(scArr, "kill", (uintptr_t)&kill);
+
 	return i;
 }
 

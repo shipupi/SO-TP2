@@ -11,7 +11,7 @@ char buf2[MAXFDSIZE] = {'b',0};
 
 
 void screenManager() {
-
+	ipc_create(DEFAULT_FDIN,MAXFDSIZE);
 	ipc_create(DEFAULT_FDOUT, MAXFDSIZE);
 	ipc_create(INVALID_FD, MAXFDSIZE);
 	while(1) {

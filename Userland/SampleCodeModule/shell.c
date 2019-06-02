@@ -5,7 +5,7 @@
 #include "syscalls.h"
 #include "applications.h"
 #include "memory.h"
-#include "PCB.h"
+#include "./include/PCB.h"
 
 static SHORTCUT shortcuts[MAX_SHORTCUTS];
 static int programs;
@@ -234,9 +234,13 @@ int shell_execute(char *command,int background, char *arguments, char * fdIn, ch
 
 		if (bg) {
 			if(isSplit() && strcmp(fdOut, DEFAULT_FDOUT) == 0) {
-				fdOut = "SPLIT_FD";
+				fdOut = SPLIT_FD;
 			}
-			os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, fdOut);
+			if(strcmp(fdIn,DEFAULT_FDIN) == 0) {
+				os_addProcess(ptr,1, PCB_BACKGROUND, 4000, INVALID_FD, fdOut);
+			} else {
+				os_addProcess(ptr,1, PCB_BACKGROUND, 4000, fdIn, fdOut);
+			}
 		} else {
 			// Si no estoy saliendo por el fdOut default, habria que redirigir la salida de shell
 			// al fdout que vino por parametro. Y reapuntar a fdout una vez que se sale de 

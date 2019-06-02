@@ -26,7 +26,7 @@ static int m_ticket = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
-	int runi = (ticks_elapsed()*31*17*11)%(MAXPROCESSES*MAXPROCESSES);
+	int runi = (ticks_elapsed()*31*17*11*13 *37)%(1000);
 	return runi;
 }
 
@@ -94,6 +94,7 @@ int chooseNextProcess(int ap[], int n) {
 }
 
 void * schedule(void * oldStack) {
+
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
@@ -125,6 +126,13 @@ void * schedule(void * oldStack) {
 		// printf(". Address: ");
 		// printn((uintptr_t)oldStack);
 		// nextLine();
+
+		// Guardando stack
+		if(oldStack > (processes[activeProcess].baseAddress + PROCESSSTACKSIZE)) {
+			printWhiteString("Stack OVerflow!!! Pid: ");
+			printInt(activeProcess);
+			printWhiteString("\n");
+		}
 		processes[activeProcess].stackAddress = oldStack;
 	} 
 

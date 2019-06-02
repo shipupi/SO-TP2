@@ -8,12 +8,15 @@
 #include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
 #include "include/scheduler/scheduler.h"
+#include "include/scheduler/PCB.h"
 
 IPC arrIPC[MAX_IPCS];
 
 int ipcIndex = 0;
 int IPCcounter = 0;
 
+
+static int lock = 0;
 
 int findId( char * id) {
     int foundId = -1;
@@ -26,6 +29,10 @@ int findId( char * id) {
         }
     }
     return foundId;
+}
+
+void initializeIPCS() {
+    // Reservado por si hay q correr funciones aca
 }
 
 void addProcessToIPCQueue(int ipcId) {
@@ -47,6 +54,7 @@ void addProcessToIPCQueue(int ipcId) {
 
 int ipc_create (char * id, uint64_t size){
     if(findId(id)==-1){
+        
         int i;
         struct IPC newIPC;
         // Reservo 20 bloques de mas porque si no se rompe por alguna razon
@@ -64,8 +72,8 @@ int ipc_create (char * id, uint64_t size){
         {
             newIPC.waitPids[i] = -1;
         }
-        arrIPC[IPCcounter] = newIPC;
         newIPC.IPCcounter = IPCcounter;
+        arrIPC[IPCcounter] = newIPC;
         IPCcounter++;
         return 1;
     }

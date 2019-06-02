@@ -3,6 +3,7 @@
 
 #include "shell.h"
 
+void kill();
 int initializeShortcutsArray(SHORTCUT scArr[]);
 void loadShortcut(SHORTCUT scArr[], char * id, uintptr_t ptr);
 int testMemoryManager();
@@ -34,7 +35,7 @@ void split();
 void unsplit();
 int isSplit();
 void diph();
-void kill();
+void filo();
 
 #endif
 

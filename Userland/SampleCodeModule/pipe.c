@@ -16,19 +16,15 @@ void pipe(){
 }
 
 void write2() {
-	uint64_t a = 0;
 	int b = 0;
-	while(1) {
-		a++;
-		if(a % 1000001 == 0) {
-
-			// b++;
-			printf("2");
-			// puint(a % 10);
-			// pint(5);
-		}
-		// if(b == 5) return;
+	os_sleep_seconds(1);
+	for (int i = 0; i < 20000; ++i)
+	{
+		printf("2");
 	}
+	// puint(a % 10);
+	// pint(5);
+	if(b == 100) return;
 }
 
 void read2() {
@@ -42,9 +38,9 @@ void read2() {
 	// os_freeMemorySpace(p, sizeof(PCB));
 
 	//read 2
+	printf(" ");
 	char c;
 	while(1) {
-		// os_listProcesses();
 		c = getChar();
 		pint((c - '0') * 2);
 	}
