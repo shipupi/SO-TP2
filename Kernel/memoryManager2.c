@@ -77,12 +77,12 @@ void * getAddressForIndex(int index) {
 
 	int blockNumber = s * p ;
 
-	printWhiteString("Requesting address for block: "); 
+	/*printWhiteString("Requesting address for block: "); 
 	printUint(index); 
 	nextLine();
 	printWhiteString("blockNumber: "); 
 	printUint(blockNumber); 
-	nextLine();
+	nextLine();*/
 
 	return baseAddress + BLOCKSIZE * blockNumber;
 }
@@ -93,20 +93,20 @@ int getIndexForAdress(int address , int size){
 
 	address = address - (uint64_t) baseAddress;
 	address = address / BLOCKSIZE;
-	printWhiteString("address - baseAddress (/ size) : "); 
+	/*printWhiteString("address - baseAddress (/ size) : "); 
 	printUint(address); 
-	nextLine();
+	nextLine();*/
 
 	int k = N - l2(size);
-	printWhiteString("level(k): "); 
+	/*printWhiteString("level(k): "); 
 	printUint(k); 
-	nextLine();
+	nextLine();*/
 
 	int step = address/size;
 
-	printWhiteString("step: "); 
+	/*printWhiteString("step: "); 
 	printUint(step); 
-	nextLine();
+	nextLine();*/
 
 	return power(2,k) - 1 + step ; // + offset - 1
 
@@ -162,7 +162,7 @@ void * requestMemorySpace(uint64_t requestedSpace) {
 	int64_t n = getBlocksForSize(requestedSpace);
 	// Pasamos la cantidad de bloques pedidos a una potencia de 2
 	n = upper_power_of_two(n);
-	printWhiteString("Reqesting ");printUint(n); printWhiteString(" blocks"); nextLine();
+	//printWhiteString("Reqesting ");printUint(n); printWhiteString(" blocks"); nextLine();
 	return getBlock(n, 0, 32768);
 }
 
@@ -191,6 +191,8 @@ void freeMemorySpace (void * freeBaseAddress,int32_t size){
 
 	freeBlock(blockNumber);
 }
+
+
 
 
 

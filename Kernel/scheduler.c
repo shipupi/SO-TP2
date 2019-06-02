@@ -200,22 +200,11 @@ void editPriority(uint64_t pid , int priority){
 */
 
 void changePriority(uint64_t pid , int priority){
-	printWhiteString("	");
-	printWhiteString("changePriority");
-	printWhiteString("	");
-	printWhiteString("	");
-	printWhiteString("pid");
-	printWhiteString("	");
-	printWhiteString("	");
-	printWhiteString("priority");
-	printWhiteString("	");
-	printWhiteString("	");
+	nextLine();
 	printUint(pid);
-	printWhiteString("	");
-	printWhiteString("	");
+	nextLine();
 	printUint(priority);
-	("	");
-	//CAMBIAR LA PRIORIDAD DEL PROCESO CON PID pid Y DARLE LA PRIORIDAD priority
+	nextLine();
 
 	processes[pid].priority = priority;
 

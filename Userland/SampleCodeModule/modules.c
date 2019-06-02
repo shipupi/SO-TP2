@@ -14,7 +14,7 @@ void help() {
 	printf("\ntime:");
 	printf("\n\tIt will display on screen the current time in hh:mm:ss format");
 
-	printf("\ntestMemoryManager:");
+	printf("\nbuddy:");
 	printf("\n\tTests the memory manager");
 
 	printf("\nnumbers:");

@@ -37,3 +37,6 @@ int to_num(char * s , int dim){
 	}
 	return n;
 }
+
+
+
