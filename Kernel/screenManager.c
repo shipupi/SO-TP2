@@ -13,6 +13,7 @@ char buf2[MAXFDSIZE] = {'b',0};
 void screenManager() {
 
 	ipc_create(DEFAULT_FDOUT, MAXFDSIZE);
+	ipc_create(INVALID_FD, MAXFDSIZE);
 	while(1) {
 		ipc_read(DEFAULT_FDOUT,buf, MAXFDSIZE);
 		printWhiteString(buf);
@@ -32,8 +33,8 @@ void screenManager2() {
 void splitScreen() {
 	// printWhiteString("(screen manager) splitting screen....");
 	ipc_create(SPLIT_FD, MAXFDSIZE);
-	addProcess(&screenManager2, 1,2,50, SPLIT_FD, INVALID_FD);
 	vesa_addSplit();
+	addProcess(&screenManager2, 1,2,50, SPLIT_FD, INVALID_FD);
 }
 
 void unsplitScreen() {

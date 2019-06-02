@@ -4,6 +4,7 @@
 #include "stdio.h"
 #include "syscalls.h"
 #include "applications.h"
+#include "PCB.h"
 void pipe(){
 	printf("\nPIPE\n");
 	printf("Testeando las funciones de pipe\n");
@@ -31,9 +32,19 @@ void write2() {
 }
 
 void read2() {
+	// PCB* p = os_requestMemorySpace(sizeof(PCB));
+	// os_pstat(p);
+	// if (p->foreground == PCB_FOREGROUND)
+	// {
+	// 	printf("This application can only be run on the background\n");
+	// 	return;
+	// }
+	// os_freeMemorySpace(p, sizeof(PCB));
+
+	//read 2
 	char c;
-	// char str[2] = {0,0};
 	while(1) {
+		// os_listProcesses();
 		c = getChar();
 		pint((c - '0') * 2);
 	}

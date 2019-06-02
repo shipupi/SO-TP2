@@ -1,8 +1,8 @@
-#include "drivers/naiveKeyboard.h"
-#include "naiveLegacy/naiveConsole.h"
-#include "pure/getKey.h"
-#include "drivers/keyMap.h"
-#include "memoryManager/memoryManager.h"
+#include "include/drivers/naiveKeyboard.h"
+#include "include/naiveLegacy/naiveConsole.h"
+#include "include/pure/getKey.h"
+#include "include/drivers/keyMap.h"
+#include "include/memoryManager/memoryManager.h"
 #include "include/ipc/ipc.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/scheduler/PCB.h"
@@ -18,8 +18,8 @@
 #define FALSE !TRUE
 
 //We are going to use a cyclic buffer, hopefully we never run out of space
-static char buffer[BUFFER_SIZE] = {0};
-static char letter[3] = {0,0,0};
+static char buffer[BUFFER_SIZE] = {1};
+static char letter[3] = {1,0,0};
 
 static int readIndex = 0;			//To know where in the buffer to start reading from
 static int size = 0;				//To know how many chars are currently stored in buffer (beware of its cyclic nature)

@@ -566,6 +566,7 @@ void vesa_addSplit() {
 }
 
 void vesa_removeSplit() {
+  printWhiteString("remoing split?");
   splits = 1;
   clearSplitSeparator();
 

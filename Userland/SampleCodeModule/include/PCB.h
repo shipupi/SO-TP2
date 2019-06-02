@@ -11,6 +11,8 @@
 #define DEFAULT_FDOUT "SCREEN_IPC"
 #define PCB_FOREGROUND 1
 #define PCB_BACKGROUND 2
+#define FD_NAME_SIZE 255
+
 
 typedef struct PCB {
 	uint64_t pid;
@@ -18,11 +20,10 @@ typedef struct PCB {
 	void * baseAddress;
 	uint64_t status;
 	uint64_t priority;
-	char name;
 	uint8_t foreground;
 	uint64_t size;
-	char * fdIn;
-	char * fdOut;
+	char fdIn[FD_NAME_SIZE];
+	char fdOut[FD_NAME_SIZE];
 } PCB;
 
 #endif

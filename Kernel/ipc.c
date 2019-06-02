@@ -1,8 +1,9 @@
- #include <stdint.h>
-#include "memoryManager/memoryManager.h"
+#include <stdint.h>
+#include "include/memoryManager/memoryManager.h"
+#include "include/ipc/ipc.h"
+#include "include/ipc/mutex.h"
+
 #include "include/lib.h"
-#include "ipc/ipc.h"
-#include "ipc/mutex.h"
 #include "include/string.h"
 #include "include/drivers/vesaDriver.h"
 #include "include/interrupts.h"
@@ -121,6 +122,9 @@ void ipc_read(char * id,char * string,uint64_t messageSize){
     int ipcId = findId(id);
     if ( ipcId == -1)
     {
+        printf("Requested non existant ipc\n");
+        printf(id);
+        printf("\n");
         return;
     }
     mut_request(id);

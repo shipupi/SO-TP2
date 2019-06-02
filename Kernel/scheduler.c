@@ -4,6 +4,7 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
+#include "string.h"
 #include "ipc/ipc.h"
 #include "include/drivers/time.h"
 #include "include/utils.h"
@@ -193,7 +194,11 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , 
 	newPCB.priority = priority;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
-	memcpy(newPCB.fdIn, fdIn, FD_NAME_SIZE);
+	if (foreground == PCB_BACKGROUND && strcmp(fdIn, DEFAULT_FDIN) == 0) {
+		memcpy(newPCB.fdIn, INVALID_FD, FD_NAME_SIZE);
+	} else {
+		memcpy(newPCB.fdIn, fdIn, FD_NAME_SIZE);
+	}
 	memcpy(newPCB.fdOut, fdOut, FD_NAME_SIZE);
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;

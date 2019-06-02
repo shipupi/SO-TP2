@@ -27,7 +27,3 @@ void pipe_write(char * pipeid , char * buffer , int messageSize){
 	ipc_write(pipeid, buffer, messageSize);
 	return;
 }
-
-
-
-
