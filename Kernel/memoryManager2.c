@@ -87,6 +87,8 @@ void * getAddressForIndex(int index) {
 	return baseAddress + BLOCKSIZE * blockNumber;
 }
 
+// Address es la memoria del bloque a liberar
+// size es la cantidad de bloques a liberar
 int getIndexForAdress(int address , int size){
 
 	address = address - (uint64_t) baseAddress;
@@ -164,8 +166,30 @@ void * requestMemorySpace(uint64_t requestedSpace) {
 	return getBlock(n, 0, 32768);
 }
 
-void freeMemorySpace (void * freeBaseAddress,int32_t size){
 
+
+void updateRec(int number) {
+	updateStatus(number);
+	
+	if(number == 0) {
+		return;
+	}
+	
+	updateRec((number - 1) / 2);
+}
+
+void freeBlock(int number) {
+	memoryNode[number] = NODE_EMPTY;
+	updateRec((number - 1) / 2);
+}
+
+
+void freeMemorySpace (void * freeBaseAddress,int32_t size){
+	int n = getBlocksForSize(size);
+	n = upper_power_of_two(n);
+	int blockNumber = getIndexForAdress((uintptr_t)freeBaseAddress, n);
+
+	freeBlock(blockNumber);
 }
 
 
