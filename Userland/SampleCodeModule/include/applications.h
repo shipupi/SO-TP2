@@ -34,6 +34,7 @@ void split();
 void unsplit();
 int isSplit();
 void diph();
+void kill();
 
 #endif
 

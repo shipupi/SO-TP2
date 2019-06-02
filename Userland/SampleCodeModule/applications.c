@@ -38,6 +38,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "split", (uintptr_t)&split);
 	loadShortcut(scArr, "unsplit", (uintptr_t)&unsplit);
 	loadShortcut(scArr, "diph", (uintptr_t)&diph);
+	loadShortcut(scArr, "kill", (uintptr_t)&kill);
 	return i;
 }
 
