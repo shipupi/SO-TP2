@@ -72,6 +72,8 @@ EXTERN sys_pipe_write
 
 EXTERN sys_change_priority
 
+EXTERN sys_kill
+
 SECTION .text
 
 %macro pushState 0
@@ -318,6 +320,9 @@ _syscall:
   cmp rdi, 0x26   ; sleep_seconds
   je .syscall26
 
+  cmp rdi, 0x27   ; kill
+  je .syscall27
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -528,6 +533,11 @@ _syscall:
   .syscall26:
   mov rdi, rsi
   call sys_sleep_seconds
+  jmp .continue
+
+  .syscall27:
+  mov rdi, rsi
+  call sys_kill
   jmp .continue
 
 ; EXCEPTIONS 

@@ -41,6 +41,7 @@ void os_split_screen();
 void os_unsplit_screen();
 void die();
 void os_sleep_seconds(int seconds);
+void os_kill(int pid);
 #endif
 
 

@@ -47,4 +47,5 @@ void sys_pipe_write(char * pipeid , char * buffer , int messageSize);
 void sys_change_priority(uint64_t pid , int priority);
 void sys_split_screen();
 void sys_unsplit_screen();
+void sys_kill(int pid);
 #endif /* SYSTEMCALLS_H */

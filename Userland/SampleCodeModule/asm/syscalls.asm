@@ -39,6 +39,7 @@ GLOBAL os_pipe_write
 GLOBAL die
 
 GLOBAL os_change_priority
+GLOBAL os_kill
 
 section .text
 
@@ -391,6 +392,13 @@ os_sleep_seconds:
 	start
 	mov rsi, rdi
 	mov rdi, 0x26
+	int 80h
+	finish
+	
+os_kill:
+	start
+	mov rsi, rdi
+	mov rdi, 0x27
 	int 80h
 	finish
 

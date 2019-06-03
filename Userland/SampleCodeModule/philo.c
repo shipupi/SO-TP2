@@ -26,6 +26,7 @@ uint64_t random(){
 typedef struct Philo
 {
 	int state;
+	int pid;
 }Philo;
 
 typedef struct Fork
@@ -209,9 +210,27 @@ void addPhilo() {
 	cubiertos[activos].mut[2] = 0;
 	os_mut_create(cubiertos[activos].mut);
 	filosofos[activos].state = INACTIVE;
-	os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
+	int p = os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
+	filosofos[activos].pid = p;
 }
 void removePhilo() {
+	if(activos == 3 ){
+		printf("no se puden eliminar");
+		printf("\n");
+		printf("solo quedan 3 filosofos");
+		printf("\n");
+	}
+	if(activos != 3){
+		printf("waiting to be able to remove\n");
+		int trying = 1;
+		while(trying){
+			if(filosofos[activos-1].state ==THINKING ){
+				os_kill(filosofos[activos-1].pid);
+				activos--;
+				trying = 0;
+			}
+		}
+	}
 
 }
 
@@ -240,8 +259,9 @@ void filo(){
 			removePhilo();
 			// printf("remove filosofer\n");
 		} else if(c == 'p') {
+
 			print_state();
-		}
+					}
 	}
 }
 

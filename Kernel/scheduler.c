@@ -211,7 +211,7 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , 
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
 	lottery();
-	return 1;
+	return PIDCounter -1;
 }
 
 /*

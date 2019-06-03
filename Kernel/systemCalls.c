@@ -224,3 +224,8 @@ void sys_split_screen() {
 void sys_unsplit_screen() {
 	unsplitScreen();
 }
+
+void sys_kill(int pid){
+	printf("Killing process: \n");printn(pid);printf("\n");
+	endProcess(pid);
+}
