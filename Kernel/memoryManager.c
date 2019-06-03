@@ -4,7 +4,7 @@
 #include "include/memoryManager/memoryManager.h"
 #include "include/drivers/vesaDriver.h"
 
-
+/*
 static char blockStatus[MAXBLOCKS];
 static void * baseAddress = (void *)(uintptr_t) BASE_ADDRESS;
 
@@ -77,3 +77,4 @@ void freeMemorySpace (void * freeBaseAddress,int32_t size){
 	}
 
 }
+*/

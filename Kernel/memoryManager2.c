@@ -30,7 +30,7 @@
  	- 2 Ocupado = NODE_FULL
 */
 
-/*
+
 static void * baseAddress = (void *)(uintptr_t) BASE_ADDRESS;
 static char memoryNode[(2*MAXBLOCKS) - 1] = {1,1};
 
@@ -98,7 +98,6 @@ void updateStatus(int index) {
 void * requestNode(int index) {
 	if(memoryNode[index] == NODE_EMPTY) {
 		memoryNode[index] = NODE_FULL;
-		printWhiteString("Returning block: "); printInt(index);printWhiteString(" \n");
 		return getAddressForIndex(index);
 	} else {
 		return 0;
@@ -166,4 +165,3 @@ void freeMemorySpace (void * freeBaseAddress,int32_t size){
 	freeBlock(blockNumber);
 }
 
-*/
