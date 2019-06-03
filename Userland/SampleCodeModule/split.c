@@ -1,13 +1,12 @@
-#include "include/stdio.h"
+#include "include/applications.h"
 #include "include/syscalls.h"
+#include "include/stdio.h"
 #include "include/PCB.h"
 
+static int splitVal = 0;
 
-void list_mutex() {
-	os_mut_list();
-}
+void split() {
 
-void mut1() {
 	PCB* p = os_requestMemorySpace(sizeof(PCB));
 	os_pstat(p);
 	if (p->foreground == PCB_FOREGROUND)
@@ -16,16 +15,17 @@ void mut1() {
 		return;
 	}
 	os_freeMemorySpace(p, sizeof(PCB));
-	os_mut_create("test");
-	while(1) {
-		os_mut_request("test");
-		printf("\nTengo turno!\n");
-	}
+
+	splitVal = 1;
+	os_split_screen();
+	printf("Creado split . Whaat?\n");
 }
 
-void mut2() {
-	os_mut_create("test");
-	os_mut_release("test");
-	printf("Liberado mut test\n");	
-	return;
+void unsplit() {
+	splitVal = 0;
+	os_unsplit_screen();
+}
+
+int isSplit() {
+	return splitVal;
 }

@@ -44,6 +44,8 @@ Por ultimo, definiar la funcion .syscall0B abajo, como el primer registro viene 
 	mov rdx, rcx
 	mov rcx, r8
 	mov r8, r9
+	mov r9, r10
+	
 	call sys_pixel
 	jmp .continue
 ```

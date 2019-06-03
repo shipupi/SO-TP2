@@ -4,10 +4,12 @@
 #include "scheduler/process.h"
 #include "drivers/vesaDriver.h"
 #include "interrupts.h"
+#include "string.h"
 #include "ipc/ipc.h"
 #include "include/drivers/time.h"
 #include "include/utils.h"
 #include "include/lib.h"
+#include "include/scheduler/scheduler.h"
 #include <naiveLegacy/naiveClock.h>
 #include <naiveLegacy/naiveConsole.h>
 
@@ -16,8 +18,7 @@
 // Process Control Block
 	
 
-#define MAXPROCESSES 256
-#define PROCESSSTACKSIZE 4096
+
 
 static int PIDCounter = 0;
 static int activeProcess = -1;
@@ -25,7 +26,7 @@ static int m_ticket = 0;
 typedef int (*EntryPoint)();
 
 int rand(int n){
-	int runi = (ticks_elapsed()*31*17*11)%(MAXPROCESSES*MAXPROCESSES);
+	int runi = (ticks_elapsed()*31*17*11*13 *37)%(1000);
 	return runi;
 }
 
@@ -93,10 +94,12 @@ int chooseNextProcess(int ap[], int n) {
 }
 
 void * schedule(void * oldStack) {
+
 	// Si no hay procesos creados, devuelvo el stack q estaba ( seguramente era del kernel)
 	if (PIDCounter  == 0)
 	{
-		return oldStack;
+		pl("PID Counter = 0");
+		halt();
 	}
 
 	int i;
@@ -114,20 +117,35 @@ void * schedule(void * oldStack) {
 
 	// Si no hay processescesos activos, hago un halt
 	// Pero hay q ver como arreglo el stack?
-
-	if (n == 0)
-	{
-		pl("no active processes, goodnight!");
-		halt();
-	}
-
 	// Tengo la cantidad de procesos activos y los tengo metidos en un array
 	if (activeProcess != -1) {
 		// Piso el stack del proceso anterior
+		// nextLine();
+		// printf("Saving stack of process: "); 
+		// printn(activeProcess);
+		// printf(". Address: ");
+		// printn((uintptr_t)oldStack);
+		// nextLine();
+
+		// Guardando stack
+		if(oldStack > (processes[activeProcess].baseAddress + PROCESSSTACKSIZE)) {
+			printWhiteString("Stack OVerflow!!! Pid: ");
+			printInt(activeProcess);
+			printWhiteString("\n");
+		}
 		processes[activeProcess].stackAddress = oldStack;
 	} 
+
+
+	if (n == 0)
+	{
+		// pl("schedule ( no active processes) ");
+		activeProcess = -1;
+		halt();
+	}
+
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess(ap, n);
+	activeProcess = chooseNextProcess2(ap, n);
 	return processes[activeProcess].stackAddress;
 }
 
@@ -173,7 +191,7 @@ void lottery(){
 }
 
 // Returns pid?
-uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t foreground , uint64_t size){
+uint8_t addProcess(void * entryPoint , uint64_t priority , uint8_t foreground , uint64_t size, char * fdIn, char * fdOut){
 	struct PCB newPCB;
 	void * newStack = requestMemorySpace(PROCESSSTACKSIZE);
 	newPCB.stackAddress = newStack;
@@ -182,9 +200,14 @@ uint8_t addProcess(void * entryPoint , uint64_t priority , char name , uint8_t f
 	newPCB.pid = PIDCounter;
 	newPCB.status = PCB_READY;
 	newPCB.priority = priority;
-	newPCB.name = name;
 	newPCB.foreground = foreground;
 	newPCB.size = size;
+	if (foreground == PCB_BACKGROUND && strcmp(fdIn, DEFAULT_FDIN) == 0) {
+		memcpy(newPCB.fdIn, INVALID_FD, FD_NAME_SIZE);
+	} else {
+		memcpy(newPCB.fdIn, fdIn, FD_NAME_SIZE);
+	}
+	memcpy(newPCB.fdOut, fdOut, FD_NAME_SIZE);
 	processes[PIDCounter] = newPCB;
 	PIDCounter++;
 	lottery();
@@ -200,14 +223,8 @@ void editPriority(uint64_t pid , int priority){
 */
 
 void changePriority(uint64_t pid , int priority){
-	nextLine();
-	printUint(pid);
-	nextLine();
-	printUint(priority);
-	nextLine();
-
 	processes[pid].priority = priority;
-
+	lottery();
 	return;
 }
 
@@ -229,43 +246,39 @@ void runProcess(uintptr_t entryPoint) {
 
 void listProcesses() {
 	int i;
-	nextLine();
-	printWhiteString("PID | Stack Addresss | Status | Priority | Nombre | Foreground | Reserved Memory ");
-	nextLine();
+	printf("\n");
+	printf("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
+	printf("\n");
 	for (i = 0; i < PIDCounter; ++i)
 	{
 		if (processes[i].status == PCB_ENDED)
 		{
 			continue;
 		}
-		printUint(processes[i].pid);
-		printWhiteString("   | 	   ");
+		printn(processes[i].pid);
+		printf("   | 	   ");
 
-		printUint((uint64_t) (uintptr_t) processes[i].stackAddress);
-		printWhiteString("    |    ");
-
+		printn((uint64_t) (uintptr_t) processes[i].stackAddress);
+		printf("    |    ");
 		switch(processes[i].status) {
 			case PCB_READY:
-				printWhiteString("rdy");
+				printf("rdy");
 				break;
 			case PCB_LOCK:
-				printWhiteString("lck");
+				printf("lck");
 				break;
 		}
-		printWhiteString("    |    ");
-
-		printInt(processes[i].priority);
-		printWhiteString("    |    ");
-
-		printUint(processes[i].name);
-		printWhiteString("    |    ");
-
-		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
-		printWhiteString("    |    ");
-
-		printUint(processes[i].size);
-
-		nextLine();
+		printf(" |    ");
+		printn(processes[i].priority);
+		printf("      |    ");
+		printf(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
+		printf("      |    ");		
+		printn(processes[i].size);
+		printf("           |     ");
+		printf(processes[i].fdIn);
+		printf("   |    ");
+		printf(processes[i].fdOut);
+		printf("\n");
 	}
 }
 
@@ -296,3 +309,14 @@ void process_status(void * pcbAddr) {
 	memcpy(pcbAddr,(void *)(uintptr_t) &p, (int) sizeof(PCB));
 }
 
+
+
+char * getFdIn() {
+	if(activeProcess == -1) return DEFAULT_FDIN;
+	return processes[activeProcess].fdIn;	
+}
+
+char * getFdOut() {
+	if(activeProcess == -1) return DEFAULT_FDOUT;
+	return processes[activeProcess].fdOut;
+}

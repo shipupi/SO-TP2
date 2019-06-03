@@ -117,7 +117,7 @@ void erasePlayersLabels() {
 
 //resets ball movement, increases score, plays sound
 void goal(){
-  os_beep();
+  // os_beep();
   int startP = os_ticks();
   while(os_ticks()-startP < 5){};
   os_unbeep();

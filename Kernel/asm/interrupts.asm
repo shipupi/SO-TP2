@@ -35,7 +35,7 @@ EXTERN sys_schedule
 EXTERN sys_addProcess
 EXTERN sys_endProcess
 EXTERN sys_listProcesses
-EXTERN sys_sleep
+EXTERN sys_sleep_seconds
 EXTERN sys_ipc_create
 EXTERN sys_ipc_write
 EXTERN sys_ipc_read
@@ -52,8 +52,11 @@ EXTERN sys_mut_delete
 EXTERN sys_mut_list
 EXTERN sys_pid
 EXTERN sys_pstat
+EXTERN sys_split_screen
+EXTERN sys_unsplit_screen
 
-EXTERN printWhiteString
+
+EXTERN printf
 EXTERN registerValueToString
 EXTERN printUint
 EXTERN nextLine
@@ -120,7 +123,6 @@ SECTION .text
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
-
 	popState
 	iretq
 %endmacro
@@ -166,10 +168,6 @@ _irq00Handler:
   call timer_handler
   mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
   call schedule  
-  ; push rax
-  ; mov rdi, rax
-  ; call printUint
-  ; pop rax
   mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
   mov al, 20h ; Send end of interrupt
   out 20h, al
@@ -307,6 +305,15 @@ _syscall:
   cmp rdi, 0x23   ; change priority
   je .syscall23
 
+  cmp rdi, 0x24   ; split screen
+  je .syscall24
+
+  cmp rdi, 0x25   ; unsplit screen
+  je .syscall25
+
+  cmp rdi, 0x26   ; sleep_seconds
+  je .syscall26
+
 .continue:
 	iretq	;Dont use ret when returning from int call
 
@@ -384,6 +391,7 @@ _syscall:
   mov rdx, rcx
   mov rcx, r8
   mov r8 , r9
+  mov r9 , r10
   call sys_addProcess
   jmp .continue
 
@@ -506,6 +514,18 @@ _syscall:
   call sys_change_priority
   jmp .continue
 
+  .syscall24:
+  call sys_split_screen
+  jmp .continue
+
+  .syscall25:
+  call sys_unsplit_screen
+
+  .syscall26:
+  mov rdi, rsi
+  call sys_sleep_seconds
+  jmp .continue
+
 ; EXCEPTIONS 
 
 %macro pushAllRegisters 0
@@ -528,14 +548,14 @@ _syscall:
 %macro printName 1
   call nextLine
   mov rdi, %1             
-  call printWhiteString
+  call printf
 %endmacro
 
 %macro printValue 0
   mov rsi, convertedString
   call registerValueToString   
   mov rdi, rax
-  call printWhiteString
+  call printf
 %endmacro
 
 %macro exception 1
@@ -545,10 +565,10 @@ _syscall:
   pushAllRegisters
   call nextLine
   mov rdi, %1             ; print type of error
-  call printWhiteString
+  call printf
   call nextLine
   mov rdi, registerLabel  ; print Register Values:
-  call printWhiteString
+  call printf
 
   printName regRIP
   mov rdi, [rbp + 8]      ; value of RIP

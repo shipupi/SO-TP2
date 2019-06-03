@@ -35,13 +35,14 @@ void testReadWriteIPC(){
 
 
 void testReadWriteIPC2(){
-	PCB p;
-	os_pstat(&p);
-	if (p.foreground == PCB_FOREGROUND)
+	PCB* p = os_requestMemorySpace(sizeof(PCB));
+	os_pstat(p);
+	if (p->foreground == PCB_FOREGROUND)
 	{
 		printf("This application can only be run on the background\n");
 		return;
 	}
+	os_freeMemorySpace(p, sizeof(PCB));
 
 
 	char msg[55];

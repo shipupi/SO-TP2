@@ -12,6 +12,8 @@
 #include "include/drivers/vesaDriver.h"
 #include "include/scheduler/scheduler.h"
 #include "include/scheduler/PCB.h"
+#include "include/screenManager.h"
+#include "include/ipc/ipc.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -61,139 +63,23 @@ void reboot()
 	main();
 }
 
+void initializeDrivers() {
+	initializeIPCS();
+	initializeKeyboardDriver();
+	initializeVideoDriver();
+	addProcess(&screenManager, 1,2,50, DEFAULT_FDOUT, INVALID_FD);
+}
+
 int main()
 {	
 	initializeMemoryManager();
-	/*void * addr1;
-	void * addr2;
-
-	addr1 = requestMemorySpace(32768*BLOCKSIZE);
-	if(addr1) {
-		printUint((uintptr_t)addr1);
-	} else {
-		pl("No blocks found");
-	}
-	nextLine();
-
-	addr2 = requestMemorySpace(16);
-	if(addr2) {
-		printUint((uintptr_t)addr2);
-	} else {
-		pl("No blocks found");
-	}
-	nextLine();
-
-*/
-
-	/*
-	initializeMemoryManager();
-	void * addr1;
-	addr1 = requestMemorySpace(32768);
-	//addr1 = requestMemorySpace(134217728 / 2 - 1); 
-	// addr1 = requestMemorySpace(4096 * 2 + 1);
-	if(addr1) {
-		printUint((uintptr_t)addr1);
-	} else {
-		pl("No blocks found");
-	}
-	*/
-/*
-	pl("-----------");
-
-	nextLine();
-	pl("BASEADDRESS: ");
-	printUint((uintptr_t) BASEADDRESS );
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(0));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(1));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(2));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(3));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(4));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(5));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(6));
-
-	nextLine();
-
-	printUint((uintptr_t)getAddressForIndex(7));
-
-	nextLine();
-
-	//nextLine();
-
-	//printUint((uintptr_t)getAddressForIndex(8));
-
-	//nextLine();
-
-	pl("-----------");
-*/
-/*
-	pl("-----------");
-
-	nextLine();
-	
-	printUint(getIndexForAdress(9437184,32768));
-	
-	nextLine();
-
-	printUint(getIndexForAdress(9437184,16384));
-	
-	nextLine();
-
-	printUint(getIndexForAdress(76546048,16384));
-	
-	nextLine();
-
-	printUint(getIndexForAdress(9437184,8192));
-	
-	nextLine();
-
-	nextLine();
-
-	printUint(getIndexForAdress(42991616,8192));
-	
-	nextLine();
-
-	nextLine();
-
-	printUint(getIndexForAdress(76546048,8192));
-	
-	nextLine();
-
-	printUint(getIndexForAdress(110100480,8192));
-	
-	nextLine();
-
-	printUint(getIndexForAdress(9437184,4096));
-	
-	nextLine();
-
-	pl("-----------");
-*/
-	addProcess(sampleCodeModuleAddress, 1, 'a', 2, 50);
+	initializeDrivers();
+	addProcess(sampleCodeModuleAddress, 1, 2, 50, DEFAULT_FDIN, DEFAULT_FDOUT);
 	load_idt();
-	/*while(1) {
+	while(1) {
 		_hlt();
 	}
-	return 0;*/
+	return 0;
 }
 
 

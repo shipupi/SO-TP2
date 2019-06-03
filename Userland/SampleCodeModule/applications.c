@@ -11,6 +11,7 @@ static int i;
 
 int initializeShortcutsArray(SHORTCUT scArr[]) {
 	i = 0;
+	
 	loadShortcut(scArr, "numbers", (uintptr_t)&printNumbers);
 	loadShortcut(scArr, "ps", (uintptr_t)&ps);
 	loadShortcut(scArr, "clear", (uintptr_t)&clear);
@@ -33,6 +34,14 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "trw2", (uintptr_t)&testReadWriteIPC3);
 	loadShortcut(scArr, "pipe", (uintptr_t)&pipe);
 	loadShortcut(scArr, "chpr", (uintptr_t)&changePriority);
+	loadShortcut(scArr, "write2", (uintptr_t)&write2);
+	loadShortcut(scArr, "read2", (uintptr_t)&read2);
+	loadShortcut(scArr, "split", (uintptr_t)&split);
+	loadShortcut(scArr, "unsplit", (uintptr_t)&unsplit);
+	loadShortcut(scArr, "diph", (uintptr_t)&diph);
+	loadShortcut(scArr, "filo", (uintptr_t)&filo);
+	loadShortcut(scArr, "kill", (uintptr_t)&kill);
+
 	return i;
 }
 
@@ -43,3 +52,6 @@ void loadShortcut(SHORTCUT scArr[], char * id, uintptr_t ptr) {
 	scArr[i] = shortcut;
 	i++;
 }
+
+
+

@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "lib.h"
+#include "include/drivers/vesaDriver.h"
 
 typedef struct ModeInfoBlock {
   uint16_t attributes;
@@ -33,12 +34,19 @@ typedef struct ModeInfoBlock {
 const char fontWidth = 8;
 static ModeInfoBlock *infoBlock = (ModeInfoBlock*)0x0000000000005C00;
 
-int maxLines = 38;
 
-static int cursorXStart = 10;
+
+// int maxLines = 38;
+// static int cursorXStart = 10;
 static int cursorX = 10;
-static int cursorYStart = 10;
 static int cursorY = 10;
+static int cursorX2 = 10;
+static int cursorY2 = 10;
+static int splits = 1;
+
+static int cursorX2Start;
+// static int maxY = cursorYStart + 20 * maxLines;
+// const int cursorYStart = 10;
 
 char fonts[130][8] = {
     
@@ -176,11 +184,6 @@ char fonts[130][8] = {
 
 
 // Local functions headers
-void prevLine();
-void shiftUp();
-int strlength(const char * str);
-void printString(char *str, unsigned char r, unsigned char g, unsigned char b);
-
 int strlength(const char * str) {
     int i = 0;
     while(*(str+i)) {
@@ -202,7 +205,7 @@ void putPixel(uint64_t x,uint64_t y, unsigned char r, unsigned char g, unsigned 
 
 // Hacer for i for j de putpixel para rectangulo no rinde, porque tiene que recalcular screen muchas veces
 // Esta forma es mas eficiente
-void fillRect(unsigned char x, unsigned char y, uint16_t width, uint16_t height, unsigned char r, unsigned char g, unsigned char b) {
+void fillRect(uint64_t x, unsigned char y, uint16_t width, uint16_t height, unsigned char r, unsigned char g, unsigned char b) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
 
   char* pos = (char *)(uintptr_t) infoBlock->physbase + x*pixelWidth + y*infoBlock->pitch;
@@ -287,82 +290,187 @@ void drawString(unsigned char  x, unsigned char  y, char* string, unsigned char 
   }
 }
 
-void deleteChar() {
-  if (cursorX == cursorXStart)
-  {
-    prevLine();
+void deleteChar(int section) {
+  int* cx;
+  int* cy;
+  int cxs;
+  if(section == 2 && splits == 2) {
+    cx = &cursorX2;
+    cy = &cursorY2;
+    cxs = cursorXStart + infoBlock->Xres / 2;
+  } else {
+    cx = &cursorX;
+    cy = &cursorY;
+    cxs = cursorXStart;
   }
-  if (cursorX > cursorXStart)
+
+
+  if (*cx == cxs)
   {
-    cursorX -= 8;
-    drawChar(cursorX, cursorY, 129, 0,0,0);
+    prevLine(section);
   }
-}
-
-
-void prevLine() {
-  cursorY -= 20;
-  cursorX = infoBlock->Xres - 14;
-} 
-
-void nextLine() {
-  int maxY = cursorYStart + 20 * maxLines;
-  cursorX = cursorXStart;
-  cursorY += 20; 
-  if (cursorY == maxY)
+  if (*cx > cxs)
   {
-    shiftUp();
+    *cx -= 8;
+    drawChar(*cx, *cy, 129, 0,0,0);
   }
 }
 
-int maxX() {
-  return infoBlock->Xres - 5 - cursorXStart;
+
+void prevLine(int section) {
+  if(section == 2 && splits == 2) {
+    cursorY2 -= 20;
+    cursorX2 = infoBlock->Xres - 14;
+  } else if (section == 1 && splits == 2) {
+    cursorY -= 20;
+    cursorX = (infoBlock->Xres / 2) - 14; 
+  } else if( splits == 1) {
+    cursorY -= 20;
+    cursorX = infoBlock->Xres - 14;
+  }
+ } 
+
+void nextLine(int section) {
+
+  if(section == 2 && splits == 2) {
+    cursorX2 = cursorX2Start;
+    cursorY2 += 20; 
+    if (cursorY2 == maxY)
+    {
+      shiftUp(section);
+    }
+  } else if (section == 1 && splits == 2) {
+  
+    cursorX = cursorXStart;
+    cursorY += 20; 
+    if (cursorY == maxY)
+    {
+      shiftUp(section);
+    }
+
+  } else if( splits == 1) {
+    cursorX = cursorXStart;
+    cursorY += 20; 
+    if (cursorY == maxY)
+    {
+      shiftUp(section);
+    }
+  }    
+
 }
 
-void printChar(unsigned char myChar, unsigned char r, unsigned char g, unsigned char b) {
-  drawChar(cursorX, cursorY, myChar, r,g,b);
-  cursorX += 8;
-  if (cursorX >= maxX())
-  {
-    nextLine();
+int maxX(int section) {
+  if(section == 1 && splits == 2) {
+   return (infoBlock->Xres / 2) - 5 - cursorXStart;
+  } else {
+   return infoBlock->Xres - 5 - cursorXStart;
+  }
+}
+
+void printChar(unsigned char myChar, unsigned char r, unsigned char g, unsigned char b, int section) {
+  // TODO - Implementar secciones a este 
+  if (myChar == '\n') {
+      nextLine(section);
+  } else if (myChar == '\b') {
+      deleteChar(section);
+  } else {
+    drawChar(cursorX, cursorY, myChar, r,g,b);
+    cursorX += 8;
+    if (cursorX >= maxX(section))
+    {
+      nextLine(section);
+    }
   }
 }
 
 void printWhiteString(char * str){
-  printString(str, 255, 255, 255);
+  printString(str, 255, 255, 255, 1);
 }
 
-void printString(char *str, unsigned char r, unsigned char g, unsigned char b) {
+void printString(char *str, unsigned char r, unsigned char g, unsigned char b, int section) {
   unsigned char pixelWidth = infoBlock->bpp / 8;
   int pitch = infoBlock->pitch;
-  char* pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+  char* pos;
+  int* cx;
+  int* cy;
+
+  if (splits == 1)  section = 1;
+  if (section == 2) {
+    cx = &cursorX2;
+    cy = &cursorY2;
+  } else {
+    cx = &cursorX;
+    cy = &cursorY;
+  }
+  pos = (char *)(uintptr_t) infoBlock->physbase + (*cx)*pixelWidth + (*cy)*pitch;
   int len = strlength(str);
+  char c;
   for (int i = 0; i < len; i++)
   {
-    drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
-    cursorX += 8;
-    if (cursorX >= (infoBlock->Xres - 5 - cursorXStart))
-    {
-      nextLine();
-      pos = (char *)(uintptr_t) infoBlock->physbase + cursorX*pixelWidth + cursorY*pitch;
+    c = str[i];
+    if ( c == 0 ) {
+      return;
+    } else if (c == '\n') {
+      nextLine(section);
+    } else if (c == '\b') {
+      deleteChar(section);
     } else {
-      pos += fontWidth * pixelWidth;
+      drawCharForString(pos, str[i],pixelWidth,pitch,r,g,b);
+      (*cx) += 8;
+      if ((*cx) >= maxX(section))
+      {
+        nextLine(section);
+        pos = (char *)(uintptr_t) infoBlock->physbase + (*cx)*pixelWidth + (*cy)*pitch;
+      } else {
+        pos += fontWidth * pixelWidth;
+      }
     }
-    /* code */
   }
 
 }
 
-void shiftUp() {
+void shiftUp(int section) {
     
-   int pitch = infoBlock->pitch;
-   int destY = cursorYStart;
-   char* dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
-   int srcY = cursorYStart + 20;
-   char* src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
-   int size = infoBlock->Xres * pitch;
-   memcpy(dest, src, size);
-   cursorY -= 20;
+  // FALTA ARREGLAR ESTA FUNCION ( SI LA PANTALLA ESTA PARTIDA NO PUEDO COPIAR UN BLOQUE ENTERO, TENGO QUE 
+  // COPIAR VARIOS BLOQUES A LA VEZ) 
+  int pitch = infoBlock->pitch;
+  int srcY = cursorYStart + 20;
+  int destY = cursorYStart;
+  char* dest;
+  char* src;
+  int size;
+  if(splits == 2 && section == 2) {
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch + cursorX2Start * infoBlock->bpp / 8;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch + cursorX2Start * infoBlock->bpp / 8;
+    cursorY2 -= 20;
+    // src[0] = 0;
+    // src[1] = 0;
+    // src[2] = 255;
+  } else if (splits == 2 && section == 1) {
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
+    cursorY -= 20;
+  } else {
+    // Hay solo 1 split, puedo mover todo el bloque junto
+    dest = (char *)(uintptr_t) infoBlock->physbase + destY*pitch;
+    src = (char *)(uintptr_t) infoBlock->physbase + srcY*pitch;
+    size = infoBlock->Xres * pitch;
+    memcpy(dest, src, size);
+    cursorY -= 20;
+    return;
+  }
+
+  // Hay 2 splits, tengo que ir copiando linea por linea para arriba
+
+  // Checkeo de que los puntos esten
+  
+  size = (infoBlock->Xres / 2) * infoBlock->bpp / 8;
+  int i;
+  for (i = 0; i < infoBlock->Yres * 2; ++i) {
+    memcpy(dest, src, size);
+    dest += pitch;
+    src += pitch;
+  }
 
 }
 
@@ -385,37 +493,12 @@ void clearAll() {
   clearFrom(0,0);
   cursorX = cursorXStart;
   cursorY = cursorYStart;
-}
-
-
-void printUint(uint64_t num) {
-  char string[10];
-  int remainder;
-  int index = 0;
-  int reverseIndex = 0;
-  char aux;
-  int length;
-  if (num == 0){
-    string[0] = '0';
-    printWhiteString(string);
-    return;
+  
+  if(splits > 1) {
+    drawSplitSeparator();
+    cursorX2 = cursorX2Start;
+    cursorY2 = cursorYStart;
   }
-  else {
-    while (num > 0){
-      remainder = num % 10;
-      string[index++] = remainder + '0';
-      num /= 10;
-    }
-  }
-  string[index] = 0;
-  length = index;
-  while (reverseIndex < length / 2){
-    aux = string[--index];
-    string[index] = string[reverseIndex];
-    string[reverseIndex++] = aux;
-  }
-
-  printWhiteString(string);
 }
 
 void printInt(int num) {
@@ -462,6 +545,29 @@ void printInt(int num) {
 }
 
 void pl(char * string) {
-  nextLine();
+  nextLine(1);
   printWhiteString(string);
+}
+
+void initializeVideoDriver() {
+   cursorX2Start = cursorXStart + infoBlock->Xres / 2;
+}
+
+void drawSplitSeparator() {  fillRect(512, 0, 4, infoBlock->Yres, 255, 0, 0);
+}
+
+void clearSplitSeparator() {
+
+}
+
+void vesa_addSplit() {
+  splits = 2;
+  clearAll();
+}
+
+void vesa_removeSplit() {
+  printWhiteString("remoing split?");
+  splits = 1;
+  clearSplitSeparator();
+
 }

@@ -1,4 +1,5 @@
 #include "include/string.h"
+#include <stdint.h>
 
 int strcmp(char * str1, char * str2) {
 	while(1) {
@@ -37,6 +38,17 @@ int to_num(char * s , int dim){
 	}
 	return n;
 }
+
+void numberToString(uint64_t number , char * string){
+	int i = 1;
+	while(number > 10){
+		string[i] = (number % 10) + '0';
+		number = number / 10;
+		i++;
+	}
+	string[0] = (number % 10) + '0';
+}
+
 
 
 

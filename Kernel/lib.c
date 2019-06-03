@@ -1,4 +1,7 @@
 #include <stdint.h>
+#include "include/scheduler/PCB.h"
+#include "include/ipc/ipc.h"
+#include "include/memoryManager/memoryManager.h"
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {
@@ -87,3 +90,37 @@ int power(int base,int n){
 }
 
 
+//Poorman's printf
+void printf(char * str) {
+	ipc_write(DEFAULT_FDOUT, str, MAXFDSIZE);
+}
+
+
+void printn(uint64_t num) {
+  char string[10];
+  int remainder;
+  int index = 0;
+  int reverseIndex = 0;
+  char aux;
+  int length;
+  if (num == 0){
+    string[0] = '0';
+    printf(string);
+    return;
+  }
+  else {
+    while (num > 0){
+      remainder = num % 10;
+      string[index++] = remainder + '0';
+      num /= 10;
+    }
+  }
+  string[index] = 0;
+  length = index;
+  while (reverseIndex < length / 2){
+    aux = string[--index];
+    string[index] = string[reverseIndex];
+    string[reverseIndex++] = aux;
+  }
+  printf(string);
+}

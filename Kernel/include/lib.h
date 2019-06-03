@@ -10,5 +10,7 @@ char *cpuVendor(char *result);
 int power(int base,int n);
 int l2(int n); 
 
-#endif
 
+void printf(char * str);
+void printn(uint64_t num);
+#endif

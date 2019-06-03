@@ -6,9 +6,16 @@
 #include "drivers/soundDriver.h"
 #include "drivers/time.h"
 #include "memoryManager/memoryManager.h"
+#include "include/screenManager.h"
 #include "scheduler/scheduler.h"
+#include "scheduler/sleeper.h"
 #include "include/ipc/ipc.h"
 #include "include/ipc/mutex.h"
+#include "include/ipc/pipe.h"
+#include "include/scheduler/PCB.h"
+#include "include/interrupts.h"
+#include "include/string.h"
+#include "include/lib.h"
 
 #define SYSCALLNUMBER 11
 
@@ -42,37 +49,18 @@ int sys_sec (int * result) {
 
 //We will only read from the keyboard buffer for this project --> fd = 0 (stdin)
 uint64_t sys_read(uint64_t fd, char *buffer, uint64_t size){
-	uint64_t bytesRead = 0;
-	char c;
-	if (fd == STDIN){							//read from the keyboard buffer (stdin)
-		while(size > 0 && (c = getChar())) {	//getChar returns 0 when the keboard buffer is empty
-			buffer[bytesRead++] = c;
-			size--;
-		}
-	}
-	return bytesRead;
+	// FD Variable obsolete atm
+	char * fdIn = getFdIn();
+	ipc_read(fdIn, buffer,size);
+	return 1;
 }
 
 //We will only write to the screen for this project --> fd = 1 (stdout)
 uint64_t sys_write(uint64_t fd, char *buffer, uint64_t size){
-	uint64_t bytesRead = 0;
-
-	if (fd == STDOUT) {
-		while(size--) {
-			char c = *buffer;
-			if (c == '\n') {
-				nextLine();
-			} else if (c == '\b') {
-				deleteChar();
-			} else {
-				printChar(c,255,255,255);
-			}
-			buffer++;
-			bytesRead++;
-		}
-	}
-
-	return bytesRead;
+	char * fdOut = getFdOut();
+	
+	ipc_write(fdOut, buffer,size);
+	return 1;
 }
 
 uint64_t * sys_time(uint64_t * timeArray) {
@@ -130,10 +118,11 @@ void sys_freeMemorySpace (void * freeBaseAddress,int32_t size) {
 
 // Processes
 void sys_schedule() {
-	schedule();
+	pl("alguien llamo a sys schedule");
+	schedule(0);
 }
-uint8_t sys_addProcess(void * entryPoint,uint64_t priority,char name,uint8_t foreground,uint64_t size) {
-	return addProcess(entryPoint,priority,name,foreground,size);
+uint8_t sys_addProcess(void * entryPoint,uint64_t priority,uint8_t foreground,uint64_t size,char * fdIn,char * fdOut) {
+	return addProcess(entryPoint,priority,foreground,size,fdIn,fdOut);
 }
 void sys_endProcess(int pid) {
 	endProcess(pid);
@@ -142,8 +131,8 @@ void sys_listProcesses() {
 	listProcesses();
 }
 
-void sys_sleep(){
-	printWhiteString("SLEEP");
+void sys_sleep_seconds(int seconds){
+	sleep_seconds(seconds);
 }
 
 void sys_ipc_create(char * id,uint64_t size){
@@ -159,14 +148,16 @@ void sys_ipc_read(char * id, char * string, uint64_t messageSize){
 }
 
 void sys_sleepPID(int pid){
-	printWhiteString("SLEEP_PID ");
-	printInt(pid);
+	printf("SLEEP_PID: ");
+	printn(pid);
+	printf("\n");
 	sleepPID(pid);
 }
 
 void sys_wakePID(int pid){
-	printWhiteString("WAKE_PID");
-	printInt(pid);
+	printf("WAKE_PID: ");
+	printn(pid);
+	printf("\n");
 	wakePID(pid);
 }
 
@@ -204,31 +195,32 @@ int  sys_pid() {
 
 void sys_pstat(void * pcbAddr) {
 	process_status(pcbAddr);
-	return;
 }
 
 void sys_pipe_create(char * pipeid){
 	pipe_create(pipeid);
-	return;
 }
 
 void sys_pipe_delete(char * pipeid){
 	pipe_delete(pipeid);
-	return;
 }
 
 void sys_pipe_read(char * pipeid , char * buffer , int messageSize){
 	pipe_read(pipeid,buffer,messageSize);
-	return;
 }
 
 void sys_pipe_write(char * pipeid , char * buffer , int messageSize){
 	pipe_write(pipeid,buffer,messageSize);
-	return;
 }
 
 void sys_change_priority(uint64_t pid , int priority){
 	changePriority(pid,priority);
-	return;
 }
 
+void sys_split_screen() {
+	splitScreen();
+}
+
+void sys_unsplit_screen() {
+	unsplitScreen();
+}

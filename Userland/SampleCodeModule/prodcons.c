@@ -62,12 +62,12 @@ void consumer(){
 }
 
 void addProd() {
-    os_addProcess(&producer, 1, 'c', PCB_BACKGROUND, PROCESS_MEMORY);
+    os_addProcess(&producer, 1, PCB_BACKGROUND, PROCESS_MEMORY,"","");
     printf("Added producer Successfully\n");
 }
 
 void addCons() {
-    os_addProcess(&consumer, 1, 'c', PCB_BACKGROUND, PROCESS_MEMORY);
+    os_addProcess(&consumer, 1, PCB_BACKGROUND, PROCESS_MEMORY,"","");
     printf("Added consumer Successfully\n");
 }
 

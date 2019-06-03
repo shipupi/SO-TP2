@@ -14,7 +14,7 @@ void os_unbeep();
 void * os_requestMemorySpace(uint64_t requestedSpace);
 void os_freeMemorySpace (void * freeBaseAddress,int32_t size);
 void os_schedule();
-uint8_t os_addProcess(void * entryPoint , uint64_t priority , char name,uint8_t foreground,uint64_t size);
+uint8_t os_addProcess(void * entryPoint , uint64_t priority,uint8_t foreground,uint64_t size, char * fdIn, char * fdOut);
 void os_endProcess(int pid);
 void os_listProcesses();
 int os_pid();
@@ -37,8 +37,11 @@ void os_pipe_delete(char * pipeid);
 void os_pipe_read(char * pipeid , char * buffer , int messageSize);
 void os_pipe_write(char * pipeid , char * buffer , int messageSize);
 void os_change_priority(uint64_t pid , int priority);
+void os_split_screen();
+void os_unsplit_screen();
+void die();
+void os_sleep_seconds(int seconds);
 #endif
-
 
 
 

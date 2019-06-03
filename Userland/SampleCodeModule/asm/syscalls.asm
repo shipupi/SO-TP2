@@ -14,6 +14,7 @@ GLOBAL os_addProcess
 GLOBAL os_endProcess
 GLOBAL os_listProcesses
 GLOBAL os_sleep
+GLOBAL os_sleep_seconds
 GLOBAL os_ipc_create
 GLOBAL os_ipc_write
 GLOBAL os_ipc_read
@@ -28,11 +29,14 @@ GLOBAL os_mut_delete
 GLOBAL os_mut_list
 GLOBAL os_pid
 GLOBAL os_pstat
+GLOBAL os_split_screen
+GLOBAL os_unsplit_screen
 
 GLOBAL os_pipe_create
 GLOBAL os_pipe_delete
 GLOBAL os_pipe_read
 GLOBAL os_pipe_write
+GLOBAL die
 
 GLOBAL os_change_priority
 
@@ -202,6 +206,7 @@ os_schedule:
 
 os_addProcess:
 	start
+	mov r10, r9
 	mov r9, r8
 	mov r8, rcx
 	mov rcx,rdx
@@ -371,6 +376,24 @@ os_change_priority:
 	int 80h
 	finish
 
+os_split_screen:
+	start
+	mov rdi, 0x24
+	int 80h
+	finish
+os_unsplit_screen:
+	start
+	mov rdi, 0x25
+	int 80h
+	finish
+
+os_sleep_seconds:
+	start
+	mov rsi, rdi
+	mov rdi, 0x26
+	int 80h
+	finish
+
 section .data
 	timeArray times 6 DW 0
 
@@ -378,3 +401,7 @@ section .bb
 	aux resb 4	; para enteros
 
 
+die:
+	cli
+	hlt
+	ret
