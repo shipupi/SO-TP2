@@ -205,6 +205,9 @@ void initialize() {
 }
 
 void addPhilo() {
+	if (activos == 9){
+		printf("No soporta mas filosofos\n");
+	}else{
 	cubiertos[activos].mut[0] = activos >= 10? '1': '0';
 	cubiertos[activos].mut[1] = activos % 10+'0';
 	cubiertos[activos].mut[2] = 0;
@@ -212,6 +215,7 @@ void addPhilo() {
 	filosofos[activos].state = INACTIVE;
 	int p = os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
 	filosofos[activos].pid = p;
+	}
 }
 void removePhilo() {
 	if(activos == 3 ){
