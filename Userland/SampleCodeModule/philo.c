@@ -2,6 +2,7 @@
 #include "include/syscalls.h"
 #include "include/PCB.h"
 #include "include/applications.h"
+#include "include/memory.h"
 
 
 #define INACTIVE 0
@@ -128,53 +129,60 @@ void philosopher(){
 	int id = getId();
 	pint(id);printf("\n");
 
+	char requestRight[3];
+	char requestLeft[3];
 	// think
 	while(1) {
 
 		think(id);
 		filosofos[id].state = HUNGRY;
+
 		// get forks
 		if(id % 2 == 0){
 			//wait right fork then left
 			// printf("filosofo: ");pint(id);printf(" pidiendo mutex: "); printf(cubiertos[(id + 1) % activos].mut); printf("\n");
 			printf("filosofo: ");pint(id);printf(" esta hambriento\n");
-			os_mut_request(cubiertos[(id + 1) % activos].mut);
+			memcopy(requestRight, cubiertos[(id + 1) % activos].mut, 3);
+			os_mut_request(requestRight);
 			// printf("filosofo: ");pint(id);printf(" pidiendo mutex: "); printf(cubiertos[id].mut);printf("\n");
-			os_mut_request(cubiertos[id].mut);
+			memcopy(requestLeft, cubiertos[id].mut, 3);
+			os_mut_request(requestLeft);
 		} else {
 			// printf("filosofo: ");pint(id);printf(" pidiendo mutex: "); printf(cubiertos[id].mut);printf("\n");
 			printf("filosofo: ");pint(id);printf(" esta hambriento\n");
 			// printf("filosofo: ");pint(id);printf(" pidiendo mutex: "); printf(cubiertos[id].mut);printf("\n");
-			os_mut_request(cubiertos[id].mut);
+			memcopy(requestLeft, cubiertos[id].mut, 3);
+			os_mut_request(requestLeft);
 			// printf("filosofo: ");pint(id);printf(" pidiendo mutex: "); printf(cubiertos[(id + 1) % activos].mut);printf("\n");	
-			os_mut_request(cubiertos[(id + 1) % activos].mut);
+			memcopy(requestRight, cubiertos[(id + 1) % activos].mut, 3);
+			os_mut_request(requestRight);
 		}
 		eat(id);
 		// printf("filosofo: ");pint(id);printf(" largando mutex: "); printf(cubiertos[id].mut);printf("\n");	
-		os_mut_release(cubiertos[id].mut);
+		os_mut_release(requestRight);
 		// printf("filosofo: ");pint(id);printf(" largando mutex: "); printf(cubiertos[(id + 1) % activos].mut);printf("\n");	
-		os_mut_release(cubiertos[(id + 1) % activos].mut);
+		os_mut_release(requestLeft);
 	}
 	
 }
 
-
-void filo(){
-	int toAdd = 3;
-
-	activos = 0;	
-
-	// PCB* p = os_requestMemorySpace(sizeof(PCB));
-	// os_pstat(p);
-	os_mut_create(IDMUT);
-	os_mut_create(PRINTMUT);
-
-	if(!isSplit()) {
-		os_addProcess(&split,1,PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
-		os_sleep_seconds(1);
+void addStartingPhilosophers(int toAdd) {
+	for (int i = 0; i < toAdd; ++i)
+	{
+		cubiertos[i].mut[0] = i >= 10? '1': '0';
+		cubiertos[i].mut[1] = i % 10+'0';
+		cubiertos[i].mut[2] = 0;
+		os_mut_create(cubiertos[i].mut);
 	}
 
+	for (int i = 0; i < toAdd; ++i)
+	{
+		os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
+		filosofos[i].state = INACTIVE;
+	}
+}
 
+void printInstructions() {
 	printf("Bienvenido a los filosofos hambrientos\n");
 
 	printf("En la pantalla derecha se ven las acciones\n");
@@ -189,35 +197,56 @@ void filo(){
 	printf("T: Thinking\n");
 	printf("H: Hungry\n");
 	printf("E: Eating\n");
+}
 
-	for (int i = 0; i < toAdd; ++i)
-	{
-		cubiertos[i].mut[0] = i >= 10? '1': '0';
-		cubiertos[i].mut[1] = i % 10+'0';
-		cubiertos[i].mut[2] = 0;
-		os_mut_create(cubiertos[i].mut);
+void initialize() {
+	os_mut_create(IDMUT);
+	os_mut_create(PRINTMUT);
+	if(!isSplit()) {
+		os_addProcess(&split,1,PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
+		os_sleep_seconds(1);
 	}
+}
 
-	for (int i = 0; i < toAdd; ++i)
-	{
-		os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
-		filosofos[i].state = INACTIVE;
-	}
+void addPhilo() {
+	cubiertos[activos].mut[0] = activos >= 10? '1': '0';
+	cubiertos[activos].mut[1] = activos % 10+'0';
+	cubiertos[activos].mut[2] = 0;
+	os_mut_create(cubiertos[activos].mut);
+	filosofos[activos].state = INACTIVE;
+	os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
+}
+void removePhilo() {
+
+}
+
+void filo(){
+
+	activos = 0;	
+
+	// PCB* p = os_requestMemorySpace(sizeof(PCB));
+	// os_pstat(p);
+	initialize();
+
+
+	printInstructions();
+
+	addStartingPhilosophers(3);
 
 
 	// os_freeMemorySpace(p, sizeof(PCB));
 	char c;
 
-
-
-
 	while ((c = getChar()) != 'q') {
 		if (c == 'a') {
-			printf("add filosofer\n");
+			// printf("add filosofer\n");
+			addPhilo();
 		} else if(c == 'r') {
-			printf("remove filosofer\n");
+			removePhilo();
+			// printf("remove filosofer\n");
 		} else if(c == 'p') {
 			print_state();
 		}
 	}
 }
+
