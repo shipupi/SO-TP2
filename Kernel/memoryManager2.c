@@ -25,6 +25,13 @@ static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
 // 
 
 // Necesito 2N - 1 nodos para representar todo el arbol, donde N = 2^15 = 32768
+/*
+ Cada nodo puede valer:
+ 	- 0 Totalmente vacio = NODE_EMPTY
+ 	- 1 Parcialmente vacio = NODE_PARTIAL
+ 	- 2 Ocupado = NODE_FULL
+*/
+/*
 
 static char memoryNode[(2*MAXBLOCKS) - 1] = {1};
 
@@ -35,13 +42,6 @@ void initializeMemoryManager(){
 		memoryNode[i] = NODE_EMPTY;
 	}
 }
-/*
- Cada nodo puede valer:
- 	- 0 Totalmente vacio = NODE_EMPTY
- 	- 1 Parcialmente vacio = NODE_PARTIAL
- 	- 2 Ocupado = NODE_FULL
-*/
-
 
 int32_t getBlocksForSize(uint64_t requestedSize){
 	if (requestedSize == 0) {
@@ -53,36 +53,36 @@ int32_t getBlocksForSize(uint64_t requestedSize){
 void * getAddressForIndex(int index) {
 	int n = index + 1;
 
-	/*printWhiteString("n //inex + 1: "); 
+	printWhiteString("n //inex + 1: "); 
 	printUint(n); 
-	nextLine();*/
+	nextLine();
 
 	int k = l2(n);
 
-	/*printWhiteString("level(k): "); 
+	printWhiteString("level(k): "); 
 	printUint(k); 
-	nextLine();*/
+	nextLine();
 
 	int s = power(2,N-k);
 
-	/*printWhiteString("step(s): "); 
+	printWhiteString("step(s): "); 
 	printUint(s); 
-	nextLine();*/
+	nextLine();
 
 	int p = n % power(2,k);
 
-	/*printWhiteString("position(p): "); 
+	printWhiteString("position(p): "); 
 	printUint(p); 
-	nextLine();*/
+	nextLine();
 
 	int blockNumber = s * p ;
 
-	/*printWhiteString("Requesting address for block: "); 
+	printWhiteString("Requesting address for block: "); 
 	printUint(index); 
 	nextLine();
 	printWhiteString("blockNumber: "); 
 	printUint(blockNumber); 
-	nextLine();*/
+	nextLine();
 
 	return baseAddress + BLOCKSIZE * blockNumber;
 }
@@ -93,20 +93,20 @@ int getIndexForAdress(int address , int size){
 
 	address = address - (uint64_t) baseAddress;
 	address = address / BLOCKSIZE;
-	/*printWhiteString("address - baseAddress (/ size) : "); 
+	printWhiteString("address - baseAddress (/ size) : "); 
 	printUint(address); 
-	nextLine();*/
+	nextLine();
 
 	int k = N - l2(size);
-	/*printWhiteString("level(k): "); 
+	printWhiteString("level(k): "); 
 	printUint(k); 
-	nextLine();*/
+	nextLine();
 
 	int step = address/size;
 
-	/*printWhiteString("step: "); 
+	printWhiteString("step: "); 
 	printUint(step); 
-	nextLine();*/
+	nextLine();
 
 	return power(2,k) - 1 + step ; // + offset - 1
 
@@ -194,8 +194,4 @@ void freeMemorySpace (void * freeBaseAddress,int32_t size){
 	freeBlock(blockNumber);
 }
 
-
-
-
-
-
+*/
