@@ -38,7 +38,7 @@ void read2() {
 
 	//read 2
 	char c;
-	printf(" ");
+		// printf(" ");
 	while(1) {
 		c = getChar();
 		pint((c - '0') * 2);

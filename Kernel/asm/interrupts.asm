@@ -166,10 +166,10 @@ _irq00Handler:
   ; Context Switch
   pushState
   call timer_handler
-  mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
-  call printInt
-  mov rdi, 1
-  call nextLine
+  ; mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
+  ; call printInt
+  ; mov rdi, 1
+  ; call nextLine
   mov rdi, rsp
   call schedule  
   mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
