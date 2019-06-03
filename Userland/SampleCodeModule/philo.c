@@ -1,14 +1,14 @@
-#include <stdio.h>
 #include "include/syscalls.h"
 #include "include/PCB.h"
 #include "include/applications.h"
+#include "include/stdio.h"
 
 
 #define INACTIVE 0
 #define HUNGRY 1
 #define EATING 2
 #define THINKING 3
-#define MAXFILOS 20
+#define MAXFILOS 100
 #define IDMUT "ID_MUTEX"
 #define PRINTMUT "PRINT_MUTEX"
 
@@ -160,7 +160,7 @@ void philosopher(){
 
 
 void filo(){
-	int toAdd = 3;
+	int toAdd = 20;
 
 	activos = 0;	
 
@@ -192,9 +192,13 @@ void filo(){
 
 	for (int i = 0; i < toAdd; ++i)
 	{
+
 		cubiertos[i].mut[0] = i >= 10? '1': '0';
 		cubiertos[i].mut[1] = i % 10+'0';
 		cubiertos[i].mut[2] = 0;
+		printf("Creando mutex: ");
+		printf(cubiertos[i].mut);
+		printf("\n");
 		os_mut_create(cubiertos[i].mut);
 	}
 

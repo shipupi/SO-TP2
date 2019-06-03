@@ -23,8 +23,8 @@
 // 
 
 // Necesito 2N - 1 nodos para representar todo el arbol, donde N = 2^15 = 32768
-/*
-static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
+
+static void * baseAddress = (void *)(uintptr_t) BASE_ADDRESS;
 static char memoryNode[(2*MAXBLOCKS) - 1] = {1,1};
 
 
@@ -85,6 +85,7 @@ void updateStatus(int index) {
 void * requestNode(int index) {
 	if(memoryNode[index] == NODE_EMPTY) {
 		memoryNode[index] = NODE_FULL;
+		printWhiteString("Returning block: "); printInt(index);printWhiteString(" \n");
 		return getAddressForIndex(index);
 	} else {
 		return 0;
@@ -119,10 +120,11 @@ void * requestMemorySpace(uint64_t requestedSpace) {
 	int64_t n = getBlocksForSize(requestedSpace);
 	// Pasamos la cantidad de bloques pedidos a una potencia de 2
 	n = upper_power_of_two(n);
+	printWhiteString("Requesting ");printInt(n);printWhiteString(" blocks\n");
 	if(n > MAXBLOCKS) return 0;
 	//printWhiteString("Reqesting ");printUint(n); printWhiteString(" blocks"); nextLine();
 	void * ans =  getBlock(n, 0, MAXBLOCKS);
-	if(ans == 0) printWhiteString("Not enough memory!");
+	if(ans == 0) printWhiteString("Not enough memory!\n");
 	return ans;
 }
 
@@ -156,4 +158,3 @@ void freeMemorySpace (void * freeBaseAddress,int32_t size){
 
 
 
-*/

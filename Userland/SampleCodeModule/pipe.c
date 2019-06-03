@@ -27,19 +27,20 @@ void write2() {
 }
 
 void read2() {
-	// PCB* p = os_requestMemorySpace(sizeof(PCB));
-	// os_pstat(p);
-	// if (p->foreground == PCB_FOREGROUND)
-	// {
-	// 	printf("This application can only be run on the background\n");
-	// 	return;
-	// }
-	// os_freeMemorySpace(p, sizeof(PCB));
+	PCB* p = os_requestMemorySpace(sizeof(PCB));
+	os_pstat(p);
+	if (p->foreground == PCB_FOREGROUND)
+	{
+		printf("This application can only be run on the background\n");
+		return;
+	}
+	os_freeMemorySpace(p, sizeof(PCB));
 
 	//read 2
-	char c;
-	while(1) {
-		c = getChar();
-		pint((c - '0') * 2);
-	}
+	// char c;
+	// while(1) {
+	// 	c = getChar();
+	// 	pint((c - '0') * 2);
+	// }
+	return;
 }

@@ -113,6 +113,7 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
         }
         ipc.waiting -= 1;
         wakePID(nextPid);
+        printWhiteString("Waking Pid: ");printInt(nextPid);printWhiteString("\n");
     }
     ipc.write = (ipc.write + 1) % ipc.size;
     ipc.free -= 1;

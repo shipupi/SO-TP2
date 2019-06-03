@@ -6,9 +6,9 @@ int mut_release(char * id);
 int mut_delete(char * id);
 void mut_list();
 
-#include "ipc/ipc.h"
+#include "./ipc.h"
 
-#define MAX_MUTS 20
+#define MAX_MUTS 2000
 
 typedef struct MUT{
 	char id[ID_SIZE];
