@@ -5,14 +5,12 @@
 #include "syscalls.h"
 #include "applications.h"
 void kill(char * param){
-
-	char parse[20][20];
-	splitString(param,' ',parse);
+	
 	printf("param");
-	int arg = to_num(parse[0], strlen(parse[0]));
+	int arg  = to_num(param, strlen(param));
 	printf("\nkill");
 	printf("\n");
 	
-	pint(arg);
+	puint(arg);
 	
 }
