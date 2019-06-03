@@ -13,7 +13,7 @@ static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
 
 int getnum(char * msg){
   printf("\n");
-  char * command;
+  char * command = os_requestMemorySpace(200);
   printf("introduce a number ");
   printf(msg);
   printf(": ");
@@ -29,7 +29,7 @@ int testMemoryManager(){
   printf("free\n");
   printf("end\n");
 
-  char * command;
+  char * command = os_requestMemorySpace(200);
   int exit = 0;
   while(!exit){
       printf("\nshell/testMemoryManager$>");

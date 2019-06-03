@@ -31,7 +31,7 @@ int pow(int base,int n){
 }
 
 int to_num(char * s , int dim){
-	int n;
+	int n = 0;
 	for(int i = 0 ; s[i]!='\0';i++){
 		n += pow(10,dim - i - 1)*(s[i]-'0');
 	}
