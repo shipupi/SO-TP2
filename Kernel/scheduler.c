@@ -223,20 +223,6 @@ void editPriority(uint64_t pid , int priority){
 */
 
 void changePriority(uint64_t pid , int priority){
-	// printf("	");
-	// printf("changePriority");
-	// printf("	");
-	// printf("	");
-	// printf("pid");
-	// printf("	");
-	// printf("	");
-	// printf("priority");
-	// printf("	");
-	// printf("	");
-	// printn(pid);
-	// printf("	");
-	// printf("	");
-	// printn(priority);
 	processes[pid].priority = priority;
 	lottery();
 	return;

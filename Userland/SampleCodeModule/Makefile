@@ -7,16 +7,16 @@ OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 OBJECTS=$(SOURCES:.c=.o)
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -I./include -c _loader.c $(SOURCES) 
+	$(GCC) -g $(GCCFLAGS) -I./include -c _loader.c $(SOURCES) 
 
 %.o: %.asm
-	$(ASM) $(ASMFLAGS) $< -o $@
-
+	$(ASM) -g $(ASMFLAGS) $< -o $@
 
 all: $(MODULE)
 
 $(MODULE): $(OBJECTS_ASM) $(OBJECTS)
 	$(LD) -T sampleCodeModule.ld _loader.o $(OBJECTS) $(OBJECTS_ASM) -o ../$(MODULE)
+	$(LD) -T sampleCodeModule.ld _loader.o $(OBJECTS) $(OBJECTS_ASM) --oformat=elf64-x86-64 -o ../sampleCodeModule.elf
 
 clean:
 	rm -rf *.o

@@ -52,8 +52,8 @@ int splitString2(char * pars, char separetor, char out[20][20]){
 			break;
 		}
 	}
-		
-	}
+	return 1;		
+}
 
 
 void changePriority(char * args){

@@ -2,6 +2,7 @@
 #include "include/scheduler/PCB.h"
 #include "include/ipc/ipc.h"
 #include "include/memoryManager/memoryManager.h"
+#include "include/lib.h"
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {
@@ -86,3 +87,41 @@ void printn(uint64_t num) {
   }
   printf(string);
 }
+
+
+/* 
+	Codigo sacado de:
+		https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
+*/
+int upper_power_of_two(int v) {
+	v--;
+	v |= v >> 1;
+	v |= v >> 2;
+	v |= v >> 4;
+	v |= v >> 8;
+	v |= v >> 16;
+	v++;
+	return v;
+}
+
+int l2(int n) {
+     if (n==0) return 0;
+     int logValue = -1;
+     while (n) {//
+         logValue++;
+         n >>= 1;
+     }
+     return logValue;
+ }
+
+
+int power(int base,int n){
+	int i , p;
+	p=1;
+	for(i=1;i<=n;++i){
+		p = p*base;
+	}
+	return p;
+}
+
+

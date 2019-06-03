@@ -1,12 +1,12 @@
 #include <stdint.h>
-#include <string.h>
+#include "include/string.h"
 #include "include/kernel.h"
+#include "include/memoryManager/memoryManager.h"
 #include "include/drivers/vesaDriver.h"
 
-#define MAXBLOCKS 32768
-#define BLOCKSIZE 4096
+
 static char blockStatus[MAXBLOCKS];
-static void * baseAddress = (void *)(uintptr_t) 0x900000;
+static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
 
 void * getBlockById(int32_t N){
 	return baseAddress + N * BLOCKSIZE ;
@@ -23,13 +23,13 @@ int32_t getBlocksForSize(uint64_t requestedSize){
 	return ((requestedSize - 1)/ BLOCKSIZE)+1;
 }
 
-void initializeMemoryManager(){
+void initializeMemoryManager() {
 	for(int i = 0 ; i < MAXBLOCKS ; i++){
 		blockStatus[i] = 0;
 	}
 }
 
-void * requestMemorySpace(uint64_t requestedSpace){
+void * requestMemorySpace(uint64_t requestedSpace) {
 
 	int32_t n = getBlocksForSize(requestedSpace); //me must find n contiguous 0's in an array
 	void * ret = (void *)(uintptr_t) -1;
@@ -62,7 +62,7 @@ void * requestMemorySpace(uint64_t requestedSpace){
 	}
 
 	return ret;
-	}
+}
 
 
 void freeMemorySpace (void * freeBaseAddress,int32_t size){

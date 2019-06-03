@@ -22,7 +22,7 @@ int initializeShortcutsArray(SHORTCUT scArr[]) {
 	loadShortcut(scArr, "prodCons", (uintptr_t)&prodCons);
 	loadShortcut(scArr, "addProd", (uintptr_t)&addProd);
 	loadShortcut(scArr, "addCons", (uintptr_t)&addCons);
-	loadShortcut(scArr, "testMemoryManager", (uintptr_t)&testMemoryManager);
+	loadShortcut(scArr, "buddy", (uintptr_t)&testMemoryManager);
 	loadShortcut(scArr, "lot", (uintptr_t)&testLottery);
 	loadShortcut(scArr, "mut", (uintptr_t)&list_mutex);
 	loadShortcut(scArr, "mut1", (uintptr_t)&mut1);

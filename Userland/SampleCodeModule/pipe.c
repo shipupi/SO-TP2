@@ -17,7 +17,6 @@ void pipe(){
 
 void write2() {
 	int b = 0;
-	os_sleep_seconds(1);
 	for (int i = 0; i < 20000; ++i)
 	{
 		printf("2");
@@ -38,7 +37,6 @@ void read2() {
 	// os_freeMemorySpace(p, sizeof(PCB));
 
 	//read 2
-	printf(" ");
 	char c;
 	while(1) {
 		c = getChar();

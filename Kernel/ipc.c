@@ -15,9 +15,6 @@ IPC arrIPC[MAX_IPCS];
 int ipcIndex = 0;
 int IPCcounter = 0;
 
-
-static int lock = 0;
-
 int findId( char * id) {
     int foundId = -1;
     for (int i = 0; i < IPCcounter; ++i)
