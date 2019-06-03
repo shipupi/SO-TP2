@@ -14,6 +14,7 @@
 #include "include/scheduler/PCB.h"
 #include "include/screenManager.h"
 #include "include/ipc/ipc.h"
+#include "include/noProcessHandler.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -73,6 +74,7 @@ void initializeDrivers() {
 int main()
 {	
 	initializeMemoryManager();
+	addProcess(&noProcessHandler, 1, 2, 50, INVALID_FD, INVALID_FD);
 	initializeDrivers();
 	addProcess(sampleCodeModuleAddress, 1, 2, 50, DEFAULT_FDIN, DEFAULT_FDOUT);
 	load_idt();

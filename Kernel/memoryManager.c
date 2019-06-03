@@ -6,7 +6,7 @@
 
 
 static char blockStatus[MAXBLOCKS];
-static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
+static void * baseAddress = (void *)(uintptr_t) BASE_ADDRESS;
 
 void * getBlockById(int32_t N){
 	return baseAddress + N * BLOCKSIZE ;

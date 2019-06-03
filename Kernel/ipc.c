@@ -15,9 +15,6 @@ IPC arrIPC[MAX_IPCS];
 int ipcIndex = 0;
 int IPCcounter = 0;
 
-
-static int lock = 0;
-
 int findId( char * id) {
     int foundId = -1;
     for (int i = 0; i < IPCcounter; ++i)
@@ -116,6 +113,7 @@ void ipc_write(char * id,char * string,uint64_t messageSize){
         }
         ipc.waiting -= 1;
         wakePID(nextPid);
+        // printWhiteString("Waking Pid: ");printInt(nextPid);printWhiteString("\n");
     }
     ipc.write = (ipc.write + 1) % ipc.size;
     ipc.free -= 1;

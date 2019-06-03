@@ -139,13 +139,13 @@ void * schedule(void * oldStack) {
 
 	if (n == 0)
 	{
-		// pl("schedule ( no active processes) ");
-		activeProcess = -1;
-		halt();
+		activeProcess = 0;
+	} else {
+		activeProcess = chooseNextProcess2(ap, n);
+
 	}
 
 	// Setteo el nuevo activeprocess con el que me toco
-	activeProcess = chooseNextProcess2(ap, n);
 	return processes[activeProcess].stackAddress;
 }
 
@@ -233,7 +233,9 @@ void changePriority(uint64_t pid , int priority){
 // Ends the process
 void endProcess(int pid) {
 	processes[pid].status = PCB_ENDED;
+	// printWhiteString("closing program ");printInt(pid);printWhiteString("\n");
 	freeMemorySpace(processes[pid].baseAddress, PROCESSSTACKSIZE);
+	// listProcesses();
 	return;
 }
 
@@ -246,39 +248,42 @@ void runProcess(uintptr_t entryPoint) {
 
 void listProcesses() {
 	int i;
-	printf("\n");
-	printf("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
-	printf("\n");
+	printWhiteString("\n");
+	printWhiteString("PID | Stack Addresss | Status | Priority  | Foreground | Reserved Memory | FDIN   | FDOUT");
+	printWhiteString("\n");
 	for (i = 0; i < PIDCounter; ++i)
 	{
 		if (processes[i].status == PCB_ENDED)
 		{
-			continue;
+			// continue;
 		}
-		printn(processes[i].pid);
-		printf("   | 	   ");
+		printInt(processes[i].pid);
+		printWhiteString("   | 	   ");
 
-		printn((uint64_t) (uintptr_t) processes[i].stackAddress);
-		printf("    |    ");
+		printInt((uint64_t) (uintptr_t) processes[i].stackAddress);
+		printWhiteString("    |    ");
 		switch(processes[i].status) {
 			case PCB_READY:
-				printf("rdy");
+				printWhiteString("rdy");
 				break;
 			case PCB_LOCK:
-				printf("lck");
+				printWhiteString("lck");
+				break;
+			case PCB_ENDED:
+				printWhiteString("end");
 				break;
 		}
-		printf(" |    ");
-		printn(processes[i].priority);
-		printf("      |    ");
-		printf(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
-		printf("      |    ");		
-		printn(processes[i].size);
-		printf("           |     ");
-		printf(processes[i].fdIn);
-		printf("   |    ");
-		printf(processes[i].fdOut);
-		printf("\n");
+		printWhiteString(" |    ");
+		printInt(processes[i].priority);
+		printWhiteString("      |    ");
+		printWhiteString(processes[i].foreground == PCB_FOREGROUND? "fg" : "bg");
+		printWhiteString("      |    ");		
+		printInt(processes[i].size);
+		printWhiteString("           |     ");
+		printWhiteString(processes[i].fdIn);
+		printWhiteString("   |    ");
+		printWhiteString(processes[i].fdOut);
+		printWhiteString("\n");
 	}
 }
 

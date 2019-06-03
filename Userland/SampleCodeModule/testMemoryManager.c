@@ -1,7 +1,7 @@
 #include "shell.h"
 #include "modules.h"
 #include "string.h"
-#include "stdio.h"
+#include "include/stdio.h"
 #include "syscalls.h"
 #include "applications.h"
 
@@ -45,7 +45,7 @@ int testMemoryManager(){
         addr = os_requestMemorySpace(blocks*BLOCKSIZE);
         if(addr){
           addr = addr - (uint64_t) baseAddress;
-          addr = (uint64_t) addr / BLOCKSIZE;
+          addr = (void*)((uintptr_t)addr / BLOCKSIZE);
           printf("address: ");
           puint((uintptr_t)addr);
           printf("\n");
@@ -55,16 +55,16 @@ int testMemoryManager(){
 
       }
       else if(strcmp(command,"free")==0){
-        void * address = (void *) getnum("address");
+        void * address = (void*)(uintptr_t)getnum("address");
         
         int blocks = getnum("blocks");
         printf("\nFree address ");
-        puint(address);
+        puint((uintptr_t)address);
         printf(" of size ");
         puint(blocks);
         printf("\n");
         
-        address = (uint64_t) address * BLOCKSIZE;
+        address = (void*)((uint64_t) address * BLOCKSIZE);
         address = address + (uint64_t)baseAddress;
         
         os_freeMemorySpace(address,(uint32_t)blocks);

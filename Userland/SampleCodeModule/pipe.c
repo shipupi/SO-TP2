@@ -17,7 +17,6 @@ void pipe(){
 
 void write2() {
 	int b = 0;
-	os_sleep_seconds(1);
 	for (int i = 0; i < 20000; ++i)
 	{
 		printf("2");
@@ -28,20 +27,21 @@ void write2() {
 }
 
 void read2() {
-	// PCB* p = os_requestMemorySpace(sizeof(PCB));
-	// os_pstat(p);
-	// if (p->foreground == PCB_FOREGROUND)
-	// {
-	// 	printf("This application can only be run on the background\n");
-	// 	return;
-	// }
-	// os_freeMemorySpace(p, sizeof(PCB));
+	PCB* p = os_requestMemorySpace(sizeof(PCB));
+	os_pstat(p);
+	if (p->foreground == PCB_FOREGROUND)
+	{
+		printf("This application can only be run on the background\n");
+		return;
+	}
+	os_freeMemorySpace(p, sizeof(PCB));
 
 	//read 2
-	printf(" ");
 	char c;
+	printf(" ");
 	while(1) {
 		c = getChar();
 		pint((c - '0') * 2);
 	}
+	return;
 }

@@ -54,7 +54,7 @@ EXTERN sys_pid
 EXTERN sys_pstat
 EXTERN sys_split_screen
 EXTERN sys_unsplit_screen
-
+EXTERN printInt
 
 EXTERN printf
 EXTERN registerValueToString
@@ -167,6 +167,10 @@ _irq00Handler:
   pushState
   call timer_handler
   mov rdi, rsp ; Load the parameters (current RSP) for the scheduler
+  call printInt
+  mov rdi, 1
+  call nextLine
+  mov rdi, rsp
   call schedule  
   mov rsp, rax  ;PUT the pointer given by schedule in the stack pointer
   mov al, 20h ; Send end of interrupt

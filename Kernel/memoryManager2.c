@@ -5,9 +5,7 @@
 #include "include/memoryManager/memoryManager.h"
 #include "include/drivers/vesaDriver.h"
 
-static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
 
-#define N 15 // 32768 = 2 ^ 15
 
 // Data Structure, arbol al estilo heap
 // Left child = 2*i + 1
@@ -31,9 +29,10 @@ static void * baseAddress = (void *)(uintptr_t) BASEADDRESS;
  	- 1 Parcialmente vacio = NODE_PARTIAL
  	- 2 Ocupado = NODE_FULL
 */
-/*
 
-static char memoryNode[(2*MAXBLOCKS) - 1] = {1};
+/*
+static void * baseAddress = (void *)(uintptr_t) BASE_ADDRESS;
+static char memoryNode[(2*MAXBLOCKS) - 1] = {1,1};
 
 
 //Pongo todos los nodos vacios
@@ -52,38 +51,10 @@ int32_t getBlocksForSize(uint64_t requestedSize){
 
 void * getAddressForIndex(int index) {
 	int n = index + 1;
-
-	printWhiteString("n //inex + 1: "); 
-	printUint(n); 
-	nextLine();
-
 	int k = l2(n);
-
-	printWhiteString("level(k): "); 
-	printUint(k); 
-	nextLine();
-
-	int s = power(2,N-k);
-
-	printWhiteString("step(s): "); 
-	printUint(s); 
-	nextLine();
-
+	int s = power(2,BLOCKSPOWER -k);
 	int p = n % power(2,k);
-
-	printWhiteString("position(p): "); 
-	printUint(p); 
-	nextLine();
-
 	int blockNumber = s * p ;
-
-	printWhiteString("Requesting address for block: "); 
-	printUint(index); 
-	nextLine();
-	printWhiteString("blockNumber: "); 
-	printUint(blockNumber); 
-	nextLine();
-
 	return baseAddress + BLOCKSIZE * blockNumber;
 }
 
@@ -93,23 +64,22 @@ int getIndexForAdress(int address , int size){
 
 	address = address - (uint64_t) baseAddress;
 	address = address / BLOCKSIZE;
-	printWhiteString("address - baseAddress (/ size) : "); 
-	printUint(address); 
-	nextLine();
+	// printWhiteString("address - baseAddress (/ size) : "); 
+	// printUint(address); 
+	// nextLine();
 
-	int k = N - l2(size);
-	printWhiteString("level(k): "); 
-	printUint(k); 
-	nextLine();
+	int k = BLOCKSPOWER - l2(size);
+	// printWhiteString("level(k): "); 
+	// printUint(k); 
+	// nextLine();
 
 	int step = address/size;
 
-	printWhiteString("step: "); 
-	printUint(step); 
-	nextLine();
+	// printWhiteString("step: "); 
+	// printUint(step); 
+	// nextLine();
 
 	return power(2,k) - 1 + step ; // + offset - 1
-
 }
 
 void updateStatus(int index) {
@@ -128,6 +98,7 @@ void updateStatus(int index) {
 void * requestNode(int index) {
 	if(memoryNode[index] == NODE_EMPTY) {
 		memoryNode[index] = NODE_FULL;
+		printWhiteString("Returning block: "); printInt(index);printWhiteString(" \n");
 		return getAddressForIndex(index);
 	} else {
 		return 0;
@@ -159,20 +130,21 @@ void * getBlock(int wantedBlockSize, int index, int currBlockSize) {
 
 // If no block found returns 0
 void * requestMemorySpace(uint64_t requestedSpace) {
-
 	int64_t n = getBlocksForSize(requestedSpace);
 	// Pasamos la cantidad de bloques pedidos a una potencia de 2
 	n = upper_power_of_two(n);
+	// printWhiteString("Requesting ");printInt(n);printWhiteString(" blocks\n");
 	if(n > MAXBLOCKS) return 0;
 	//printWhiteString("Reqesting ");printUint(n); printWhiteString(" blocks"); nextLine();
-	return getBlock(n, 0, MAXBLOCKS);
+	void * ans =  getBlock(n, 0, MAXBLOCKS);
+	if(ans == 0) printWhiteString("Not enough memory!\n");
+	return ans;
 }
 
 
 
 void updateRec(int number) {
 	updateStatus(number);
-	
 	if(number == 0) {
 		return;
 	}

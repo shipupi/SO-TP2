@@ -12,11 +12,11 @@ OBJECTS=$(SOURCES:.c=.o)
 %.o: %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
 
-
 all: $(MODULE)
 
 $(MODULE): $(OBJECTS_ASM) $(OBJECTS)
 	$(LD) -T sampleCodeModule.ld _loader.o $(OBJECTS) $(OBJECTS_ASM) -o ../$(MODULE)
+	$(LD) -T sampleCodeModule.ld _loader.o $(OBJECTS) $(OBJECTS_ASM) --oformat=elf64-x86-64 -o ../sampleCodeModule.elf
 
 clean:
 	rm -rf *.o

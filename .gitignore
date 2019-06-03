@@ -1,6 +1,7 @@
 *.bin
 *.sys
+*.elf
 Image/*
 !Image/Makefile
 *.o
-*.elf
+.gdb_history

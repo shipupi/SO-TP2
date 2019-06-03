@@ -1,15 +1,15 @@
-#include <stdio.h>
 #include "include/syscalls.h"
 #include "include/PCB.h"
 #include "include/applications.h"
 #include "include/memory.h"
+#include "include/stdio.h"
 
 
 #define INACTIVE 0
 #define HUNGRY 1
 #define EATING 2
 #define THINKING 3
-#define MAXFILOS 20
+#define MAXFILOS 100
 #define IDMUT "ID_MUTEX"
 #define PRINTMUT "PRINT_MUTEX"
 
@@ -173,12 +173,7 @@ void addStartingPhilosophers(int toAdd) {
 		cubiertos[i].mut[1] = i % 10+'0';
 		cubiertos[i].mut[2] = 0;
 		os_mut_create(cubiertos[i].mut);
-	}
-
-	for (int i = 0; i < toAdd; ++i)
-	{
 		os_addProcess(&philosopher,1, PCB_BACKGROUND, 4000, INVALID_FD, SPLIT_FD);
-		filosofos[i].state = INACTIVE;
 	}
 }
 

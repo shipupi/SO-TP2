@@ -3,9 +3,14 @@
 
 docker build . --tag so_builder
 
-docker run -v ${PWD}:/sources/ so_builder
+docker run -v ${PWD}:/root/ so_builde	r
 
-sudo chown $(whoami):$(whoami) Image/x*
-sudo chmod 777 Image/x*
+chown $(whoami):$(whoami) Image/x*
+chmod 777 Image/x*
 
-./run.sh
+if [[ "$1" = "gdb" ]]; then
+  ./run.sh gdb
+else
+  ./run.sh
+fi
+

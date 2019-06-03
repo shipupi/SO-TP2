@@ -1,9 +1,9 @@
 #include <stdint.h>
-#include "memoryManager/memoryManager.h"
-#include "drivers/vesaDriver.h"
-#include "interrupts.h"
-#include "string.h"
-#include "ipc/mutex.h"
+#include "include/memoryManager/memoryManager.h"
+#include "include/drivers/vesaDriver.h"
+#include "include/interrupts.h"
+#include "include/string.h"
+#include "include/ipc/mutex.h"
 #include "include/lib.h"
 #include "include/utils.h"
 #include "include/scheduler/scheduler.h"
@@ -79,21 +79,17 @@ int mut_release(char * id){
         return -1;
     }
     arrMUT[mId].value = MUT_UNLOCKED;
-    MUT m = arrMUT[mId];
-    m.value = MUT_UNLOCKED;
-    arrMUT[mId] = m;
     int nextPid = -1;
-	if (m.waiting > 0) {
-        nextPid = m.waitPids[0];
-        m.waitPids[0] = -1;
-        for (int i = 1; i < m.waiting - 1; ++i)
+	if (arrMUT[mId].waiting > 0) {
+        nextPid = arrMUT[mId].waitPids[0];
+        arrMUT[mId].waitPids[0] = -1;
+        for (int i = 1; i < arrMUT[mId].waiting - 1; ++i)
         {
-            m.waitPids[i -1 ] = m.waitPids[i];
+            arrMUT[mId].waitPids[i -1 ] = arrMUT[mId].waitPids[i];
         }
-        m.waiting -= 1;
+        arrMUT[mId].waiting -= 1;
         wakePID(nextPid);
     }
-    arrMUT[mId] = m;
 	return 0;
 }
 
