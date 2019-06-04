@@ -56,6 +56,16 @@ void help() {
 	printf("\nfilo:");
 	printf("\n\tFisolofos");
 
+	printf("\nsplit:");
+	printf("\n\t Split the terminal in background and foreground");
+
+	printf("\nwrite2:");
+	printf("\n\t Writes the number 2 indefinitely");
+
+	printf("\nread2:");
+	printf("\n\t Reads and multiply by 2 the input");
+
+
 	
 }
 
