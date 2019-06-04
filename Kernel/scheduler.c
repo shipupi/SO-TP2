@@ -255,7 +255,7 @@ void listProcesses() {
 	{
 		if (processes[i].status == PCB_ENDED)
 		{
-			// continue;
+			 continue;
 		}
 		printInt(processes[i].pid);
 		printWhiteString("   | 	   ");
