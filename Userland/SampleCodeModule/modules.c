@@ -14,9 +14,6 @@ void help() {
 	printf("\ntime:");
 	printf("\n\tIt will display on screen the current time in hh:mm:ss format");
 
-	printf("\nbuddy:");
-	printf("\n\tTests the memory manager");
-
 	printf("\nnumbers:");
 	printf("\n\tPrint numbers");
 
@@ -65,6 +62,8 @@ void help() {
 	printf("\nread2:");
 	printf("\n\t Reads and multiply by 2 the input");
 
+	printf("\nbuddy:");
+	printf("\n\tTests the memory manager");
 
 	
 }
